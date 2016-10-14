@@ -21,7 +21,9 @@
 *.la
 *.a
 *.lib
-
+Debug*
+Release*
+x64*
 # Executables
 *.exe
 *.out
