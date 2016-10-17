@@ -5,18 +5,16 @@ namespace anyun_regex
 	DirectedGraph::DirectedGraph()
 	{
 		pattern = "";
-		nodes.push_back(new DirectedNode(true));
-		start_node = end_node = nodes[0];
+		nodes.push_back(DirectedNode(0,true));
+		start_node_id = end_node_id = 0;
 	}
-	DirectedGraph::DirectedGraph(const char * pattern)
+	DirectedGraph::DirectedGraph(const char * pattern):pattern(pattern)
 	{
-		this->pattern = pattern;
 		compile();
 	}
 	DirectedGraph::~DirectedGraph()
 	{
-		for (size_t i = 0; i < nodes.size(); i++)	//release memory
-			delete nodes[i];
+		
 	}
 	size_t DirectedGraph::v()
 	{
@@ -24,24 +22,25 @@ namespace anyun_regex
 	}
 	void DirectedGraph::compile()
 	{
-		start_node = new DirectedNode();
-		nodes.push_back(start_node);
-		DirectedNode *state = start_node;
-
+		nodes.push_back(DirectedNode());
+		nodes.back().set_id(0);
+		start_node_id = 0;
+		size_t state = 0;
 		for (size_t index = 0; pattern[index] != '\0'; index++)
 		{
 			char ch = pattern[index];
 
 			//simple transaction
-			DirectedNode *next = new DirectedNode();
+			DirectedNode next(nodes.size());
+			DirectedEdge edge(ch, state, next.get_id(),edges.size());
+			nodes[state].add_out_edge(edge.get_id());
+			next.add_in_edge(edge.get_id());
 			nodes.push_back(next);
-			DirectedEdge *edge = new DirectedEdge(ch, state, next);
-			state->add_out_edge(edge);
-			next->add_in_edge(edge);
-			state = next;
+			edges.push_back(edge);
+			state = next.get_id();
 		}
 
-		end_node = state;
-		end_node->set_final(true);
+		end_node_id = state;
+		nodes[end_node_id].set_final(true);
 	}
 }

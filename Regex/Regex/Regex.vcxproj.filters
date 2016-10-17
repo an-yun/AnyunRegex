@@ -24,6 +24,9 @@
     <ClInclude Include="DirectedNode.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="NFA.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -38,5 +41,13 @@
     <ClCompile Include="DirectedNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="NFA.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="test.txt">
+      <Filter>资源文件</Filter>
+    </Text>
   </ItemGroup>
 </Project>

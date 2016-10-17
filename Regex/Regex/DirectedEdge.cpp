@@ -2,43 +2,77 @@
 
 namespace anyun_regex
 {
-	DirectedEdge::DirectedEdge() :start(nullptr), end(nullptr) {}
-	DirectedEdge::DirectedEdge(const char *)
+	DirectedEdge::DirectedEdge(size_t id) : id(id) {}
+	DirectedEdge::DirectedEdge(const char *str, size_t id)
 	{
 
 	}
-	DirectedEdge::DirectedEdge(char ch)
+	DirectedEdge::DirectedEdge(char ch, size_t id) : condition(ch) {}
+	DirectedEdge::DirectedEdge(char ch, size_t s_id, size_t  e_id, size_t id) : id(id), start_id(s_id), end_id(e_id),condition(ch)
 	{
-		condition = new TransactionCondition(ch);
-	}
-	DirectedEdge::DirectedEdge(char ch, DirectedNode *s, DirectedNode *e)
-	{
-		condition = new TransactionCondition(ch);
-		start = s;
-		end = e;
+
 	}
 	DirectedEdge::~DirectedEdge()
 	{
-		delete condition;
 	}
-	void DirectedEdge::set_start_node(DirectedNode * node)
+
+	void DirectedEdge::set_start_node(size_t  node_id)
 	{
-		start = node;
+		start_id = node_id;
 	}
-	void DirectedEdge::set_end_node(DirectedNode * node)
+
+	void DirectedEdge::set_end_node(size_t node_id)
 	{
-		end = node;
+		end_id = node_id;
 	}
-	TransactionCondition::TransactionCondition(int start, int end)
+
+	size_t DirectedEdge::get_start_node_id()
 	{
-		start_index = start;
-		end_index = end;
-		is_char = false;
+		return start_id;
 	}
-	TransactionCondition::TransactionCondition(char ch) :ch(ch),is_char(true) {}
+
+	size_t DirectedEdge::get_end_node_id()
+	{
+		return end_id;
+	}
+	
+	bool DirectedEdge::is_sigma_edge()
+	{
+		return condition.flag == -1;
+	}
+	bool DirectedEdge::accept(char ch)
+	{
+		return condition.match(ch);
+	}
+	size_t DirectedEdge::get_id()
+	{
+		return id;
+	}
+	TransactionCondition::TransactionCondition() :flag(-1) //sigma condition,namely every char is matched
+	{
+	}
+	TransactionCondition::TransactionCondition(char ch) :flag(0) 
+	{
+		condition.ch = ch;
+	}
+	TransactionCondition::TransactionCondition(int start, int end):flag(1)
+	{
+		condition.range.start_index = start;
+		condition.range.end_index = end;
+	}
+
 	bool TransactionCondition::match(int ch)
 	{
-		if (is_char) return ch == this->ch;
-		else return ch >= start_index && ch <= end_index;
+		switch (flag)
+		{
+		case -1:
+			return false;
+		case 0:
+			return condition.ch == ch;
+		case 1:
+			return ch >= condition.range.start_index && ch <= condition.range.end_index;
+		default:
+			return false;
+		}
 	}
 }

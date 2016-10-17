@@ -1,38 +1,58 @@
-#ifndef DIRECTED_EDGE
-#define DIRECTED_EDGE
-
+#ifndef DIRECTED_EDGE_H
+#define DIRECTED_EDGE_H
+#include<vector>
 namespace anyun_regex
 {
+	using std::vector;
 	class TransactionCondition
 	{
+		friend class DirectedEdge;
 	private:
-		char ch;
-		int start_index;
-		int end_index;
-		bool is_char;
+		union {
+			char ch;
+			struct
+			{
+				int start_index;
+				int end_index;
+			}range;
+		}condition;
+		/*
+		the flag:
+		-1 represent sigma conditon
+		0 represent single char
+		1 represent a range
+		*/
+		int flag;
 	public:
-		TransactionCondition(int start, int end);
+		TransactionCondition();
 		TransactionCondition(char ch);
+		TransactionCondition(int start, int end);
 		bool match(int ch);
 	};
-	class DirectedNode;
 	class DirectedEdge
 	{
+
 	public:
-		DirectedEdge();
-		DirectedEdge(const char *);
-		DirectedEdge(char);
-		DirectedEdge(char ch,DirectedNode *s,DirectedNode *e);
+		DirectedEdge(size_t id);
+		DirectedEdge(const char *str, size_t id);
+		DirectedEdge(char ch,size_t id);
+		DirectedEdge(char ch,size_t s_id, size_t  e_id,size_t id);
 		~DirectedEdge();
 		
-		void set_start_node(DirectedNode *node);
-		void set_end_node(DirectedNode *node);
-
+		void set_start_node(size_t node_id);
+		void set_end_node(size_t node_id);
+		size_t get_start_node_id();
+		size_t get_end_node_id();
+		bool is_sigma_edge();
+		bool accept(char ch);
+		size_t get_id();
 
 	private:
-		DirectedNode *start;
-		DirectedNode *end;
-		TransactionCondition *condition;
+		size_t id;
+		size_t start_id;
+		size_t end_id;
+		TransactionCondition condition;
+
 	};
 }
 

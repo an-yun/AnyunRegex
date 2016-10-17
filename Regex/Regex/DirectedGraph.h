@@ -1,7 +1,6 @@
-#ifndef DIRECTED_GRAPH
-#define DIRECTED_GRAPH
+#ifndef DIRECTED_GRAPH_H
+#define DIRECTED_GRAPH_H
 #include <vector>
-
 #include "DirectedNode.h"
 #include "DirectedEdge.h"
 
@@ -9,6 +8,7 @@ namespace anyun_regex
 {
 	class DirectedGraph
 	{
+		friend class NFA;
 	public:
 		DirectedGraph();
 		DirectedGraph(const char *pattern);
@@ -17,10 +17,11 @@ namespace anyun_regex
 		size_t v();
 
 	private:
-		const char *pattern;
-		DirectedNode *start_node;
-		DirectedNode *end_node;
-		vector<DirectedNode*> nodes;
+		const char * pattern;
+		size_t start_node_id;
+		size_t end_node_id;
+		vector<DirectedNode> nodes;
+		vector<DirectedEdge> edges;
 
 		void compile();
 	};

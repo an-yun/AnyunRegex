@@ -2,20 +2,22 @@
 
 namespace anyun_regex
 {
-	DirectedNode::DirectedNode(bool is_final = false):out_edges(),in_edges(),is_final_node(is_final)
+	DirectedNode::DirectedNode(size_t id, bool is_final):id(id), is_final_node(is_final),out_edges(), in_edges()
+	{
+	}
+	DirectedNode::DirectedNode(bool is_final): is_final_node(is_final),out_edges(),in_edges()
 	{
 	}
 	DirectedNode::~DirectedNode()
 	{
-		for (size_t i = 0; i < out_edges.size(); i++)  //only release out_edges memory
-			delete out_edges[i];
+		
 	}
-	const vector<DirectedEdge*>& anyun_regex::DirectedNode::get_out_edges()
+	const vector<size_t>& anyun_regex::DirectedNode::get_out_edges()
 	{
 		return out_edges;
 	}
 
-	const vector<DirectedEdge*>& DirectedNode::get_in_edges()
+	const vector<size_t>& DirectedNode::get_in_edges()
 	{
 		return in_edges;
 	}
@@ -30,14 +32,19 @@ namespace anyun_regex
 		return in_edges.size();
 	}
 
-	void DirectedNode::add_out_edge(DirectedEdge * out_edge)
+	size_t DirectedNode::get_id()
 	{
-		out_edges.push_back(out_edge);
+		return id;
 	}
 
-	void DirectedNode::add_in_edge(DirectedEdge * in_edge)
+	void DirectedNode::add_out_edge(size_t out_edge_id)
 	{
-		in_edges.push_back(in_edge);
+		out_edges.push_back(out_edge_id);
+	}
+
+	void DirectedNode::add_in_edge(size_t in_edge_id)
+	{
+		in_edges.push_back(in_edge_id);
 	}
 
 	bool DirectedNode::is_final()
@@ -48,6 +55,11 @@ namespace anyun_regex
 	void DirectedNode::set_final(bool f)
 	{
 		is_final_node = f;
+	}
+
+	void DirectedNode::set_id(size_t id)
+	{
+		this->id = id;
 	}
 
 

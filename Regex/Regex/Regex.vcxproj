@@ -149,12 +149,17 @@
     <ClInclude Include="DirectedEdge.h" />
     <ClInclude Include="DirectedGraph.h" />
     <ClInclude Include="DirectedNode.h" />
+    <ClInclude Include="NFA.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedNode.cpp" />
     <ClCompile Include="DirectedEdge.cpp" />
     <ClCompile Include="DirectedGraph.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NFA.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="test.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
