@@ -1,0 +1,45 @@
+10 ""
+
+1
+12
+ab
+123
+dfq
+343
+fdasf
+3435za
+erewqtt
+
+20 "aab"
+
+a
+aab
+dqerq
+qwreqew
+afdasfab
+aabdca
+adgaaabdfd
+aaaddegdaaab
+afddaf
+134jfda9fiabc
+aabdagdasgbwe
+aaaaaaaaaaaabaaaaaaaaaaaabaab
+adfadsfdasfdsaadfadsfdasfdsa
+a12AF@#()&&&*^*DJKJODkldopasfkdas;lfkdpasfudaisf
+aabdagdasgbwebaaaaaaaaaaaabaabF@#()&&&*^*DJKJODkld
+aaaaa3afdaaaaba234324aabaaaa341324aaaaaaaadfdasbaereabaab
+adfadsfdasfdsaa@#()&&&*^*DJKJODkldopasf:"'kdadfadsfdasfdsa
+a12AF@#()&&&*^*DJKJODkldopasfa234324aabaaaa341324aaaaaaaadfdasbaereabaaisf
+1234567890abcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}|:"?><"/*-+
+
+10 "#$"
+12
+ab
+cde
+etgds
+ade*&
+23(*)
+!#$*)
+*$&(*(#$))
+etgds^&%
+a12de*&)(*)

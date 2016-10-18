@@ -149,7 +149,9 @@
     <ClInclude Include="DirectedEdge.h" />
     <ClInclude Include="DirectedGraph.h" />
     <ClInclude Include="DirectedNode.h" />
+    <ClInclude Include="DriectedGraphTest.h" />
     <ClInclude Include="NFA.h" />
+    <ClInclude Include="NFATest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedNode.cpp" />
@@ -159,7 +161,8 @@
     <ClCompile Include="NFA.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="test.txt" />
+    <Text Include="and_test_case.txt" />
+    <Text Include="C++.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

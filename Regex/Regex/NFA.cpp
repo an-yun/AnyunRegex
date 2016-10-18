@@ -29,7 +29,7 @@ namespace anyun_regex
 		{
 			is_find = (text[offset]!='\0');
 			offset++;
-			return is_find;
+			return true;
 		}
 		else is_find = false;
 
@@ -57,14 +57,15 @@ namespace anyun_regex
 
 	void NFA::match(const char * text, postoin_type offset)
 	{
-		is_find = true;
+		is_find = (digraph.parse_result == REGEX_PARSE_OK);
 		this->offset = offset;
 		this->text = text;
 	}
 
 	char* NFA::get_match(char *match)
 	{
-		if (is_find)
+		if (start_is_final && !is_find) return match;
+		else if (is_find)
 		{
 			char *end =copy(text + match_start, text + match_end, match);
 			*end = '\0';
@@ -85,7 +86,7 @@ namespace anyun_regex
 
 	const char * NFA::get_pattern()
 	{
-		return digraph.pattern;
+		return digraph.pattern.c_str();
 	}
 
 	void NFA::get_sigma_closure(list<size_t>& source, bool &is_find)

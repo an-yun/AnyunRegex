@@ -1,6 +1,8 @@
 #ifndef DIRECTED_EDGE_H
 #define DIRECTED_EDGE_H
 #include<vector>
+
+
 namespace anyun_regex
 {
 	using std::vector;
@@ -34,6 +36,7 @@ namespace anyun_regex
 
 	public:
 		DirectedEdge(size_t id);
+		DirectedEdge(size_t s_id, size_t  e_id, size_t id);
 		DirectedEdge(const char *str, size_t id);
 		DirectedEdge(char ch,size_t id);
 		DirectedEdge(char ch,size_t s_id, size_t  e_id,size_t id);

@@ -3,11 +3,14 @@
 namespace anyun_regex
 {
 	DirectedEdge::DirectedEdge(size_t id) : id(id) {}
-	DirectedEdge::DirectedEdge(const char *str, size_t id)
+	DirectedEdge::DirectedEdge(size_t s_id, size_t e_id, size_t id):id(id), start_id(s_id), end_id(e_id)
+	{
+	}
+	DirectedEdge::DirectedEdge(const char *str, size_t id): id(id)
 	{
 
 	}
-	DirectedEdge::DirectedEdge(char ch, size_t id) : condition(ch) {}
+	DirectedEdge::DirectedEdge(char ch, size_t id) : id(id),condition(ch) {}
 	DirectedEdge::DirectedEdge(char ch, size_t s_id, size_t  e_id, size_t id) : id(id), start_id(s_id), end_id(e_id),condition(ch)
 	{
 
@@ -48,7 +51,8 @@ namespace anyun_regex
 	{
 		return id;
 	}
-	TransactionCondition::TransactionCondition() :flag(-1) //sigma condition,namely every char is matched
+	//this default construction is sigma condition,namely sigma(the empty edge)
+	TransactionCondition::TransactionCondition() :flag(-1) 
 	{
 	}
 	TransactionCondition::TransactionCondition(char ch) :flag(0) 

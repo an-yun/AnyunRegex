@@ -27,6 +27,12 @@
     <ClInclude Include="NFA.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="NFATest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DriectedGraphTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,7 +52,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="test.txt">
+    <Text Include="and_test_case.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="C++.txt">
       <Filter>资源文件</Filter>
     </Text>
   </ItemGroup>
