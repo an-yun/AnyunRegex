@@ -29,7 +29,9 @@ namespace anyun_regex
 
 		bool find();
 		void match(const char * text,postoin_type offset =0);
-		char* get_match(char *match);
+		void match(const string & text, postoin_type offset = 0);
+		string get_match();
+
 		size_t get_match_start();
 		size_t get_match_end();
 		const char *get_pattern();
@@ -38,7 +40,7 @@ namespace anyun_regex
 	private:
 		DirectedGraph digraph;
 		list<size_t> start_state;
-		const char* text;
+		string text;
 		size_t match_start;
 		size_t match_end;
 		postoin_type offset;

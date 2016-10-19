@@ -137,14 +137,8 @@ namespace anyun_regex
 			ConnectedFragment fra1 = operands.top();
 			operands.pop();
 
-			//add zero repeat
-			DirectedEdge sigma_edge1(edges.size());
-			edges.push_back(sigma_edge1);
-			ConnectedFragment fra2 = merge_fragments(fra1, ConnectedFragment(sigma_edge1.get_id(),sigma_edge1.get_id()));
-
-			//add one more repeat
-
-			//operands.push();
+			//add self connect and push
+			operands.push(self_connect_fragment(fra1));
 			break;
 		}
 		default:
@@ -226,14 +220,22 @@ namespace anyun_regex
 		nodes[out_node_id].add_in_edge(fragment.out_edge_id);
 	}
 
-	size_t DirectedGraph::add_in_sigma_edge(size_t node_id)
+	inline size_t DirectedGraph::add_in_sigma_edge(size_t node_id)
 	{
-		return size_t();//return sigma_edge id
+		//connect in  edge
+		DirectedEdge sigma_edge(edges.size());
+		edges.push_back(sigma_edge);
+		connect_out_node_to_edge(node_id, sigma_edge.get_id());
+		return sigma_edge.get_id();  //return sigma_edge id
 	}
 
-	size_t DirectedGraph::add_out_sigma_edge(size_t node_id)
+	inline size_t DirectedGraph::add_out_sigma_edge(size_t node_id)
 	{
-		return size_t();//return sigma_edge id
+		//connect out edges
+		DirectedEdge sigma_edge(edges.size());
+		edges.push_back(sigma_edge);
+		connect_in_node_to_edge(node_id, sigma_edge.get_id());
+		return sigma_edge.get_id();  //return sigma_edge id
 	}
 	/*
 	connect fragment to itself
@@ -248,8 +250,12 @@ namespace anyun_regex
 		nodes.push_back(node);
 		//connect to itself
 		connect_in_node(node.get_id(), fragment);
-		connect_in_node(node.get_id(), fragment);
-		return ConnectedFragment(0,0);
+		connect_out_node(node.get_id(), fragment);
+		//add in and out edge
+		size_t in_edge_id = add_in_sigma_edge(node.get_id());
+		size_t out_edge_id = add_out_sigma_edge(node.get_id());
+
+		return ConnectedFragment(in_edge_id, out_edge_id);
 	}
 	/*
 	connect fragment1 to fragment1
@@ -286,14 +292,10 @@ namespace anyun_regex
 		connect_out_node(out_node.get_id(), fragment1);
 		connect_out_node(out_node.get_id(), fragment2);
 		//connect in and out edges
-		DirectedEdge sigma_edge1(edges.size());
-		edges.push_back(sigma_edge1);
-		connect_out_node_to_edge(in_node.get_id(), sigma_edge1.get_id());
-		DirectedEdge sigma_edge2(edges.size());
-		edges.push_back(sigma_edge2);
-		connect_in_node_to_edge(out_node.get_id(), sigma_edge2.get_id());
+		size_t in_edge_id = add_in_sigma_edge(in_node.get_id());
+		size_t out_edge_id = add_out_sigma_edge(out_node.get_id());
 		
-		return ConnectedFragment(sigma_edge1.get_id(), sigma_edge2.get_id());
+		return ConnectedFragment(in_edge_id, out_edge_id);
 	}
 
 	/*

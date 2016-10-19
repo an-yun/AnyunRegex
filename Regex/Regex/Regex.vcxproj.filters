@@ -39,6 +39,9 @@
     <ClInclude Include="NFATest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
+    <ClInclude Include="RegexTest.h">
+      <Filter>头文件\test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedEdge.cpp">
@@ -54,6 +57,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="NFATest.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="RegexTest.cpp">
       <Filter>源文件\test</Filter>
     </ClCompile>
   </ItemGroup>

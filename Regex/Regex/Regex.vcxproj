@@ -152,6 +152,7 @@
     <ClInclude Include="DriectedGraphTest.h" />
     <ClInclude Include="NFA.h" />
     <ClInclude Include="NFATest.h" />
+    <ClInclude Include="RegexTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedNode.cpp" />
@@ -159,6 +160,8 @@
     <ClCompile Include="DirectedGraph.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NFA.cpp" />
+    <ClCompile Include="NFATest.cpp" />
+    <ClCompile Include="RegexTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="and_test_case.txt" />

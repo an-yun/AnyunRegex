@@ -2,17 +2,17 @@
 
 namespace anyun_regex
 {
-	NFA::NFA():text(nullptr),offset(0),is_find(false)
+	NFA::NFA():offset(0),is_find(false)
 	{
 
 	}
 
-	NFA::NFA(const char * pattern) : digraph(pattern), start_state({ 0 }),text(nullptr), offset(0), start_is_final(false),is_find(false)
+	NFA::NFA(const char * pattern) : digraph(pattern), start_state({ 0 }),offset(0), start_is_final(false),is_find(false)
 	{
 		if (digraph.parse_result == REGEX_PARSE_OK)get_sigma_closure(start_state, start_is_final);
 	}
 
-	NFA::NFA(const string & pattern) :digraph(pattern), start_state({ 0 }), text(nullptr), offset(0), start_is_final(false), is_find(false)
+	NFA::NFA(const string & pattern) :digraph(pattern), start_state({ 0 }), offset(0), start_is_final(false), is_find(false)
 	{
 		if(digraph.parse_result== REGEX_PARSE_OK)get_sigma_closure(start_state, start_is_final);
 	}
@@ -25,58 +25,60 @@ namespace anyun_regex
 	{
 		//if last time search could not find,then return false
 		if (!is_find) return false;
-		
 		//begin to match ,start from the offset
 		size_t start = offset;
 		match_start = match_end = offset;
+		is_find = false;
 
-		if (start_is_final)
-		{
-			is_find = (text[offset]!='\0');
-			offset++;
-			return true;
-		}
-		else is_find = false;
-
-
-		while ((!is_find) && text[start] != '\0')
+		while (!is_find && text[start] != '\0')
 		{
 			list<size_t> state = start_state;
+			is_find = start_is_final;
 			for (size_t index = start; !state.empty() && text[index] != '\0'; index++)
 			{
-				get_next_state(state, text[index], is_find);
 				//if match,set is_find to true,save the result range to match ,else set false;
 				if (is_find)
 				{
 					match_start = start;
-					match_end = index+1;
-					offset = start + 1;
-					break;
+					match_end = index;
+					offset = index;
+					//if greedy remove break
 				}
+				get_next_state(state, text[index], is_find);
 			}
-			start++;
+			if(!is_find && text[start] != '\0')start++;
 		}
-
+		if (start == offset)
+		{
+			if (text[offset] == '\0')
+			{
+				is_find = false;
+				return true;
+			}
+			else
+				offset++;
+		}
 		return is_find;
+
 	}
 
 	void NFA::match(const char * text, postoin_type offset)
+	{
+		match(string(text));
+	}
+
+	void NFA::match(const string & text, postoin_type offset)
 	{
 		is_find = (digraph.parse_result == REGEX_PARSE_OK);
 		this->offset = offset;
 		this->text = text;
 	}
 
-	char* NFA::get_match(char *match)
+
+
+	string NFA::get_match()
 	{
-		if (start_is_final && !is_find) return match;
-		else if (is_find)
-		{
-			char *end =copy(text + match_start, text + match_end, match);
-			*end = '\0';
-			return end;
-		}
-		else return nullptr;
+		return text.substr(match_start,match_end-match_start);
 	}
 
 	size_t NFA::get_match_start()
