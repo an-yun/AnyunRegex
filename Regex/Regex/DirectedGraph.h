@@ -60,19 +60,41 @@ namespace anyun_regex
 		void operate(size_t opt, stack<ConnectedFragment> &operands);
 		void connect_in_node(size_t in_node_id, const ConnectedFragment &fragment);
 		void connect_out_node(size_t out_node_id, const ConnectedFragment &fragment);
+		size_t add_in_sigma_edge(size_t node_id);
+		size_t add_out_sigma_edge(size_t node_id);
 		/*
-		connect fra1 to fra2 , ->fra1->fra2->
+		connect fragment to itself
+          <fra<
+		 \     /
+		->  O  ->
+
+		*/
+		ConnectedFragment self_connect_fragment(const ConnectedFragment &fragment);
+		/*
+		connect fragment1 to fragment1 
+		->fra1->fra2->
 		*/
 		ConnectedFragment connect_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2);
 		/*
-		merge fra1 and  fra2 together
-		   fra1
-		  /    \
-	    ->      ->
-		  \    /
-		   fra2
+		merge fragment1 and  fragment2 together
+		   
+		   >fra1>
+		  /      \
+	   ->O        O->
+		  \      /
+		   >fra2>
 		*/
 		ConnectedFragment merge_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2);
+		/*
+		reverse merge fragment1 and  fragment2 together
+
+		   >fra1>
+		  /      \
+	    ->O       O->
+		  \      /
+		   <fra2<
+		*/
+		ConnectedFragment reverse_merge_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2);
 		void connect_in_node_to_edge(size_t in_node_id, size_t edge_id);
 		void connect_out_node_to_edge(size_t out_node_id, size_t edge_id);
 

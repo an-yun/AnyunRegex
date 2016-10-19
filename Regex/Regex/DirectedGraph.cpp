@@ -132,6 +132,21 @@ namespace anyun_regex
 				operands.push(merge_fragments(fra1, fra2));
 				break;
 			}
+		case '*':
+		{
+			ConnectedFragment fra1 = operands.top();
+			operands.pop();
+
+			//add zero repeat
+			DirectedEdge sigma_edge1(edges.size());
+			edges.push_back(sigma_edge1);
+			ConnectedFragment fra2 = merge_fragments(fra1, ConnectedFragment(sigma_edge1.get_id(),sigma_edge1.get_id()));
+
+			//add one more repeat
+
+			//operands.push();
+			break;
+		}
 		default:
 			break;
 		}
@@ -211,8 +226,34 @@ namespace anyun_regex
 		nodes[out_node_id].add_in_edge(fragment.out_edge_id);
 	}
 
+	size_t DirectedGraph::add_in_sigma_edge(size_t node_id)
+	{
+		return size_t();//return sigma_edge id
+	}
+
+	size_t DirectedGraph::add_out_sigma_edge(size_t node_id)
+	{
+		return size_t();//return sigma_edge id
+	}
 	/*
-	connect fra1 to fra2 , ->fra1->fra2->
+	connect fragment to itself
+	  <fra<
+	 \     /
+	->  O  ->
+	*/
+	ConnectedFragment DirectedGraph::self_connect_fragment(const ConnectedFragment & fragment)
+	{
+		//the selfnode
+		DirectedNode node(nodes.size());
+		nodes.push_back(node);
+		//connect to itself
+		connect_in_node(node.get_id(), fragment);
+		connect_in_node(node.get_id(), fragment);
+		return ConnectedFragment(0,0);
+	}
+	/*
+	connect fragment1 to fragment1
+	->fra1->fra2->
 	*/
 	inline ConnectedFragment DirectedGraph::connect_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
 	{
@@ -224,12 +265,13 @@ namespace anyun_regex
 	}
 
 	/*
-	merge fra1 and  fra2 together
-	 fra1
-	/    \
-  ->      ->
-	\    /
-	 fra2
+	merge fragment1 and  fragment2 together
+
+	    >fra1>
+	   /      \
+	->O        O->
+	   \      /
+	    >fra2>
 	*/
 	inline ConnectedFragment DirectedGraph::merge_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
 	{
@@ -252,6 +294,21 @@ namespace anyun_regex
 		connect_in_node_to_edge(out_node.get_id(), sigma_edge2.get_id());
 		
 		return ConnectedFragment(sigma_edge1.get_id(), sigma_edge2.get_id());
+	}
+
+	/*
+	reverse merge fragment1 and  fragment2 together
+
+	    >fra1>
+	   /      \
+	->O       O->
+	   \      /
+	    <fra2<
+	*/
+	inline ConnectedFragment DirectedGraph::reverse_merge_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
+	{
+		//to do
+		return ConnectedFragment(0,0);
 	}
 
 	inline void DirectedGraph::connect_in_node_to_edge(size_t in_node_id, size_t edge_id)
