@@ -23,11 +23,12 @@ namespace anyun_regex
 		-1 represent sigma conditon
 		0 represent single char
 		1 represent a range
+		2 represent can accept any char
 		*/
 		int flag;
 	public:
-		TransactionCondition();
 		TransactionCondition(char ch);
+		TransactionCondition(bool is_dot = false);
 		TransactionCondition(int start, int end);
 		bool match(int ch);
 	};
@@ -35,7 +36,7 @@ namespace anyun_regex
 	{
 
 	public:
-		DirectedEdge(size_t id);
+		DirectedEdge(size_t id,bool is_dot = false);
 		DirectedEdge(size_t s_id, size_t  e_id, size_t id);
 		DirectedEdge(const char *str, size_t id);
 		DirectedEdge(char ch,size_t id);

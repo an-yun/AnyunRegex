@@ -9,7 +9,12 @@ namespace anyun_regex
 
 	NFA::NFA(const char * pattern) : digraph(pattern), start_state({ 0 }),text(nullptr), offset(0), start_is_final(false),is_find(false)
 	{
-		get_sigma_closure(start_state, start_is_final);
+		if (digraph.parse_result == REGEX_PARSE_OK)get_sigma_closure(start_state, start_is_final);
+	}
+
+	NFA::NFA(const string & pattern) :digraph(pattern), start_state({ 0 }), text(nullptr), offset(0), start_is_final(false), is_find(false)
+	{
+		if(digraph.parse_result== REGEX_PARSE_OK)get_sigma_closure(start_state, start_is_final);
 	}
 
 	NFA::~NFA()

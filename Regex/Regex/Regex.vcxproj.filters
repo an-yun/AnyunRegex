@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\test">
+      <UniqueIdentifier>{a603d73d-8f7d-4d94-bbb1-e8fdde051c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\test">
+      <UniqueIdentifier>{d7a38b0d-4ae4-4ac9-a88e-49b222c09f06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectedGraph.h">
@@ -27,17 +33,14 @@
     <ClInclude Include="NFA.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="NFATest.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="DriectedGraphTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="NFATest.h">
+      <Filter>头文件\test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="DirectedEdge.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -50,12 +53,24 @@
     <ClCompile Include="NFA.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="and_test_case.txt">
       <Filter>资源文件</Filter>
     </Text>
     <Text Include="C++.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="or_test_case.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="dot_test_case.txt">
+      <Filter>资源文件</Filter>
+    </Text>
+    <Text Include="question_mark_test_case.txt">
       <Filter>资源文件</Filter>
     </Text>
   </ItemGroup>

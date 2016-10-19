@@ -24,6 +24,7 @@ namespace anyun_regex
 
 		NFA();
 		NFA(const char *pattern);
+		NFA(const string & pattern);
 		~NFA();
 
 		bool find();

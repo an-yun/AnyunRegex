@@ -1,0 +1,42 @@
+10 "a|b"
+a
+b
+ab
+aaa
+bbbb
+134erq
+abceefaeq
+ewqtefadsfqrte
+ewrertrtweryrrety4
+$^(4ad)(^(03431)))923
+
+15 "a1|2bc"
+a
+b
+2bc
+a1aa
+a1bca
+ba2bcbb
+134erq
+abcea1bcaefaeq
+ewqtefadsfqrte
+ewrertrtweryrrety4
+$^(4ad)(^(03431
+a111bbbbcc$^cca_)&
+b1#a2^22a2bcbbbcbb)))923
+C++ Is Designed by	Bjarne Stroustrup
+can you find me is a1|2bc match this a12bc ro match this a1bc
+
+5 "am|is|are"
+are you ok?
+I am fine!
+thank you.
+who is he?
+can the regex engine find me aa aa aa ia sr s  ar aa a aam ,ok you get it
+
+5 "he(r|ll)o"
+hello
+hero
+are you ok?
+I am fine!
+can the regex engine find me aa aa aa ia sr s  ar aa a aam ,ok you get it wrong

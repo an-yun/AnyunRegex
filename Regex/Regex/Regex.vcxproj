@@ -163,6 +163,9 @@
   <ItemGroup>
     <Text Include="and_test_case.txt" />
     <Text Include="C++.txt" />
+    <Text Include="dot_test_case.txt" />
+    <Text Include="or_test_case.txt" />
+    <Text Include="question_mark_test_case.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

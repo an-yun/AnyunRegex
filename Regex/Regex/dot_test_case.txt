@@ -1,0 +1,30 @@
+5 "a.."
+hello
+hero
+are you ok?
+I am fine!
+can the regex engine find me aa aa aa ia sr s  ar aa a aam ,ok you get it wrong
+
+10 "a.."
+am
+add
+are
+word
+nice to meet you
+the abs of -1 is 1
+can this match?
+this should not be apper,isn't it? no
+ computer scientist
+not A in this sentence
+
+10 "a..|hello|you"
+am
+add
+are
+word
+nice to meet you
+the abs of -1 is 1
+can this match?
+this should not be apper,isn't it? no
+ computer scientist
+not A in this sentence

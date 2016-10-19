@@ -2,7 +2,7 @@
 
 namespace anyun_regex
 {
-	DirectedEdge::DirectedEdge(size_t id) : id(id) {}
+	DirectedEdge::DirectedEdge(size_t id,bool is_dot) : id(id),condition(is_dot) {}
 	DirectedEdge::DirectedEdge(size_t s_id, size_t e_id, size_t id):id(id), start_id(s_id), end_id(e_id)
 	{
 	}
@@ -10,7 +10,12 @@ namespace anyun_regex
 	{
 
 	}
-	DirectedEdge::DirectedEdge(char ch, size_t id) : id(id),condition(ch) {}
+	DirectedEdge::DirectedEdge(char ch, size_t id) : id(id)
+	{
+		//for the dot char
+		if (ch == '.')condition = TransactionCondition(true);
+		else condition = TransactionCondition(ch);
+	}
 	DirectedEdge::DirectedEdge(char ch, size_t s_id, size_t  e_id, size_t id) : id(id), start_id(s_id), end_id(e_id),condition(ch)
 	{
 
@@ -51,9 +56,15 @@ namespace anyun_regex
 	{
 		return id;
 	}
-	//this default construction is sigma condition,namely sigma(the empty edge)
-	TransactionCondition::TransactionCondition() :flag(-1) 
+	/*
+	if is_dot is true which means the condition can accept any char
+	else is sigma condition,namely sigma(the empty edge),not accept any char
+	
+	*/
+	TransactionCondition::TransactionCondition(bool is_dot)
 	{
+		if (is_dot)flag = 2;
+		else flag = -1;
 	}
 	TransactionCondition::TransactionCondition(char ch) :flag(0) 
 	{
@@ -75,6 +86,8 @@ namespace anyun_regex
 			return condition.ch == ch;
 		case 1:
 			return ch >= condition.range.start_index && ch <= condition.range.end_index;
+		case 2:
+			return true;
 		default:
 			return false;
 		}

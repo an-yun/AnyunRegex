@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <stack>
+#include <list>
 #include <string>
 #include <assert.h>
 #include "DirectedNode.h"
@@ -12,6 +13,7 @@ namespace anyun_regex
 {
 	using std::map;
 	using std::stack;
+	using std::list;
 	using std::string;
 	enum RegexParseCode {
 		REGEX_PARSE_OK = 0,
@@ -34,15 +36,16 @@ namespace anyun_regex
 	public:
 		DirectedGraph();
 		DirectedGraph(const char *pattern);
+		DirectedGraph(const string &pattern);
 		~DirectedGraph();
-		/*
-		static const char SINGLE_SPECAIL_CAHR[];
+		
+		static const char SINGLE_SPECAIL_CAHRS[];
 		static const size_t SINGLE_SPECAIL_CAHR_SIZE;
-		static bool is_special_char(char ch);
-		*/
+		static bool is_special_char(size_t ch);
+		static bool is_char_in(size_t ch, const char *str,size_t length);
 		size_t v();
 
-		RegexParseCode compile(const char *pattern);
+		RegexParseCode compile(const string &pattern);
 
 
 	private:
@@ -52,16 +55,33 @@ namespace anyun_regex
 		vector<DirectedNode> nodes;
 		vector<DirectedEdge> edges;
 		RegexParseCode parse_result;
-		size_t parse_index;
 		
 		static int get_priority(size_t op1,size_t op2);
 		void operate(size_t opt, stack<ConnectedFragment> &operands);
 		void connect_in_node(size_t in_node_id, const ConnectedFragment &fragment);
 		void connect_out_node(size_t out_node_id, const ConnectedFragment &fragment);
-		void connect_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2);
+		/*
+		connect fra1 to fra2 , ->fra1->fra2->
+		*/
+		ConnectedFragment connect_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2);
+		/*
+		merge fra1 and  fra2 together
+		   fra1
+		  /    \
+	    ->      ->
+		  \    /
+		   fra2
+		*/
+		ConnectedFragment merge_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2);
 		void connect_in_node_to_edge(size_t in_node_id, size_t edge_id);
 		void connect_out_node_to_edge(size_t out_node_id, size_t edge_id);
-		ConnectedFragment parse();
+
+		//pre_process_pattern add the dot \. (means concatenation  operator) to pattern
+		string pre_process_pattern(const string &p);
+		ConnectedFragment parse(string p);
+		//compare op's priority with operators.top()'s
+		//accroding the result of  comparation to decide it should push or operate
+		void normal_priority_parse(size_t op, stack<size_t> &operators, stack<ConnectedFragment>& operands, size_t &parse_index);
 	};
 }
 
