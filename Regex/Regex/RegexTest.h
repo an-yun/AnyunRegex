@@ -8,30 +8,30 @@
 
 #include "NFA.h"
 
-using std::string;
-using std::ifstream;
-using std::cout;
-using std::endl;
-using anyun_regex::NFA;
-
-int test_exameple();
-int test_files();
 
 namespace anyun_regex
 {
 	using std::string;
+	using std::regex;
+	using std::smatch;
+	using std::sregex_iterator;
+	using std::string;
+	using std::ifstream;
+	using std::cout;
+	using std::endl;
+	using anyun_regex::NFA;
 	
 	class LibraryRegex
 	{
 	public:
 		LibraryRegex();
-		LibraryRegex(const string &);
 
 	private:
 
 	};
 
-
+	int test_exameple();
+	int test_files();
 }
 
 #endif // !REGEX_TEST_H

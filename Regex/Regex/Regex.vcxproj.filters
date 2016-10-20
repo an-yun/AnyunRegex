@@ -33,13 +33,13 @@
     <ClInclude Include="NFA.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="DriectedGraphTest.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="NFATest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
     <ClInclude Include="RegexTest.h">
+      <Filter>头文件\test</Filter>
+    </ClInclude>
+    <ClInclude Include="DriectedGraphTest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
   </ItemGroup>

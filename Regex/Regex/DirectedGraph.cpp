@@ -395,8 +395,8 @@ namespace anyun_regex
 				normal_priority_parse('?', operators, operands, parse_index);
 				break;
 			case '*':
-				//to do
-				parse_index++;
+				//to test
+				normal_priority_parse('?', operators, operands, parse_index);
 				break;
 			//the single char
 			default:
