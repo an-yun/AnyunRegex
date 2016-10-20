@@ -42,5 +42,6 @@ namespace anyun_regex
 	};
 
 	int singal_test(const string& pattern ,const string &text);
+	int test_standard(const string& pattern, const string &text);
 }
 #endif // !NFA_TEST_H

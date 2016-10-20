@@ -6,6 +6,6 @@
 
 int main(int argc, char **argv)
 {
-	anyun_regex::singal_test("a|b","aaabbb");
+	anyun_regex::singal_test("(a*)|b*","aaabbb");
 	return 0;
 }

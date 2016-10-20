@@ -56,4 +56,14 @@ namespace anyun_regex
 		std::cout << "Test pass?" << (begin == end && !nfa.find() ? "true" : "false") << std::endl;
 		return 0;
 	}
+	int test_standard(const string& pattern, const string &text)
+	{
+		regex standard_regex(pattern, std::regex_constants::ECMAScript);
+		sregex_iterator begin(text.begin(), text.end(), standard_regex);
+		sregex_iterator end = std::sregex_iterator();
+		int i = 1;
+		for (; begin != end ; begin++)
+			std::cout <<  i++ << ":" << (*begin).str() << std::endl;
+		return 0;
+	}
 }

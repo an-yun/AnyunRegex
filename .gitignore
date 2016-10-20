@@ -75,3 +75,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/Regex/Regex.VC.VC.opendb
