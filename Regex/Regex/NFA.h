@@ -41,14 +41,15 @@ namespace anyun_regex
 		DirectedGraph digraph;
 		list<size_t> start_state;
 		string text;
+		size_t text_length;
 		size_t match_start;
 		size_t match_end;
 		postoin_type offset;
 		bool start_is_final;
 		bool is_find;
 
-		void get_sigma_closure(list<size_t> &source,bool &is_find);
-		void get_next_state(list<size_t> & state, char ch,bool &is_find);
+		bool get_sigma_closure(list<size_t> &source);
+		bool get_next_state(list<size_t> & state, char ch);
 	};
 
 }

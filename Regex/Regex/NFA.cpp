@@ -9,12 +9,12 @@ namespace anyun_regex
 
 	NFA::NFA(const char * pattern) : digraph(pattern), start_state({ 0 }),offset(0), start_is_final(false),is_find(false)
 	{
-		if (digraph.parse_result == REGEX_PARSE_OK)get_sigma_closure(start_state, start_is_final);
+		if (digraph.parse_result == REGEX_PARSE_OK)start_is_final =get_sigma_closure(start_state);
 	}
 
 	NFA::NFA(const string & pattern) :digraph(pattern), start_state({ 0 }), offset(0), start_is_final(false), is_find(false)
 	{
-		if(digraph.parse_result== REGEX_PARSE_OK)get_sigma_closure(start_state, start_is_final);
+		if (digraph.parse_result == REGEX_PARSE_OK)start_is_final = get_sigma_closure(start_state);
 	}
 
 	NFA::~NFA()
@@ -23,40 +23,41 @@ namespace anyun_regex
 
 	bool NFA::find()
 	{
-		//if last time search could not find,then return false
+		//if last search could not find,then return false
 		if (!is_find) return false;
+		if (offset > text_length) return is_find = false;
 		//begin to match ,start from the offset
 		size_t start = offset;
 		match_start = match_end = offset;
 		is_find = false;
-
-		while (!is_find && text[start] != '\0')
+		bool get_final = false;
+		while (!is_find && start <= text_length)
 		{
 			list<size_t> state = start_state;
-			is_find = start_is_final;
-			for (size_t index = start; !state.empty() && text[index] != '\0'; index++)
+			get_final = start_is_final;
+			if (get_final)
 			{
+				match_start = start;
+				match_end = start;
+				offset = start+1;
+				is_find = true;
+				//if greedy remove break
+			}
+			for (size_t index = start;!state.empty() && index < text_length; index++)
+			{
+
+				get_final = get_next_state(state, text[index]);
 				//if match,set is_find to true,save the result range to match ,else set false;
-				if (is_find)
+				if (get_final)
 				{
 					match_start = start;
-					match_end = index;
-					offset = index;
+					match_end = index+1;
+					offset = index+1;
+					is_find = true;
 					//if greedy remove break
 				}
-				get_next_state(state, text[index], is_find);
 			}
-			if(!is_find && text[start] != '\0')start++;
-		}
-		if (start == offset)
-		{
-			if (text[offset] == '\0')
-			{
-				is_find = false;
-				return true;
-			}
-			else
-				offset++;
+			start++;
 		}
 		return is_find;
 
@@ -72,6 +73,7 @@ namespace anyun_regex
 		is_find = (digraph.parse_result == REGEX_PARSE_OK);
 		this->offset = offset;
 		this->text = text;
+		this->text_length = text.size();
 	}
 
 
@@ -96,9 +98,9 @@ namespace anyun_regex
 		return digraph.pattern.c_str();
 	}
 
-	void NFA::get_sigma_closure(list<size_t>& source, bool &is_find)
+	bool NFA::get_sigma_closure(list<size_t>& source)
 	{
-
+		bool get_final = false;
 		//breath first search
 		vector<bool> visited(digraph.v(), false);
 		queue<size_t> node_ids;
@@ -109,7 +111,7 @@ namespace anyun_regex
 			size_t id = *b;
 			visited[id] = true;
 			node_ids.push(id);
-			if (digraph.nodes[id].is_final())is_find = true;
+			if (digraph.nodes[id].is_final())get_final = true;
 		}
 
 		while (!node_ids.empty())
@@ -126,13 +128,14 @@ namespace anyun_regex
 					visited[end_node_id] = true;
 					node_ids.push(end_node_id);
 					source.push_back(end_node_id);
-					if (digraph.nodes[end_node_id].is_final())is_find = true;
+					if (digraph.nodes[end_node_id].is_final())get_final = true;
 				}
 			}
 
 		}
+		return get_final;
 	}
-	void NFA::get_next_state(list<size_t>& state, char ch, bool &is_find)
+	bool NFA::get_next_state(list<size_t>& state, char ch)
 	{
 		set<size_t> next_state;
 		vector<DirectedEdge> &edges = digraph.edges;
@@ -145,6 +148,6 @@ namespace anyun_regex
 		}
 		state.clear();
 		copy(next_state.begin(), next_state.end(), back_inserter(state));
-		get_sigma_closure(state,is_find);
+		return get_sigma_closure(state);
 	}
 }

@@ -7,7 +7,7 @@ namespace anyun_regex
 	-----------------------these code can be used again------------------------------------
 	2016-10-18 10:23  
 	*/
-	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','|'};
+	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','|','*','?'};
 	const size_t DirectedGraph::SINGLE_SPECAIL_CAHR_SIZE = sizeof(DirectedGraph::SINGLE_SPECAIL_CAHRS) / sizeof(char);
 	inline bool DirectedGraph::is_special_char(size_t ch)
 	{
@@ -396,7 +396,7 @@ namespace anyun_regex
 				break;
 			case '*':
 				//to test
-				normal_priority_parse('?', operators, operands, parse_index);
+				normal_priority_parse('*', operators, operands, parse_index);
 				break;
 			//the single char
 			default:

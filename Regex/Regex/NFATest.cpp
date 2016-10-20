@@ -40,13 +40,11 @@ namespace anyun_regex
 
 	int testNFA()
 	{
-		std::string s =
-			"aaabbb";
-		std::regex a_b_more("a*b*");
-		anyun_regex::NFA nfa("a*b*");
-		std::sregex_iterator begin =
-			std::sregex_iterator(s.begin(), s.end(), a_b_more);
-		std::sregex_iterator end = std::sregex_iterator();
+		string s ="aaabbb";
+		regex a_b_more("a*b*");
+		NFA nfa("a*b*");
+		sregex_iterator begin(s.begin(), s.end(), a_b_more);
+		sregex_iterator end = std::sregex_iterator();
 		nfa.match(s);
 		int i = 1;
 		for (; begin != end && nfa.find(); begin++)

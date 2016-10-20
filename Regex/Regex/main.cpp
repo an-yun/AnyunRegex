@@ -6,6 +6,6 @@
 
 int main(int argc, char **argv)
 {
-	testNFA();
+	anyun_regex::testNFA();
 	return 0;
 }
