@@ -46,14 +46,15 @@ namespace anyun_regex
 
 	int test_files()
 	{
+		string parent_path = "../testfiles/";
 		string test_files[] = { "and_test_case.txt" ,"or_test_case.txt" ,"dot_test_case.txt" ,"question_mark_test_case.txt" };
 		ifstream input;
 		for (size_t i = 0; i < sizeof(test_files) / sizeof(string); i++)
 		{
-			input.open(test_files[i]);
+			input.open(parent_path+test_files[i]);
 			if (input.bad())
 			{
-				std::cout << test_files[i] << " file error!" << std::endl;
+				std::cout << parent_path +test_files[i] << " file error!" << std::endl;
 				return 0;
 			}
 			cout << "-------------------------------------" << test_files[i] << "-----------------------------------------------------" << endl;

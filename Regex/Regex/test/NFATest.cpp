@@ -6,11 +6,11 @@ namespace anyun_regex
 	{
 	}
 
-	NFATest::NFATest(const string & pattern)
+	NFATest::NFATest(const string & pattern) :pattern(pattern), standard_regex(pattern)
 	{
 	}
 
-	NFATest::NFATest(const string & pattern, const string & test_file_path)
+	NFATest::NFATest(const string & pattern, const string & test_file_path) : pattern(pattern), standard_regex(pattern)
 	{
 	}
 
@@ -38,14 +38,18 @@ namespace anyun_regex
 	{
 	}
 
-	int testNFA()
+	void NFATest::read_testcases_from_file(const string & test_file_path)
 	{
-		string s ="aaabbb";
-		regex a_b_more("a*b*");
-		NFA nfa("a*b*");
-		sregex_iterator begin(s.begin(), s.end(), a_b_more);
+
+	}
+
+	int singal_test(const string& pattern, const string &text)
+	{
+		regex standard_regex(pattern);
+		NFA nfa(pattern);
+		sregex_iterator begin(text.begin(), text.end(), standard_regex);
 		sregex_iterator end = std::sregex_iterator();
-		nfa.match(s);
+		nfa.match(text);
 		int i = 1;
 		for (; begin != end && nfa.find(); begin++)
 			std::cout << "test " << i++ << ":" << (*begin).str() << " " << nfa.get_match() << std::endl;

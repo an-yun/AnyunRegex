@@ -6,7 +6,7 @@
 #include <string>
 #include <regex>
 
-#include "NFA.h"
+#include "../NFA.h"
 
 
 namespace anyun_regex

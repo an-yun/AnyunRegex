@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <regex>
-#include "NFA.h"
+#include "../NFA.h"
 
 
 namespace anyun_regex
@@ -14,6 +14,7 @@ namespace anyun_regex
 	using std::regex;
 	using std::smatch;
 	using std::sregex_iterator;
+	using std::vector;
 	using std::string;
 	using std::ifstream;
 	using std::cout;
@@ -33,9 +34,13 @@ namespace anyun_regex
 		void add_testcase(const string &testcase);
 		void test();
 	private:
-		regex standrad_regex;
+		string pattern;
+		regex standard_regex;
+		vector<string> testcases;
+
+		void read_testcases_from_file(const string &test_file_path);
 	};
 
-	int testNFA();
+	int singal_test(const string& pattern ,const string &text);
 }
 #endif // !NFA_TEST_H

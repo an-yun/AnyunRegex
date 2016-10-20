@@ -149,26 +149,26 @@
     <ClInclude Include="DirectedEdge.h" />
     <ClInclude Include="DirectedGraph.h" />
     <ClInclude Include="DirectedNode.h" />
-    <ClInclude Include="DriectedGraphTest.h" />
     <ClInclude Include="NFA.h" />
-    <ClInclude Include="NFATest.h" />
-    <ClInclude Include="RegexTest.h" />
+    <ClInclude Include="test\DriectedGraphTest.h" />
+    <ClInclude Include="test\NFATest.h" />
+    <ClInclude Include="test\RegexTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedNode.cpp" />
     <ClCompile Include="DirectedEdge.cpp" />
     <ClCompile Include="DirectedGraph.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="NFA.cpp" />
-    <ClCompile Include="NFATest.cpp" />
-    <ClCompile Include="RegexTest.cpp" />
+    <ClCompile Include="test\main.cpp" />
+    <ClCompile Include="test\NFATest.cpp" />
+    <ClCompile Include="test\RegexTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="and_test_case.txt" />
-    <Text Include="C++.txt" />
-    <Text Include="dot_test_case.txt" />
-    <Text Include="or_test_case.txt" />
-    <Text Include="question_mark_test_case.txt" />
+    <Text Include="testfiles\and_test_case.txt" />
+    <Text Include="testfiles\C++.txt" />
+    <Text Include="testfiles\dot_test_case.txt" />
+    <Text Include="testfiles\or_test_case.txt" />
+    <Text Include="testfiles\question_mark_test_case.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -33,13 +33,13 @@
     <ClInclude Include="NFA.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="NFATest.h">
+    <ClInclude Include="test\DriectedGraphTest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
-    <ClInclude Include="RegexTest.h">
+    <ClInclude Include="test\NFATest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
-    <ClInclude Include="DriectedGraphTest.h">
+    <ClInclude Include="test\RegexTest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,30 +56,30 @@
     <ClCompile Include="NFA.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="test\main.cpp">
       <Filter>源文件\test</Filter>
     </ClCompile>
-    <ClCompile Include="NFATest.cpp">
+    <ClCompile Include="test\NFATest.cpp">
       <Filter>源文件\test</Filter>
     </ClCompile>
-    <ClCompile Include="RegexTest.cpp">
+    <ClCompile Include="test\RegexTest.cpp">
       <Filter>源文件\test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="and_test_case.txt">
+    <Text Include="testfiles\and_test_case.txt">
       <Filter>资源文件</Filter>
     </Text>
-    <Text Include="C++.txt">
+    <Text Include="testfiles\C++.txt">
       <Filter>资源文件</Filter>
     </Text>
-    <Text Include="or_test_case.txt">
+    <Text Include="testfiles\dot_test_case.txt">
       <Filter>资源文件</Filter>
     </Text>
-    <Text Include="dot_test_case.txt">
+    <Text Include="testfiles\or_test_case.txt">
       <Filter>资源文件</Filter>
     </Text>
-    <Text Include="question_mark_test_case.txt">
+    <Text Include="testfiles\question_mark_test_case.txt">
       <Filter>资源文件</Filter>
     </Text>
   </ItemGroup>

@@ -7,7 +7,7 @@ namespace anyun_regex
 	-----------------------these code can be used again------------------------------------
 	2016-10-18 10:23  
 	*/
-	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','|','*','?'};
+	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','|','*','+','?'};
 	const size_t DirectedGraph::SINGLE_SPECAIL_CAHR_SIZE = sizeof(DirectedGraph::SINGLE_SPECAIL_CAHRS) / sizeof(char);
 	inline bool DirectedGraph::is_special_char(size_t ch)
 	{
@@ -37,7 +37,6 @@ namespace anyun_regex
 			|
 			\0  (start or end)
 			
-			
 			*/
 			priority['\0']['\0'] = 0;
 			priority['\0']['('] = -1;
@@ -46,6 +45,7 @@ namespace anyun_regex
 			priority['\0']['.'] = -1;
 			priority['\0']['?'] = -1;
 			priority['\0']['*'] = -1;
+			priority['\0']['+'] = -1;
 
 			//priority['(']['\0']  miss right bracket
 			priority['(']['('] = -1;
@@ -54,6 +54,7 @@ namespace anyun_regex
 			priority['(']['.'] = -1;
 			priority['(']['?'] = -1;
 			priority['(']['*'] = -1;
+			priority['(']['+'] = -1;
 
 			priority[')']['\0'] = 1;
 			priority[')']['('] =  1;
@@ -62,6 +63,7 @@ namespace anyun_regex
 			priority[')']['.'] = 1;
 			priority[')']['?'] = 1;
 			priority[')']['*'] = 1;
+			priority[')']['+'] = 1;
 
 			priority['|']['\0'] = 1;
 			priority['|']['('] = -1;
@@ -70,6 +72,7 @@ namespace anyun_regex
 			priority['|']['.'] = -1;
 			priority['|']['?'] = -1;
 			priority['|']['*'] = -1;
+			priority['|']['+'] = -1;
 
 			priority['.']['\0'] = 1;
 			priority['.']['('] = -1;
@@ -78,6 +81,7 @@ namespace anyun_regex
 			priority['.']['.'] = 1;
 			priority['.']['?'] = -1;
 			priority['.']['*'] = -1;
+			priority['.']['+'] = -1;
 
 			priority['?']['\0'] = 1;
 			//priority['?']['('] miss concatenation  operator
@@ -86,6 +90,7 @@ namespace anyun_regex
 			priority['?']['.'] = 1;
 			priority['?']['?'] = 1;
 			priority['?']['*'] = 1;
+			priority['?']['+'] = 1;
 
 			priority['*']['\0'] = 1;
 			//priority['*']['('] miss concatenation  operator
@@ -94,6 +99,15 @@ namespace anyun_regex
 			priority['*']['.'] = 1;
 			priority['*']['?'] = 1;
 			priority['*']['*'] = 1;
+
+			priority['+']['\0'] = 1;
+			//priority['+']['('] miss concatenation  operator
+			priority['+'][')'] = 1;
+			priority['+']['|'] = 1;
+			priority['+']['.'] = 1;
+			priority['+']['?'] = 1;
+			priority['+']['*'] = 1;
+			priority['+']['+'] = 1;
 
 		}
 		return priority[op1][op2];
@@ -136,9 +150,20 @@ namespace anyun_regex
 		{
 			ConnectedFragment fra1 = operands.top();
 			operands.pop();
-
 			//add self connect and push
 			operands.push(self_connect_fragment(fra1));
+			break;
+		}
+		case '+':
+		{
+			ConnectedFragment fra1 = operands.top();
+			operands.pop();
+			DirectedEdge sigma_edge(edges.size());
+			edges.push_back(sigma_edge);
+			//the fra2
+			ConnectedFragment fra2(sigma_edge.get_id(), sigma_edge.get_id());
+			//reverse merge fra1 and fra2
+			operands.push(reverse_merge_fragments(fra1,fra2));
 			break;
 		}
 		default:
@@ -309,8 +334,21 @@ namespace anyun_regex
 	*/
 	inline ConnectedFragment DirectedGraph::reverse_merge_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
 	{
-		//to do
-		return ConnectedFragment(0,0);
+		//connect in node
+		DirectedNode in_node(nodes.size());
+		nodes.push_back(in_node);
+		connect_in_node(in_node.get_id(), fragment1);
+		connect_out_node(in_node.get_id(), fragment2);
+		//connect out node
+		DirectedNode out_node(nodes.size());
+		nodes.push_back(out_node);
+		connect_out_node(out_node.get_id(), fragment1);
+		connect_in_node(out_node.get_id(), fragment2);
+		//connect in and out edges
+		size_t in_edge_id = add_in_sigma_edge(in_node.get_id());
+		size_t out_edge_id = add_out_sigma_edge(out_node.get_id());
+
+		return ConnectedFragment(in_edge_id, out_edge_id);
 	}
 
 	inline void DirectedGraph::connect_in_node_to_edge(size_t in_node_id, size_t edge_id)
@@ -328,8 +366,8 @@ namespace anyun_regex
 
 	string DirectedGraph::pre_process_pattern(const string & p)
 	{
-		static const char end_and_no_connect_operators[] = {'\0',')','|','*','?', };
-		static const char right_operators[] = { '*','?',']',')','}' };
+		static const char end_and_no_connect_operators[] = {'\0',')','|','*','+','?', };
+		static const char right_operators[] = { '*','+','?',']',')','}' };
 		list<size_t> result;
 		size_t size = p.size();
 		for (size_t i = 0; i < size; i++)
@@ -360,6 +398,7 @@ namespace anyun_regex
 		size_t parse_index = 0;
 		while (parse_result == REGEX_PARSE_NOT_FOUND)
 		{
+			//now we have support () | . + *
 			switch (p[parse_index])
 			{
 			case '\0':
@@ -397,6 +436,10 @@ namespace anyun_regex
 			case '*':
 				//to test
 				normal_priority_parse('*', operators, operands, parse_index);
+				break;
+			case '+':
+				//to test
+				normal_priority_parse('+', operators, operands, parse_index);
 				break;
 			//the single char
 			default:
