@@ -21,6 +21,27 @@ namespace anyun_regex
 	{
 	}
 
+	bool NFA::compile(const string & pattern)
+	{
+		return digraph.compile(pattern) == REGEX_PARSE_OK;
+	}
+
+	RegexParseCode NFA::get_compile_result_code()
+	{
+		return digraph.parse_result;
+	}
+
+	string NFA::get_compile_message()
+	{
+		switch (digraph.parse_result)
+		{
+		case REGEX_PARSE_OK:
+			return "compile pased!";
+		default:
+			return "";
+		}
+	}
+
 	bool NFA::find()
 	{
 		//if last search could not find,then return false

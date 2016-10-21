@@ -366,6 +366,19 @@ namespace anyun_regex
 
 	string DirectedGraph::pre_process_pattern(const string & p)
 	{
+
+		
+		/*
+		nedd to add exception handle
+		case '\0':
+		if (operators.top() == '(') parse_result = REGEX_PARSE_MISS_RIGHT_BRACKET;
+
+		case ')':
+		if (operators.empty() || operators.top() == '\0')
+		parse_result = REGEX_PARSE_MISS_LEFT_BRACKET;
+
+
+		*/
 		static const char end_and_no_connect_operators[] = {'\0',')','|','*','+','?', };
 		static const char right_operators[] = { '*','+','?',']',')','}' };
 		list<size_t> result;
@@ -398,21 +411,21 @@ namespace anyun_regex
 		size_t parse_index = 0;
 		while (parse_result == REGEX_PARSE_NOT_FOUND)
 		{
-			//now we have support () | . + *
+			/*
+			now we have support () | . + *
+			next to support is []
+			*/
 			switch (p[parse_index])
 			{
 			case '\0':
-				if (operators.top() == '(') parse_result = REGEX_PARSE_MISS_RIGHT_BRACKET;
-				else normal_priority_parse('\0', operators, operands, parse_index);
+				normal_priority_parse('\0', operators, operands, parse_index);
 				if (operators.empty()) parse_result = REGEX_PARSE_OK;
 				break;
 			case '(':
 				normal_priority_parse('(', operators, operands, parse_index);
 				break;
 			case ')':
-				if (operators.empty() || operators.top() == '\0')
-					parse_result = REGEX_PARSE_MISS_LEFT_BRACKET;
-				else normal_priority_parse(')', operators, operands, parse_index);
+				normal_priority_parse(')', operators, operands, parse_index);
 				break;
 			case '|':
 				normal_priority_parse('|', operators, operands, parse_index);
@@ -426,7 +439,8 @@ namespace anyun_regex
 					if (p[parse_index-1] == '\\')parse_index--;
 					break;
 				default:
-						break;
+					parse_index++;
+					break;
 				}
 				break;
 			case '?':

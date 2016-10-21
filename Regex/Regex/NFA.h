@@ -27,9 +27,12 @@ namespace anyun_regex
 		NFA(const string & pattern);
 		~NFA();
 
-		bool find();
-		void match(const char * text,postoin_type offset =0);
+		bool compile(const string &pattern);
+		RegexParseCode get_compile_result_code();
+		string get_compile_message();
+		void match(const char * text, postoin_type offset = 0);
 		void match(const string & text, postoin_type offset = 0);
+		bool find();
 		string get_match();
 
 		size_t get_match_start();

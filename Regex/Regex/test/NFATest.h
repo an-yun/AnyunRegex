@@ -1,9 +1,11 @@
 #ifndef NFA_TEST_H
 #define NFA_TEST_H
 #include <iostream>
+#include <fstream>
 #include <iterator>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <regex>
 #include "../NFA.h"
 
@@ -32,13 +34,19 @@ namespace anyun_regex
 		void set_testcases(const string &test_file_path);
 		void set_testcase(const string &testcase);
 		void add_testcase(const string &testcase);
+		void add_testcases(const vector<string> &testcases);
+		void add_testcases(const string &test_file_path);
 		void test();
 	private:
 		string pattern;
 		regex standard_regex;
+		NFA nfa;
 		vector<string> testcases;
 
 		void read_testcases_from_file(const string &test_file_path);
+		void print_test_information();
+		bool test_one_testcase(const string &testcase);
+		void print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count);
 	};
 
 	int singal_test(const string& pattern ,const string &text);
