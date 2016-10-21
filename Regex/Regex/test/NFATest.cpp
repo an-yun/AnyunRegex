@@ -94,6 +94,7 @@ namespace anyun_regex
 	bool NFATest::test_one_testcase(const string & testcase)
 	{
 		//to do 
+		return false;
 	}
 
 	void NFATest::print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count)

@@ -1,5 +1,0 @@
-#ifndef DIRECTED_GRAPH_TEST_H
-#define DIRECTED_GRAPH_TEST_H
-
-
-#endif // !DIRECTED_GRAPH_TEST_H

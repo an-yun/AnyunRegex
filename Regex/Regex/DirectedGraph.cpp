@@ -2,25 +2,30 @@
 
 namespace anyun_regex
 {
+#define PRE_PROCESS_ERROR(assgin,code)  \
+	do {								\
+		(assgin) = (code);				\
+		return "" ;						\
+	} while(0)
 
 	/*
 	-----------------------these code can be used again------------------------------------
-	2016-10-18 10:23  
+	2016-10-18 10:23
 	*/
-	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','|','*','+','?'};
+	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' };
 	const size_t DirectedGraph::SINGLE_SPECAIL_CAHR_SIZE = sizeof(DirectedGraph::SINGLE_SPECAIL_CAHRS) / sizeof(char);
 	inline bool DirectedGraph::is_special_char(size_t ch)
 	{
 		return is_char_in(ch, SINGLE_SPECAIL_CAHRS, SINGLE_SPECAIL_CAHR_SIZE);
 	}
 
-	inline bool DirectedGraph::is_char_in(size_t ch,const char * str,size_t length)
+	inline bool DirectedGraph::is_char_in(size_t ch, const char * str, size_t length)
 	{
 		for (size_t i = 0; i < length; i++)
 			if (ch == str[i])return true;
 		return false;
 	}
-	
+
 	int DirectedGraph::get_priority(size_t op1, size_t op2)
 	{
 		static map<size_t, map<size_t, int>> priority;
@@ -28,15 +33,15 @@ namespace anyun_regex
 		{
 			/*
 			the priority table
-			
-			\metachar  (the escape char)     
+
+			\metachar  (the escape char)
 			( )、(?: )、(?= )、[ ]
 			*、+、?、{n}、{n,}、{m,n}
 			^、$
 			concatenation  operator (I represent it here using .)
 			|
 			\0  (start or end)
-			
+
 			*/
 			priority['\0']['\0'] = 0;
 			priority['\0']['('] = -1;
@@ -57,9 +62,9 @@ namespace anyun_regex
 			priority['(']['+'] = -1;
 
 			priority[')']['\0'] = 1;
-			priority[')']['('] =  1;
-			priority[')'][')'] =  1;
-			priority[')']['|'] =  1;
+			priority[')']['('] = 1;
+			priority[')'][')'] = 1;
+			priority[')']['|'] = 1;
 			priority[')']['.'] = 1;
 			priority[')']['?'] = 1;
 			priority[')']['*'] = 1;
@@ -118,34 +123,34 @@ namespace anyun_regex
 		switch (opt)
 		{
 		case '|':
-			{
-				ConnectedFragment fra2 = operands.top();
-				operands.pop();
-				ConnectedFragment fra1 = operands.top();
-				operands.pop();
-				operands.push(merge_fragments(fra1,fra2));
-				break;
-			}
+		{
+			ConnectedFragment fra2 = operands.top();
+			operands.pop();
+			ConnectedFragment fra1 = operands.top();
+			operands.pop();
+			operands.push(merge_fragments(fra1, fra2));
+			break;
+		}
 		//the dot . means concatenation  operator
 		case '.':
-			{
-				ConnectedFragment fra2 = operands.top();
-				operands.pop();
-				ConnectedFragment fra1 = operands.top();
-				operands.pop();
-				operands.push(connect_fragments(fra1, fra2));
-				break;
-			}
+		{
+			ConnectedFragment fra2 = operands.top();
+			operands.pop();
+			ConnectedFragment fra1 = operands.top();
+			operands.pop();
+			operands.push(connect_fragments(fra1, fra2));
+			break;
+		}
 		case '?':
-			{
-				ConnectedFragment fra1 = operands.top();
-				operands.pop();
-				DirectedEdge sigma_edge(edges.size());
-				edges.push_back(sigma_edge);
-				ConnectedFragment fra2(sigma_edge.get_id(), sigma_edge.get_id());
-				operands.push(merge_fragments(fra1, fra2));
-				break;
-			}
+		{
+			ConnectedFragment fra1 = operands.top();
+			operands.pop();
+			DirectedEdge sigma_edge(edges.size());
+			edges.push_back(sigma_edge);
+			ConnectedFragment fra2(sigma_edge.get_id(), sigma_edge.get_id());
+			operands.push(merge_fragments(fra1, fra2));
+			break;
+		}
 		case '*':
 		{
 			ConnectedFragment fra1 = operands.top();
@@ -163,7 +168,7 @@ namespace anyun_regex
 			//the fra2
 			ConnectedFragment fra2(sigma_edge.get_id(), sigma_edge.get_id());
 			//reverse merge fra1 and fra2
-			operands.push(reverse_merge_fragments(fra1,fra2));
+			operands.push(reverse_merge_fragments(fra1, fra2));
 			break;
 		}
 		default:
@@ -212,7 +217,10 @@ namespace anyun_regex
 		nodes.push_back(start_node);
 
 		//bgein to parse
-		ConnectedFragment fragment = parse(pre_process_pattern(this->pattern));
+		parse_result = REGEX_PARSE_OK;
+		string pre_pattern = pre_process_pattern(this->pattern);
+		if (parse_result != REGEX_PARSE_OK) return parse_result;
+		ConnectedFragment fragment = parse(pre_pattern);
 		if (parse_result == REGEX_PARSE_OK)
 		{
 			DirectedNode end_node;
@@ -298,11 +306,11 @@ namespace anyun_regex
 	/*
 	merge fragment1 and  fragment2 together
 
-	    >fra1>
+		>fra1>
 	   /      \
 	->O        O->
 	   \      /
-	    >fra2>
+		>fra2>
 	*/
 	inline ConnectedFragment DirectedGraph::merge_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
 	{
@@ -319,18 +327,18 @@ namespace anyun_regex
 		//connect in and out edges
 		size_t in_edge_id = add_in_sigma_edge(in_node.get_id());
 		size_t out_edge_id = add_out_sigma_edge(out_node.get_id());
-		
+
 		return ConnectedFragment(in_edge_id, out_edge_id);
 	}
 
 	/*
 	reverse merge fragment1 and  fragment2 together
 
-	    >fra1>
+		>fra1>
 	   /      \
 	->O       O->
 	   \      /
-	    <fra2<
+		<fra2<
 	*/
 	inline ConnectedFragment DirectedGraph::reverse_merge_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
 	{
@@ -367,39 +375,73 @@ namespace anyun_regex
 	string DirectedGraph::pre_process_pattern(const string & p)
 	{
 
-		
-		/*
-		nedd to add exception handle
-		case '\0':
-		if (operators.top() == '(') parse_result = REGEX_PARSE_MISS_RIGHT_BRACKET;
-
-		case ')':
-		if (operators.empty() || operators.top() == '\0')
-		parse_result = REGEX_PARSE_MISS_LEFT_BRACKET;
-
-
-		*/
-		static const char end_and_no_connect_operators[] = {'\0',')','|','*','+','?', };
+		static const char end_and_no_connect_operators[] = { '\0',')','{','|','*','+','?', };
 		static const char right_operators[] = { '*','+','?',']',')','}' };
 		list<size_t> result;
 		size_t size = p.size();
+		stack<size_t> bracket_states;
+		int bracket_count = 0;
 		for (size_t i = 0; i < size; i++)
 		{
 			size_t current = p[i], next = p[i + 1];
+			bool statest_empty = bracket_states.empty();
 			bool current_is_special = is_special_char(current);
 			bool current_is_right = is_char_in(current, right_operators, sizeof(right_operators) / sizeof(char));
 			bool next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
-			//if next char is group end position or other operator ,not add concatenation operator
-			if ((!current_is_special || current_is_right) && !next_is_other)
+			result.push_back(current);
+			switch (current)
 			{
-				result.push_back(current);
-				result.push_back('\\');
-				result.push_back('.');
+			case '(':
+				bracket_count++;
+				break;
+			case ')':
+				if (bracket_count < 1)
+					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_LEFT_BRACKET);
+				else bracket_count--;
+				break;
+			case '[':
+				if (statest_empty)
+					bracket_states.push(1);
+				else
+					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
+				break;
+			case ']':
+				if (!statest_empty && bracket_states.top() == 1)
+					bracket_states.pop();
+				else
+					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET);
+				break;
+			case '{':
+				if (statest_empty)
+					bracket_states.push(2);
+				else
+					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_BRACKET);
+				break;
+			case '}':
+				if (!statest_empty && bracket_states.top() == 2)
+					bracket_states.pop();
+				else
+					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_LEFT_BRACKET);
+				break;
+			case '|':
+				//handle the error |* || |)
+				if (next_is_other)
+					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_AFTER_OR_ILLEGAL);
+				break;
+			default:
+				break;
 			}
-			else result.push_back(current);
+			//if next char is group end position or other operator ,not add concatenation operator,if not ,add it
+			if (bracket_states.empty() && (!current_is_special || current_is_right) && !next_is_other)
+			{
+				result.push_back('\\');
+				result.push_back('N');
+			}
 
 		}
-		return string(result.begin(),result.end());
+		if (bracket_count > 0)
+			PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_BRACKET);
+		return string(result.begin(), result.end());
 	}
 
 	ConnectedFragment DirectedGraph::parse(string p)
@@ -433,10 +475,10 @@ namespace anyun_regex
 			case '\\':
 				switch (p[++parse_index])
 				{
-				//the dot . means concatenation  operator
-				case '.':
+					//the dot \N means concatenation  operator
+				case 'N':
 					normal_priority_parse('.', operators, operands, parse_index);
-					if (p[parse_index-1] == '\\')parse_index--;
+					if (p[parse_index - 1] == '\\')parse_index--;
 					break;
 				default:
 					parse_index++;
@@ -455,7 +497,7 @@ namespace anyun_regex
 				//to test
 				normal_priority_parse('+', operators, operands, parse_index);
 				break;
-			//the single char
+				//the single char
 			default:
 				DirectedEdge edge(p[parse_index], edges.size());
 				edges.push_back(edge);
@@ -471,7 +513,7 @@ namespace anyun_regex
 	compare op's priority with operators.top()'s
 	accroding the result of  comparation to decide it should push or operate
 	*/
-	inline void DirectedGraph::normal_priority_parse(size_t op, stack<size_t>& operators, stack<ConnectedFragment>& operands,size_t &parse_index)
+	inline void DirectedGraph::normal_priority_parse(size_t op, stack<size_t>& operators, stack<ConnectedFragment>& operands, size_t &parse_index)
 	{
 		int compare = get_priority(operators.top(), op);
 		if (compare < 0)

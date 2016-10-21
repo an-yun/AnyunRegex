@@ -33,13 +33,13 @@
     <ClInclude Include="NFA.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="test\DriectedGraphTest.h">
-      <Filter>头文件\test</Filter>
-    </ClInclude>
     <ClInclude Include="test\NFATest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
     <ClInclude Include="test\RegexTest.h">
+      <Filter>头文件\test</Filter>
+    </ClInclude>
+    <ClInclude Include="test\DirectedGraphTest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
   </ItemGroup>
@@ -63,6 +63,9 @@
       <Filter>源文件\test</Filter>
     </ClCompile>
     <ClCompile Include="test\RegexTest.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\DirectedGraphTest.cpp">
       <Filter>源文件\test</Filter>
     </ClCompile>
   </ItemGroup>

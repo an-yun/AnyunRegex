@@ -21,8 +21,9 @@ namespace anyun_regex
 		REGEX_PARSE_PATTERN_IS_NULL,
 		REGEX_PARSE_MISS_LEFT_BRACKET,
 		REGEX_PARSE_MISS_RIGHT_BRACKET,
-		REGEX_PARSE_GET_RIGHT_BRACKET,
-		REGEX_PARSE_GET_INVALID_CHAR
+		REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET,
+		REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET,
+		REGEX_PARSE_AFTER_OR_ILLEGAL
 	};
 	struct ConnectedFragment
 	{
@@ -33,6 +34,7 @@ namespace anyun_regex
 	class DirectedGraph
 	{
 		friend class NFA;
+		friend class DirectedGraphTest;
 	public:
 		DirectedGraph();
 		DirectedGraph(const char *pattern);
@@ -98,7 +100,7 @@ namespace anyun_regex
 		void connect_in_node_to_edge(size_t in_node_id, size_t edge_id);
 		void connect_out_node_to_edge(size_t out_node_id, size_t edge_id);
 
-		//pre_process_pattern add the dot \. (means concatenation  operator) to pattern
+		//pre_process_pattern add the dot \N (means concatenation  operator) to pattern
 		string pre_process_pattern(const string &p);
 		ConnectedFragment parse(string p);
 		//compare op's priority with operators.top()'s
