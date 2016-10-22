@@ -34,6 +34,11 @@ namespace anyun_regex
 		end_id = node_id;
 	}
 
+	void DirectedEdge::set_to_complementary(bool complementary)
+	{
+		condition.set_complementary(complementary);
+	}
+
 	size_t DirectedEdge::get_start_node_id()
 	{
 		return start_id;
@@ -61,16 +66,20 @@ namespace anyun_regex
 	else is sigma condition,namely sigma(the empty edge),not accept any char
 	
 	*/
-	TransactionCondition::TransactionCondition(bool is_dot)
+	TransactionCondition::TransactionCondition(bool is_dot):is_complementary(false)
 	{
 		if (is_dot)flag = 2;
 		else flag = -1;
 	}
-	TransactionCondition::TransactionCondition(char ch) :flag(0) 
+	void TransactionCondition::set_complementary(bool complementary)
+	{
+		is_complementary = complementary;
+	}
+	TransactionCondition::TransactionCondition(char ch) :flag(0), is_complementary(false)
 	{
 		condition.ch = ch;
 	}
-	TransactionCondition::TransactionCondition(int start, int end):flag(1)
+	TransactionCondition::TransactionCondition(int start, int end):flag(1),is_complementary(false)
 	{
 		condition.range.start_index = start;
 		condition.range.end_index = end;
@@ -78,18 +87,24 @@ namespace anyun_regex
 
 	bool TransactionCondition::match(int ch)
 	{
+		bool is_match = false;
 		switch (flag)
 		{
 		case -1:
-			return false;
+			is_match =  false;
+			break;
 		case 0:
-			return condition.ch == ch;
+			is_match = condition.ch == ch;
+			break;
 		case 1:
-			return ch >= condition.range.start_index && ch <= condition.range.end_index;
+			is_match = (ch >= condition.range.start_index && ch <= condition.range.end_index);
+			break;
 		case 2:
-			return true;
+			is_match = true;
+			break;
 		default:
-			return false;
+			break;
 		}
+		return is_complementary ^ is_match;
 	}
 }

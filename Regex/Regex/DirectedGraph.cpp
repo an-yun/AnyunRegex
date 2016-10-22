@@ -2,10 +2,15 @@
 
 namespace anyun_regex
 {
-#define PRE_PROCESS_ERROR(assgin,code)  \
+#define PRE_PROCESS_PATTERN_ERROR(assgin,code)  \
 	do {								\
 		(assgin) = (code);				\
 		return "" ;						\
+	} while(0)
+#define PARSE_ERROR(assgin,code)		\
+	do {								\
+		(assgin) = (code);				\
+		return ConnectedFragment(0,0);	\
 	} while(0)
 
 	/*
@@ -236,6 +241,7 @@ namespace anyun_regex
 			nodes.clear();
 			edges.clear();
 		}
+		
 		return parse_result;
 	}
 
@@ -426,37 +432,43 @@ namespace anyun_regex
 				break;
 			case ')':
 				if (bracket_count < 1)
-					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_LEFT_BRACKET);
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_LEFT_BRACKET);
 				else bracket_count--;
 				break;
 			case '[':
 				if (statest_empty)
 					bracket_states.push(1);
+				else if(bracket_states.top() == 1)
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_SQUARE_BRAKET_NESTED);
 				else
-					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
 				break;
 			case ']':
 				if (!statest_empty && bracket_states.top() == 1)
 					bracket_states.pop();
+				else if (!statest_empty && bracket_states.top() == 2)
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_BRACES);
 				else
-					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET);
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET);
 				break;
 			case '{':
 				if (statest_empty)
 					bracket_states.push(2);
+				else if (!statest_empty && bracket_states.top() == 1)
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
 				else
-					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_BRACKET);
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_BRACES);
 				break;
 			case '}':
 				if (!statest_empty && bracket_states.top() == 2)
 					bracket_states.pop();
 				else
-					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_LEFT_BRACKET);
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_LEFT_BRACES);
 				break;
 			case '|':
 				//handle the error |* || |)
 				if (next_is_other)
-					PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_AFTER_OR_ILLEGAL);
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_ILLEGAL_CHAR_AFTER_OR);
 				break;
 			default:
 				break;
@@ -469,9 +481,15 @@ namespace anyun_regex
 			}
 
 		}
-		if (bracket_count > 0)
-			PRE_PROCESS_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_BRACKET);
-		return string(result.begin(), result.end());
+		if (!bracket_states.empty())
+		{
+			if (bracket_states.top() == 1)
+				PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
+			else PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_BRACES);
+		}
+		else if (bracket_count > 0)
+			PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_BRACKET);
+		else return string(result.begin(), result.end());
 	}
 
 	ConnectedFragment DirectedGraph::parse(string p)
@@ -485,7 +503,7 @@ namespace anyun_regex
 		{
 			/*
 			now we have support () | . + *
-			next to support is []
+			next to support is [] {}
 			*/
 			switch (p[parse_index])
 			{
@@ -498,6 +516,17 @@ namespace anyun_regex
 				break;
 			case ')':
 				normal_priority_parse(')', operators, operands, parse_index);
+				break;
+			case '[':
+			{
+				bool complementary = p[parse_index + 1] == '^';
+				if (complementary)parse_index++;
+				//to  do
+
+				break;
+			}
+			case '{':
+				//to do
 				break;
 			case '|':
 				normal_priority_parse('|', operators, operands, parse_index);

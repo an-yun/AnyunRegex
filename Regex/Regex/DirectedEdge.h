@@ -26,6 +26,8 @@ namespace anyun_regex
 		2 represent can accept any char
 		*/
 		int flag;
+		bool is_complementary;
+		void set_complementary(bool complementary);
 	public:
 		TransactionCondition(char ch);
 		TransactionCondition(bool is_dot = false);
@@ -45,6 +47,7 @@ namespace anyun_regex
 		
 		void set_start_node(size_t node_id);
 		void set_end_node(size_t node_id);
+		void set_to_complementary(bool complementary);
 		size_t get_start_node_id();
 		size_t get_end_node_id();
 		bool is_sigma_edge();

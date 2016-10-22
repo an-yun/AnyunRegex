@@ -10,7 +10,7 @@ namespace anyun_regex
 		string result = diagraph.pre_process_pattern(test_string);										\
 		if(diagraph.parse_result == REGEX_PARSE_OK && result == (except_string))						\
 		{																								\
-			cout<<"Test function pre_process_pattern in testcase "<<test_string<<" passed! "<<endl;		\
+			cout<<"Test function pre_process_pattern in testcase \""<<test_string<<"\" passed! "<<endl;	\
 			pass_count++;																				\
 		}																								\
 		else																							\
@@ -27,13 +27,13 @@ namespace anyun_regex
 		string result = diagraph.pre_process_pattern(test_string);										\
 		if(diagraph.parse_result == except_parse_code && result == "")									\
 		{																								\
-			cout<<"Test function pre_process_pattern in testcase "<<test_string<<" passed! "<<endl;		\
+			cout<<"Test function pre_process_pattern in testcase \""<<test_string<<"\" passed! "<<endl;	\
 			pass_count++;																				\
 		}																								\
 		else																							\
 		{																								\
 			cout<<"Test "<<test_count<<" failed, in file "<<__FILE__<<":"<<__LINE__<<endl;				\
-			cout<<"\ttest string:"<<(test_string)<<endl;												\
+			cout<<"\ttest string:\""<<(test_string)<<"\""<<endl;										\
 			cout<<"\tactual:"<<PARSE_RESULT_MESSAGE[diagraph.parse_result]<<endl;						\
 			cout<<"\texcept:"<<PARSE_RESULT_MESSAGE[except_parse_code]<<endl;							\
 		}																								\
@@ -93,23 +93,27 @@ namespace anyun_regex
 		TEST_PRE_PROCESS_PATTERN("(A|a)(B|b)c{2,5}D", "(A|a)\\N(B|b)\\Nc{2,5}\\ND");
 		TEST_PRE_PROCESS_PATTERN("(a|b|c|d){2,5}D", "(a|b|c|d){2,5}\\ND");
 		TEST_PRE_PROCESS_PATTERN("(a|b|c|d){2,5}D", "(a|b|c|d){2,5}\\ND");
-
+		TEST_PRE_PROCESS_PATTERN("[0-9](a|b|c|d){2,5}D", "[0-9]\\N(a|b|c|d){2,5}\\ND");
 
 	}
 	void DirectedGraphTest::test_pre_process_error()
 	{
 		TEST_PRE_PROCESS_PATTERN_ERROR("(", REGEX_PARSE_MISS_RIGHT_BRACKET);
 		TEST_PRE_PROCESS_PATTERN_ERROR(")", REGEX_PARSE_MISS_LEFT_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("(a||b)", REGEX_PARSE_ILLEGAL_CHAR_AFTER_OR);
+		TEST_PRE_PROCESS_PATTERN_ERROR("a|*b", REGEX_PARSE_ILLEGAL_CHAR_AFTER_OR);
 		TEST_PRE_PROCESS_PATTERN_ERROR("(a()", REGEX_PARSE_MISS_RIGHT_BRACKET);
 		TEST_PRE_PROCESS_PATTERN_ERROR("(a(cd)", REGEX_PARSE_MISS_RIGHT_BRACKET);
 		TEST_PRE_PROCESS_PATTERN_ERROR("(a(cd)", REGEX_PARSE_MISS_RIGHT_BRACKET);
 		TEST_PRE_PROCESS_PATTERN_ERROR("(a(cd)", REGEX_PARSE_MISS_RIGHT_BRACKET);
 		TEST_PRE_PROCESS_PATTERN_ERROR("[", REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
 		TEST_PRE_PROCESS_PATTERN_ERROR("]", REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET);
-		TEST_PRE_PROCESS_PATTERN_ERROR("[][", REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET);
-		TEST_PRE_PROCESS_PATTERN_ERROR("[1-9][", REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET);
-
-
+		TEST_PRE_PROCESS_PATTERN_ERROR("[][", REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("[1-9][", REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("[1-9[]][", REGEX_PARSE_SQUARE_BRAKET_NESTED);
+		TEST_PRE_PROCESS_PATTERN_ERROR("[a{2,3}", REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("{", REGEX_PARSE_MISS_RIGHT_BRACES);
+		TEST_PRE_PROCESS_PATTERN_ERROR("}", REGEX_PARSE_MISS_LEFT_BRACES);
 	}
 #endif // _DEBUG
 }

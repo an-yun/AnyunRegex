@@ -1,12 +1,22 @@
 #include <iostream>
-#include	<string>
+#include <string>
 #include <fstream>
-#include <boost\regex.hpp>
 #include "DirectedGraphTest.h"
 #include "NFATest.h"
 #include "RegexTest.h"
 
-int main(int argc, char **argv)
+int main()
+{
+	anyun_regex::test_directedgraph();
+#ifdef BOOST_TEST
+	boost_regex();
+#endif // BOOST_TEST
+	return 0;
+}
+
+#ifdef BOOST_TEST
+
+int boost_regex()
 {
 	boost::regex e1("a|b");
 	std::string text("aaabbb");
@@ -24,3 +34,4 @@ int main(int argc, char **argv)
 	//anyun_regex::test_directedgraph();
 	return 0;
 }
+#endif // BOOST_TEST
