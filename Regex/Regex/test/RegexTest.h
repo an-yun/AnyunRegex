@@ -20,7 +20,7 @@ namespace anyun_regex
 	using std::cout;
 	using std::endl;
 	using anyun_regex::NFA;
-	
+#ifdef _DEBUG	
 	class LibraryRegex
 	{
 	public:
@@ -32,6 +32,7 @@ namespace anyun_regex
 
 	int test_exameple();
 	int test_files();
+#endif // DEBUG
 }
 
 #endif // !REGEX_TEST_H

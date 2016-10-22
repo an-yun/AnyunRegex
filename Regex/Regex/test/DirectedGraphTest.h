@@ -22,9 +22,10 @@ namespace anyun_regex
 	using std::stringstream;
 	using std::vector;
 	using std::string;
+#ifdef _DEBUG
+
 
 	int test_directedgraph();
-
 	class DirectedGraphTest
 	{
 	public:
@@ -39,6 +40,8 @@ namespace anyun_regex
 		void test_pre_process_normal();
 		void test_pre_process_error();
 	};
+#endif // _DEBUG
+
 }
 
 

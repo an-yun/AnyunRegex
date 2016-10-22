@@ -33,13 +33,7 @@ namespace anyun_regex
 
 	string NFA::get_compile_message()
 	{
-		switch (digraph.parse_result)
-		{
-		case REGEX_PARSE_OK:
-			return "compile pased!";
-		default:
-			return "";
-		}
+		return PARSE_RESULT_MESSAGE[digraph.parse_result];
 	}
 
 	bool NFA::find()

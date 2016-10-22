@@ -2,6 +2,7 @@
 
 namespace anyun_regex
 {
+#ifdef _DEBUG	
 	LibraryRegex::LibraryRegex()
 	{
 	}
@@ -80,4 +81,5 @@ namespace anyun_regex
 		}
 		return 0;
 	}
+#endif // DEBUG
 }

@@ -23,7 +23,21 @@ namespace anyun_regex
 		REGEX_PARSE_MISS_RIGHT_BRACKET,
 		REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET,
 		REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET,
-		REGEX_PARSE_AFTER_OR_ILLEGAL
+		REGEX_PARSE_AFTER_OR_ILLEGAL,
+		REGEX_PARSE_SQUARE_BRAKET_NESTED
+	};
+	static const char *PARSE_RESULT_MESSAGE[] =
+	{
+		"REGEX_PARSE_OK",
+		"REGEX_PARSE_NOT_FOUND",
+		"REGEX_PARSE_PATTERN_IS_NULL",
+		"REGEX_PARSE_MISS_LEFT_BRACKET",
+		"REGEX_PARSE_MISS_RIGHT_BRACKET",
+		"REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET",
+		"REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET",
+		"REGEX_PARSE_AFTER_OR_ILLEGAL",
+		"REGEX_PARSE_SQUARE_BRAKET_NESTED",
+		nullptr
 	};
 	struct ConnectedFragment
 	{
@@ -34,7 +48,10 @@ namespace anyun_regex
 	class DirectedGraph
 	{
 		friend class NFA;
+#ifdef _DEBUG
 		friend class DirectedGraphTest;
+#endif // DEBUG
+
 	public:
 		DirectedGraph();
 		DirectedGraph(const char *pattern);
@@ -87,6 +104,18 @@ namespace anyun_regex
 		   >fra2>
 		*/
 		ConnectedFragment merge_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2);
+		/*
+		merge two or more fragments together
+
+		     >fra1>
+			/  .   \
+		   /   .    \
+		->O ->frai-> O->
+		   \   .    /
+		    \  .   /
+			 >fran>
+		*/
+		ConnectedFragment merge_fragments(const vector<ConnectedFragment> &fragments);
 		/*
 		reverse merge fragment1 and  fragment2 together
 

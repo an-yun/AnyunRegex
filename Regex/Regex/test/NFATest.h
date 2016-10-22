@@ -23,6 +23,8 @@ namespace anyun_regex
 	using std::endl;
 	using anyun_regex::NFA;
 
+#ifdef _DEBUG
+
 	class NFATest
 	{
 	public:
@@ -51,5 +53,6 @@ namespace anyun_regex
 
 	int singal_test(const string& pattern ,const string &text);
 	int test_standard(const string& pattern, const string &text);
+#endif // DEBUG
 }
 #endif // !NFA_TEST_H

@@ -2,6 +2,7 @@
 
 namespace anyun_regex
 {
+#ifdef _DEBUG
 	NFATest::NFATest()
 	{
 	}
@@ -125,4 +126,5 @@ namespace anyun_regex
 			std::cout << i++ << ":" << (*begin).str() << std::endl;
 		return 0;
 	}
+#endif // DEBUG
 }

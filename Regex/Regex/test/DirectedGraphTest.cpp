@@ -2,6 +2,7 @@
 
 namespace anyun_regex
 {
+#ifdef _DEBUG
 
 #define TEST_PRE_PROCESS_PATTERN(test_string,except_string)												\
 	do {																								\
@@ -17,6 +18,24 @@ namespace anyun_regex
 			cout<<"Test "<<test_count<<" failed, in file "<<__FILE__<<":"<<__LINE__<<endl;				\
 			cout<<"\tactual:"<<result<<endl;															\
 			cout<<"\texcept:"<<except_string<<endl;														\
+		}																								\
+	}while(0)
+
+#define TEST_PRE_PROCESS_PATTERN_ERROR(test_string,except_parse_code)									\
+	do {																								\
+		test_count++;																					\
+		string result = diagraph.pre_process_pattern(test_string);										\
+		if(diagraph.parse_result == except_parse_code && result == "")									\
+		{																								\
+			cout<<"Test function pre_process_pattern in testcase "<<test_string<<" passed! "<<endl;		\
+			pass_count++;																				\
+		}																								\
+		else																							\
+		{																								\
+			cout<<"Test "<<test_count<<" failed, in file "<<__FILE__<<":"<<__LINE__<<endl;				\
+			cout<<"\ttest string:"<<(test_string)<<endl;												\
+			cout<<"\tactual:"<<PARSE_RESULT_MESSAGE[diagraph.parse_result]<<endl;						\
+			cout<<"\texcept:"<<PARSE_RESULT_MESSAGE[except_parse_code]<<endl;							\
 		}																								\
 	}while(0)
 
@@ -54,13 +73,44 @@ namespace anyun_regex
 	{
 		TEST_PRE_PROCESS_PATTERN("", "");
 		TEST_PRE_PROCESS_PATTERN("ab", "a\\Nb");
+		TEST_PRE_PROCESS_PATTERN("abbba", "a\\Nb\\Nb\\Nb\\Na");
 		TEST_PRE_PROCESS_PATTERN("a|b", "a|b");
 		TEST_PRE_PROCESS_PATTERN("a|bc", "a|b\\Nc");
+		TEST_PRE_PROCESS_PATTERN("a|b|123", "a|b|1\\N2\\N3");
 		TEST_PRE_PROCESS_PATTERN("(a|b)c", "(a|b)\\Nc");
+		TEST_PRE_PROCESS_PATTERN("(a|bb)c", "(a|b\\Nb)\\Nc");
+		TEST_PRE_PROCESS_PATTERN("(a|b)|123", "(a|b)|1\\N2\\N3");
+		TEST_PRE_PROCESS_PATTERN("(A|a)(B|b)(C|c)(E|e)", "(A|a)\\N(B|b)\\N(C|c)\\N(E|e)");
 		TEST_PRE_PROCESS_PATTERN("[0-9]c", "[0-9]\\Nc");
+		TEST_PRE_PROCESS_PATTERN("[0-9a-z]c", "[0-9a-z]\\Nc");
+		TEST_PRE_PROCESS_PATTERN("[0-9A-Z!]c", "[0-9A-Z!]\\Nc");
+		TEST_PRE_PROCESS_PATTERN("[0-9A-Z!](are|you)c", "[0-9A-Z!]\\N(a\\Nr\\Ne|y\\No\\Nu)\\Nc");
+		TEST_PRE_PROCESS_PATTERN("(a|b){2}", "(a|b){2}");
+		TEST_PRE_PROCESS_PATTERN("(a|b){2,5}", "(a|b){2,5}");
+		TEST_PRE_PROCESS_PATTERN("(a|b){2,}", "(a|b){2,}");
+		TEST_PRE_PROCESS_PATTERN("(a|b){2,}c", "(a|b){2,}\\Nc");
+		TEST_PRE_PROCESS_PATTERN("(a|b){2,}c", "(a|b){2,}\\Nc");
+		TEST_PRE_PROCESS_PATTERN("(A|a)(B|b)c{2,5}D", "(A|a)\\N(B|b)\\Nc{2,5}\\ND");
+		TEST_PRE_PROCESS_PATTERN("(a|b|c|d){2,5}D", "(a|b|c|d){2,5}\\ND");
+		TEST_PRE_PROCESS_PATTERN("(a|b|c|d){2,5}D", "(a|b|c|d){2,5}\\ND");
+
+
 	}
 	void DirectedGraphTest::test_pre_process_error()
 	{
+		TEST_PRE_PROCESS_PATTERN_ERROR("(", REGEX_PARSE_MISS_RIGHT_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR(")", REGEX_PARSE_MISS_LEFT_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("(a()", REGEX_PARSE_MISS_RIGHT_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("(a(cd)", REGEX_PARSE_MISS_RIGHT_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("(a(cd)", REGEX_PARSE_MISS_RIGHT_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("(a(cd)", REGEX_PARSE_MISS_RIGHT_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("[", REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("]", REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("[][", REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET);
+		TEST_PRE_PROCESS_PATTERN_ERROR("[1-9][", REGEX_PARSE_MISS_LEFT_SQUARE_BRACKET);
+
+
 	}
+#endif // _DEBUG
 }
 

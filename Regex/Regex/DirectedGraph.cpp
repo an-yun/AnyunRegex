@@ -35,9 +35,9 @@ namespace anyun_regex
 			the priority table
 
 			\metachar  (the escape char)
-			( )ã€(?: )ã€(?= )ã€[ ]
-			*ã€+ã€?ã€{n}ã€{n,}ã€{m,n}
-			^ã€$
+			( )¡¢(?: )¡¢(?= )¡¢[ ]
+			*¡¢+¡¢?¡¢{n}¡¢{n,}¡¢{m,n}
+			^¡¢$
 			concatenation  operator (I represent it here using .)
 			|
 			\0  (start or end)
@@ -331,6 +331,36 @@ namespace anyun_regex
 		return ConnectedFragment(in_edge_id, out_edge_id);
 	}
 
+
+	/*
+	merge two or more fragments together
+	     >fra1>
+		/  .   \
+	   /   .    \
+	->O ->frai-> O->
+	   \   .    /
+	    \  .   /
+		 >fran>
+	*/
+	ConnectedFragment DirectedGraph::merge_fragments(const vector<ConnectedFragment>& fragments)
+	{
+		//connect in node
+		DirectedNode in_node(nodes.size());
+		nodes.push_back(in_node);
+		size_t fragments_size = fragments.size();
+		for(size_t i=0;i<fragments_size;i++)
+			connect_in_node(in_node.get_id(), fragments[i]);
+		//connect out node
+		DirectedNode out_node(nodes.size());
+		nodes.push_back(out_node);
+		for (size_t i = 0; i<fragments_size; i++)
+			connect_out_node(out_node.get_id(), fragments[i]);
+		//connect in and out edges
+		size_t in_edge_id = add_in_sigma_edge(in_node.get_id());
+		size_t out_edge_id = add_out_sigma_edge(out_node.get_id());
+
+		return ConnectedFragment(in_edge_id, out_edge_id);
+	}
 	/*
 	reverse merge fragment1 and  fragment2 together
 
@@ -506,6 +536,8 @@ namespace anyun_regex
 				break;
 			}
 		}
+		assert(operators.empty());
+		assert(operands.size() == 1);
 		return operands.top();
 	}
 
