@@ -74,11 +74,11 @@ namespace anyun_regex
 		
 		void set_start_node(size_t node_id);
 		void set_end_node(size_t node_id);
-		size_t get_start_node_id();
-		size_t get_end_node_id();
-		bool is_sigma_edge();
-		bool accept(char ch);
-		size_t get_id();
+		size_t get_start_node_id() const;
+		size_t get_end_node_id() const;
+		bool is_sigma_edge() const;
+		bool accept(char ch) const;
+		size_t get_id() const;
 
 	private:
 		size_t id;

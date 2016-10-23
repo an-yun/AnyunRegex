@@ -28,7 +28,10 @@ namespace anyun_regex
 		REGEX_PARSE_ILLEGAL_CHAR_AFTER_OR,
 		REGEX_PARSE_BRAKET_NESTED,
 		REGEX_PARSE_SQUARE_BRAKET_NESTED,
-		REGEX_PARSE_ILLEGAL_CHAR_IN_BRACES
+		REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET,
+		REGEX_PARSE_ILLEGAL_CHAR_IN_BRACES,
+		REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY,
+		REGEX_PARSE_BRACES_IS_EMPTY
 	};
 	static const char *PARSE_RESULT_MESSAGE[] =
 	{
@@ -44,9 +47,20 @@ namespace anyun_regex
 		"REGEX_PARSE_ILLEGAL_CHAR_AFTER_OR",
 		"REGEX_PARSE_BRAKET_NESTED",
 		"REGEX_PARSE_SQUARE_BRAKET_NESTED",
+		"REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET",
 		"REGEX_PARSE_ILLEGAL_CHAR_IN_BRACES",
+		"REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY",
+		"REGEX_PARSE_BRACES_IS_EMPTY",
 		nullptr
 	};
+
+	const size_t ZERO = '0';
+	const size_t NINE = '9';
+	const size_t LOWER_A = 'a';
+	const size_t LOWER_Z = 'z';
+	const size_t UPPER_A = 'A';
+	const size_t UPPER_Z = 'Z';
+
 	struct ConnectedFragment
 	{
 		size_t in_edge_id;
@@ -69,6 +83,11 @@ namespace anyun_regex
 		static const char SINGLE_SPECAIL_CAHRS[];
 		static const size_t SINGLE_SPECAIL_CAHR_SIZE;
 		static bool is_special_char(size_t ch);
+		static bool is_upper_case(size_t ch);
+		static bool is_lower_case(size_t ch);
+		static bool is_letter(size_t ch);
+		static bool is_num(size_t ch);
+		static bool is_alpnum(size_t ch);
 		static bool is_char_in(size_t ch, const char *str,size_t length);
 		size_t v();
 
@@ -140,6 +159,13 @@ namespace anyun_regex
 		//pre_process_pattern add the dot \N (means concatenation  operator) to pattern
 		string pre_process_pattern(const string &p);
 		ConnectedFragment parse(string p);
+		//parse or condition in []
+		bool parse_or_condition(vector<ConditionPoint> &conditions, const string &p, size_t &parse_index);
+
+		//check the range is right?
+		bool check_range(size_t from,size_t to);
+		//store the edge
+		void store_edge(const DirectedEdge &edge, stack<ConnectedFragment> &operands);
 		//compare op's priority with operators.top()'s
 		//accroding the result of  comparation to decide it should push or operate
 		void normal_priority_parse(size_t op, stack<size_t> &operators, stack<ConnectedFragment>& operands, size_t &parse_index);

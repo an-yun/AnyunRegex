@@ -7,12 +7,14 @@ namespace anyun_regex
 
 	}
 
-	NFA::NFA(const char * pattern) : digraph(pattern), start_state({ 0 }),offset(0), start_is_final(false),is_find(false)
+	NFA::NFA(const char * pattern) 
+		: digraph(pattern), start_state({ 0 }),match_start(0),match_end(0),offset(0), start_is_final(false),is_find(false)
 	{
 		if (digraph.parse_result == REGEX_PARSE_OK)start_is_final =get_sigma_closure(start_state);
 	}
 
-	NFA::NFA(const string & pattern) :digraph(pattern), start_state({ 0 }), offset(0), start_is_final(false), is_find(false)
+	NFA::NFA(const string & pattern) 
+		:digraph(pattern), start_state({ 0 }), match_start(0), match_end(0), offset(0), start_is_final(false), is_find(false)
 	{
 		if (digraph.parse_result == REGEX_PARSE_OK)start_is_final = get_sigma_closure(start_state);
 	}
@@ -23,7 +25,10 @@ namespace anyun_regex
 
 	bool NFA::compile(const string & pattern)
 	{
-		return digraph.compile(pattern) == REGEX_PARSE_OK;
+		match_start = match_end = offset = 0;
+		is_find = digraph.compile(pattern) == REGEX_PARSE_OK;
+		if (digraph.parse_result == REGEX_PARSE_OK)start_is_final = get_sigma_closure(start_state);
+		return is_find;
 	}
 
 	RegexParseCode NFA::get_compile_result_code()

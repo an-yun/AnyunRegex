@@ -2,27 +2,43 @@
 
 namespace anyun_regex
 {
-#define PRE_PROCESS_PATTERN_ERROR(assgin,code)  \
-	do {								\
-		(assgin) = (code);				\
-		return "" ;						\
-	} while(0)
-#define PARSE_ERROR(assgin,code)		\
-	do {								\
-		(assgin) = (code);				\
-		return ConnectedFragment(0,0);	\
-	} while(0)
-
 	/*
 	-----------------------these code can be used again------------------------------------
 	2016-10-18 10:23
 	*/
-	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' };
+	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' ,'\\'};
 	const size_t DirectedGraph::SINGLE_SPECAIL_CAHR_SIZE = sizeof(DirectedGraph::SINGLE_SPECAIL_CAHRS) / sizeof(char);
 	inline bool DirectedGraph::is_special_char(size_t ch)
 	{
 		return is_char_in(ch, SINGLE_SPECAIL_CAHRS, SINGLE_SPECAIL_CAHR_SIZE);
 	}
+
+	bool DirectedGraph::is_upper_case(size_t ch)
+	{
+		return ch >= UPPER_A && ch <= UPPER_Z;
+	}
+
+	bool DirectedGraph::is_lower_case(size_t ch)
+	{
+		return ch >= LOWER_A && ch <= LOWER_Z;
+	}
+
+	bool DirectedGraph::is_letter(size_t ch)
+	{
+		return is_lower_case(ch) || is_upper_case(ch);
+	}
+
+	bool DirectedGraph::is_num(size_t ch)
+	{
+		return ch >= ZERO && ch <= NINE;
+	}
+
+	bool DirectedGraph::is_alpnum(size_t ch)
+	{
+		return is_letter(ch) || is_num(ch);
+	}
+
+
 
 	inline bool DirectedGraph::is_char_in(size_t ch, const char * str, size_t length)
 	{
@@ -30,6 +46,7 @@ namespace anyun_regex
 			if (ch == str[i])return true;
 		return false;
 	}
+
 
 	int DirectedGraph::get_priority(size_t op1, size_t op2)
 	{
@@ -208,6 +225,8 @@ namespace anyun_regex
 	RegexParseCode DirectedGraph::compile(const string &pattern)
 	{
 		//the empty pattern
+		edges.clear();
+		nodes.clear();
 		if (pattern.size() == 0)
 		{
 			this->pattern = "";
@@ -241,7 +260,7 @@ namespace anyun_regex
 			nodes.clear();
 			edges.clear();
 		}
-		
+
 		return parse_result;
 	}
 
@@ -340,12 +359,12 @@ namespace anyun_regex
 
 	/*
 	merge two or more fragments together
-	     >fra1>
+		 >fra1>
 		/  .   \
 	   /   .    \
 	->O ->frai-> O->
 	   \   .    /
-	    \  .   /
+		\  .   /
 		 >fran>
 	*/
 	ConnectedFragment DirectedGraph::merge_fragments(const vector<ConnectedFragment>& fragments)
@@ -354,12 +373,12 @@ namespace anyun_regex
 		DirectedNode in_node(nodes.size());
 		nodes.push_back(in_node);
 		size_t fragments_size = fragments.size();
-		for(size_t i=0;i<fragments_size;i++)
+		for (size_t i = 0; i < fragments_size; i++)
 			connect_in_node(in_node.get_id(), fragments[i]);
 		//connect out node
 		DirectedNode out_node(nodes.size());
 		nodes.push_back(out_node);
-		for (size_t i = 0; i<fragments_size; i++)
+		for (size_t i = 0; i < fragments_size; i++)
 			connect_out_node(out_node.get_id(), fragments[i]);
 		//connect in and out edges
 		size_t in_edge_id = add_in_sigma_edge(in_node.get_id());
@@ -410,7 +429,11 @@ namespace anyun_regex
 
 	string DirectedGraph::pre_process_pattern(const string & p)
 	{
-
+#define PRE_PROCESS_PATTERN_ERROR(assgin,code)  \
+			do {								\
+				(assgin) = (code);				\
+				return "" ;						\
+			} while(0)
 		static const char end_and_no_connect_operators[] = { '\0',')','{','|','*','+','?', };
 		static const char right_operators[] = { '*','+','?',']',')','}' };
 		list<size_t> result;
@@ -438,7 +461,7 @@ namespace anyun_regex
 			case '[':
 				if (statest_empty)
 					bracket_states.push(1);
-				else if(bracket_states.top() == 1)
+				else if (bracket_states.top() == 1)
 					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_SQUARE_BRAKET_NESTED);
 				else
 					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
@@ -494,6 +517,12 @@ namespace anyun_regex
 
 	ConnectedFragment DirectedGraph::parse(string p)
 	{
+#define PARSE_ERROR(assgin,code)		\
+			do {								\
+				(assgin) = (code);				\
+				return ConnectedFragment(0,0);	\
+			} while(0)
+
 		stack<ConnectedFragment> operands;
 		stack<size_t> operators;
 		operators.push('\0');//the start operator
@@ -502,8 +531,8 @@ namespace anyun_regex
 		while (parse_result == REGEX_PARSE_NOT_FOUND)
 		{
 			/*
-			now we have support () | . + *
-			next to support is [] {}
+			now we have support () | . + * []
+			next to support is ^ $ {}
 			*/
 			switch (p[parse_index])
 			{
@@ -519,10 +548,26 @@ namespace anyun_regex
 				break;
 			case '[':
 			{
-				bool complementary = p[parse_index + 1] == '^';
+				// to test
+				bool complementary = p[++parse_index] == '^';
 				if (complementary)parse_index++;
-				//to  do
 
+				//check whether is nothing in []
+				if (p[parse_index + 1] == ']')
+					PARSE_ERROR(parse_result, REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY);
+
+				//parse all or condition
+				vector<ConditionPoint> conditions;
+				if (!parse_or_condition(conditions, p, parse_index))
+					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET);
+				//is complement?
+				ConditionPoint condition(new OrCondtion(conditions));
+				if (complementary)condition.reset(new ComplmentCondtion(condition));
+
+				DirectedEdge edge(condition, edges.size());
+				store_edge(edge, operands);
+				assert(p[parse_index] == ']');
+				parse_index++;
 				break;
 			}
 			case '{':
@@ -559,8 +604,7 @@ namespace anyun_regex
 				//the single char
 			default:
 				DirectedEdge edge(p[parse_index], edges.size());
-				edges.push_back(edge);
-				operands.push(ConnectedFragment(edge.get_id(), edge.get_id()));
+				store_edge(edge, operands);
 				parse_index++;
 				break;
 			}
@@ -568,6 +612,63 @@ namespace anyun_regex
 		assert(operators.empty());
 		assert(operands.size() == 1);
 		return operands.top();
+	}
+
+	//parse or condition in []
+	inline bool DirectedGraph::parse_or_condition(vector<ConditionPoint>& conditions, const string & p, size_t & parse_index)
+	{
+
+		size_t current = p[parse_index], next = p[parse_index + 1];
+		while (current != ']')
+		{
+			if (next == '-')
+			{
+				if (check_range(current, p[parse_index + 2]))
+				{
+					conditions.push_back(ConditionPoint(new RangeCondition(current, p[parse_index + 2])));
+					parse_index += 3;
+				}
+				else return false;
+			}
+			else if (current == '\\')
+			{
+				if (is_special_char(next))
+				{
+					conditions.push_back(ConditionPoint(new SingleCharCondition(next)));
+					parse_index += 2;
+				}
+				else return false;
+			}
+			else if (is_special_char(current))
+				return false;
+			else
+			{
+				conditions.push_back(ConditionPoint(new SingleCharCondition(current)));
+				parse_index++;
+			}
+			current = p[parse_index], next = p[parse_index + 1];
+		}
+		return true;
+	}
+
+	//check the range is right?
+	bool DirectedGraph::check_range(size_t from, size_t to)
+	{
+		if (from < to)
+		{
+			if (is_num(from) && is_num(to)) return true;
+			else if (is_upper_case(from) && is_upper_case(to))return true;
+			else if (is_lower_case(from) && is_lower_case(to))return true;
+			else return false;
+		}
+		else return false;
+	}
+
+	//store the edge
+	inline void DirectedGraph::store_edge(const DirectedEdge & edge, stack<ConnectedFragment>& operands)
+	{
+		edges.push_back(edge);
+		operands.push(ConnectedFragment(edge.get_id(), edge.get_id()));
 	}
 
 	/*

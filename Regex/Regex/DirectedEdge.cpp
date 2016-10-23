@@ -81,25 +81,25 @@ namespace anyun_regex
 	}
 
 
-	size_t DirectedEdge::get_start_node_id()
+	size_t DirectedEdge::get_start_node_id() const
 	{
 		return start_id;
 	}
 
-	size_t DirectedEdge::get_end_node_id()
+	size_t DirectedEdge::get_end_node_id() const
 	{
 		return end_id;
 	}
 
-	bool DirectedEdge::is_sigma_edge()
+	bool DirectedEdge::is_sigma_edge() const
 	{
 		return is_sigma;
 	}
-	bool DirectedEdge::accept(char ch)
+	bool DirectedEdge::accept(char ch) const
 	{
 		return !is_sigma && condition->match(ch);
 	}
-	size_t DirectedEdge::get_id()
+	size_t DirectedEdge::get_id() const
 	{
 		return id;
 	}
