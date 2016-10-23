@@ -7,7 +7,11 @@
 
 int main()
 {
-	anyun_regex::test_directedgraph();
+	//anyun_regex::test_directedgraph();
+	anyun_regex::NFA nfa("a*b");
+	nfa.match("aaabbb");
+	while (nfa.find())
+		std::cout << nfa.get_match() << std::endl;
 #ifdef BOOST_TEST
 	boost_regex();
 #endif // BOOST_TEST

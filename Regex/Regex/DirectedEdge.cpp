@@ -2,23 +2,69 @@
 
 namespace anyun_regex
 {
-	DirectedEdge::DirectedEdge(size_t id,bool is_dot) : id(id),condition(is_dot) {}
-	DirectedEdge::DirectedEdge(size_t s_id, size_t e_id, size_t id):id(id), start_id(s_id), end_id(e_id)
+	Condition::~Condition()
 	{
 	}
-	DirectedEdge::DirectedEdge(const char *str, size_t id): id(id)
+	bool DotCondition::match(size_t ch) const
 	{
+		return true;
+	}
+	SingleCharCondition::SingleCharCondition(size_t ch):ch(ch)
+	{
+	}
+	bool SingleCharCondition::match(size_t ch) const
+	{
+		return this->ch == ch;
+	}
+	RangeCondition::RangeCondition(size_t from, size_t to):from(from),to(to)
+	{
+	}
+	bool RangeCondition::match(size_t ch) const
+	{
+		return ch >= from && ch <= to;
+	}
+	ComplmentCondtion::ComplmentCondtion(ConditionPoint condition_ptr):original_condition(condition_ptr)
+	{
+	}
+	bool ComplmentCondtion::match(size_t ch) const
+	{
+		return !original_condition->match(ch);
+	}
+	OrCondtion::OrCondtion(ConditionPoint lhs, ConditionPoint rhs)
+	{
+		conditions.push_back(lhs);
+		conditions.push_back(rhs);
+	}
+	OrCondtion::OrCondtion(vector<ConditionPoint> conditions):conditions(conditions)
+	{
+	}
+	bool OrCondtion::match(size_t ch) const
+	{
+		for (vector<ConditionPoint>::const_iterator b = conditions.cbegin(), e = conditions.cend(); b != e; b++)
+			if ((*b)->match(ch))return true;
+		return false;
+	}
+	DirectedEdge::DirectedEdge(size_t id)
+		:id(id),start_id(0),end_id(0),is_sigma(true)
+	{
+	}
+	DirectedEdge::DirectedEdge(char ch, size_t id,size_t s_id, size_t e_id)
+		: id(id), start_id(s_id), end_id(e_id), is_sigma(false)
+	{
+		if (ch == '.')condition.reset(new DotCondition());
+		else condition.reset(new SingleCharCondition(ch));
+	}
+	DirectedEdge::DirectedEdge(char start,char end, size_t id, bool complementary,size_t s_id, size_t e_id)
+		:id(id), start_id(s_id), end_id(e_id), is_sigma(false)
+	{
+		ConditionPoint range_condition(new RangeCondition(start, end));
+		if (complementary) condition.reset(new ComplmentCondtion(range_condition));
+		else condition = range_condition;
+	}
 
-	}
-	DirectedEdge::DirectedEdge(char ch, size_t id) : id(id)
+	DirectedEdge::DirectedEdge(ConditionPoint condition, size_t id, size_t s_id, size_t e_id) 
+		: id(id), start_id(s_id), end_id(e_id), is_sigma(false),condition(condition)
 	{
-		//for the dot char
-		if (ch == '.')condition = TransactionCondition(true);
-		else condition = TransactionCondition(ch);
-	}
-	DirectedEdge::DirectedEdge(char ch, size_t s_id, size_t  e_id, size_t id) : id(id), start_id(s_id), end_id(e_id),condition(ch)
-	{
-
 	}
 	DirectedEdge::~DirectedEdge()
 	{
@@ -34,10 +80,6 @@ namespace anyun_regex
 		end_id = node_id;
 	}
 
-	void DirectedEdge::set_to_complementary(bool complementary)
-	{
-		condition.set_complementary(complementary);
-	}
 
 	size_t DirectedEdge::get_start_node_id()
 	{
@@ -48,63 +90,17 @@ namespace anyun_regex
 	{
 		return end_id;
 	}
-	
+
 	bool DirectedEdge::is_sigma_edge()
 	{
-		return condition.flag == -1;
+		return is_sigma;
 	}
 	bool DirectedEdge::accept(char ch)
 	{
-		return condition.match(ch);
+		return !is_sigma && condition->match(ch);
 	}
 	size_t DirectedEdge::get_id()
 	{
 		return id;
-	}
-	/*
-	if is_dot is true which means the condition can accept any char
-	else is sigma condition,namely sigma(the empty edge),not accept any char
-	
-	*/
-	TransactionCondition::TransactionCondition(bool is_dot):is_complementary(false)
-	{
-		if (is_dot)flag = 2;
-		else flag = -1;
-	}
-	void TransactionCondition::set_complementary(bool complementary)
-	{
-		is_complementary = complementary;
-	}
-	TransactionCondition::TransactionCondition(char ch) :flag(0), is_complementary(false)
-	{
-		condition.ch = ch;
-	}
-	TransactionCondition::TransactionCondition(int start, int end):flag(1),is_complementary(false)
-	{
-		condition.range.start_index = start;
-		condition.range.end_index = end;
-	}
-
-	bool TransactionCondition::match(int ch)
-	{
-		bool is_match = false;
-		switch (flag)
-		{
-		case -1:
-			is_match =  false;
-			break;
-		case 0:
-			is_match = condition.ch == ch;
-			break;
-		case 1:
-			is_match = (ch >= condition.range.start_index && ch <= condition.range.end_index);
-			break;
-		case 2:
-			is_match = true;
-			break;
-		default:
-			break;
-		}
-		return is_complementary ^ is_match;
 	}
 }
