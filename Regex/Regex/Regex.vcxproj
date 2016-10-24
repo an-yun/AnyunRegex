@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v140_clang_c2</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -90,6 +90,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\我的文件\C++\boost_1_62_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,6 +152,7 @@
     <ClInclude Include="DirectedEdge.h" />
     <ClInclude Include="DirectedGraph.h" />
     <ClInclude Include="DirectedNode.h" />
+    <ClInclude Include="Matcher.h" />
     <ClInclude Include="NFA.h" />
     <ClInclude Include="test\DirectedGraphTest.h" />
     <ClInclude Include="test\NFATest.h" />

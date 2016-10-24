@@ -8,7 +8,7 @@
 #include <queue>
 #include <iterator>
 #include "DirectedGraph.h"
-
+#include "Matcher.h"
 namespace anyun_regex
 {
 	using std::string;
@@ -50,9 +50,10 @@ namespace anyun_regex
 		postoin_type offset;
 		bool start_is_final;
 		bool is_find;
+		Matcher matcher;
 
 		bool get_sigma_closure(list<size_t> &source);
-		bool get_next_state(list<size_t> & state, char ch);
+		bool get_next_state(list<size_t> & state, const string &text, size_t index, Matcher &matcher);
 	};
 
 }

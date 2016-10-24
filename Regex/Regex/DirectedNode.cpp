@@ -2,39 +2,46 @@
 
 namespace anyun_regex
 {
-	DirectedNode::DirectedNode(size_t id, bool is_final):id(id), is_final_node(is_final),out_edges(), in_edges()
+	DirectedNode::DirectedNode(size_t id):id(id),out_edges(), in_edges()
 	{
 	}
-	DirectedNode::DirectedNode(bool is_final): is_final_node(is_final),out_edges(),in_edges()
-	{
-	}
+
 	DirectedNode::~DirectedNode()
 	{
 		
 	}
-	const vector<size_t>& anyun_regex::DirectedNode::get_out_edges()
+	const vector<size_t>& anyun_regex::DirectedNode::get_out_edges() const
 	{
 		return out_edges;
 	}
 
-	const vector<size_t>& DirectedNode::get_in_edges()
+	const vector<size_t>& DirectedNode::get_in_edges() const
 	{
 		return in_edges;
 	}
 
-	size_t DirectedNode::out_edges_num()
+	size_t DirectedNode::out_edges_num() const
 	{
 		return out_edges.size();
 	}
 
-	size_t DirectedNode::in_edges_num()
+	size_t DirectedNode::in_edges_num() const
 	{
 		return in_edges.size();
 	}
 
-	size_t DirectedNode::get_id()
+	size_t DirectedNode::get_id() const
 	{
 		return id;
+	}
+
+	void DirectedNode::action(Matcher & matcher) const
+	{
+	}
+
+	DirectedNodeType DirectedNode::get_type() const
+	{
+		return DIRECTEDNODE;
 	}
 
 	void DirectedNode::add_out_edge(size_t out_edge_id)
@@ -47,20 +54,37 @@ namespace anyun_regex
 		in_edges.push_back(in_edge_id);
 	}
 
-	bool DirectedNode::is_final()
-	{
-		return is_final_node;
-	}
-
-	void DirectedNode::set_final(bool f)
-	{
-		is_final_node = f;
-	}
 
 	void DirectedNode::set_id(size_t id)
 	{
 		this->id = id;
 	}
 
+
+	StartDirectedNode::StartDirectedNode(size_t id):DirectedNode(id)
+	{
+	}
+
+	void StartDirectedNode::action(Matcher & matcher) const
+	{
+	}
+
+	DirectedNodeType StartDirectedNode::get_type() const
+	{
+		return START_DIRECTEDNODE;
+	}
+
+	EndDirectedNode::EndDirectedNode(size_t id) :DirectedNode(id)
+	{
+	}
+
+	void EndDirectedNode::action(Matcher & matcher) const
+	{
+	}
+
+	DirectedNodeType EndDirectedNode::get_type() const
+	{
+		return END_DIRECTEDNODE;
+	}
 
 }

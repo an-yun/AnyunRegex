@@ -1,12 +1,15 @@
 #ifndef DIRECTED_EDGE_H
 #define DIRECTED_EDGE_H
 #include<vector>
+#include<string>
 #include<memory>
 
 namespace anyun_regex
 {
 	using std::vector;
+	using std::string;
 	using std::shared_ptr;
+	class Matcher;			//forward declaration
 	class Condition
 	{
 	public:
@@ -23,11 +26,11 @@ namespace anyun_regex
 		bool match(size_t ch) const override;
 	};
 
-	class SingleCharCondition:public Condition
+	class CharCondition:public Condition
 	{
 	public:
-		SingleCharCondition(size_t ch);
-		bool match(size_t ch) const override;
+		CharCondition(size_t ch);
+		bool match(size_t ch)  const override;
 	private:
 		size_t ch;
 	};
@@ -61,33 +64,62 @@ namespace anyun_regex
 		vector<ConditionPoint> conditions;
 	};
 
+	enum DirectedEdgeType
+	{
+		SIGMA_DIRECTEDEDGE,
+		SINGLE_CHAR_DIRECTEDEDGE,
+		LINE_START_DIRECTEDEDGE,
+		LINE_END_DIRECTEDEDGE,
+		REPEAT_COUNT_DIRECTEDEDGE,
+		STRING_DIRECTEDEDGE
+	};
+
 
 	class DirectedEdge
 	{
 	public:
-		//the default sigma edge
-		DirectedEdge(size_t id);
-		DirectedEdge(char ch, size_t id,size_t s_id =0, size_t  e_id=0);
-		DirectedEdge(char start, char end , size_t id,  bool complementary = false, size_t s_id = 0, size_t  e_id = 0);
-		DirectedEdge(ConditionPoint condition, size_t id, size_t s_id = 0, size_t  e_id = 0);
-		~DirectedEdge();
-		
-		void set_start_node(size_t node_id);
-		void set_end_node(size_t node_id);
-		size_t get_start_node_id() const;
-		size_t get_end_node_id() const;
-		bool is_sigma_edge() const;
-		bool accept(char ch) const;
+		DirectedEdge(size_t id, size_t s_id = 0, size_t e_id = 0);
 		size_t get_id() const;
+		virtual DirectedEdgeType get_type() const = 0;
 
+		virtual void set_start_node(size_t node_id);
+		virtual void set_end_node(size_t node_id);
+		virtual size_t get_start_node_id(const Matcher &matcher) const;
+		virtual size_t get_end_node_id(const Matcher &matcher) const;
+
+		virtual bool accept(const string &text, size_t index, Matcher &matcher) const = 0 ;
+
+		virtual ~DirectedEdge();	//the virtual destructor
 	private:
 		size_t id;
 		size_t start_id;
 		size_t end_id;
-		bool is_sigma;
-		ConditionPoint condition;
-
 	};
+
+	typedef shared_ptr<DirectedEdge> DirectedEdgePoint;
+
+	class SigmaDirectedEdge:public DirectedEdge
+	{
+	public:
+		SigmaDirectedEdge(size_t id, size_t s_id = 0, size_t e_id = 0);
+
+		DirectedEdgeType get_type() const override;
+		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+	};
+
+	class SingleCharDirectedEdge :public DirectedEdge
+	{
+	public:
+		SingleCharDirectedEdge(size_t ch, size_t id, size_t s_id = 0, size_t  e_id = 0);
+		SingleCharDirectedEdge(size_t start, size_t end, size_t id, bool complementary = false, size_t s_id = 0, size_t  e_id = 0);
+		SingleCharDirectedEdge(ConditionPoint condition, size_t id, size_t s_id = 0, size_t  e_id = 0);
+
+		DirectedEdgeType get_type() const override;
+		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+	private:
+		ConditionPoint condition;
+	};
+
 }
 
 #endif

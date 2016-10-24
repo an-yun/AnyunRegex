@@ -167,9 +167,9 @@ namespace anyun_regex
 		{
 			ConnectedFragment fra1 = operands.top();
 			operands.pop();
-			DirectedEdge sigma_edge(edges.size());
+			DirectedEdgePoint sigma_edge(new SigmaDirectedEdge(edges.size()));
 			edges.push_back(sigma_edge);
-			ConnectedFragment fra2(sigma_edge.get_id(), sigma_edge.get_id());
+			ConnectedFragment fra2(sigma_edge->get_id(), sigma_edge->get_id());
 			operands.push(merge_fragments(fra1, fra2));
 			break;
 		}
@@ -185,10 +185,10 @@ namespace anyun_regex
 		{
 			ConnectedFragment fra1 = operands.top();
 			operands.pop();
-			DirectedEdge sigma_edge(edges.size());
+			DirectedEdgePoint sigma_edge(new SigmaDirectedEdge(edges.size()));
 			edges.push_back(sigma_edge);
 			//the fra2
-			ConnectedFragment fra2(sigma_edge.get_id(), sigma_edge.get_id());
+			ConnectedFragment fra2(sigma_edge->get_id(), sigma_edge->get_id());
 			//reverse merge fra1 and fra2
 			operands.push(reverse_merge_fragments(fra1, fra2));
 			break;
@@ -230,15 +230,13 @@ namespace anyun_regex
 		if (pattern.size() == 0)
 		{
 			this->pattern = "";
-			nodes.push_back(DirectedNode(0, true));
+			nodes.push_back(DirectedNodePoint(new EndDirectedNode(0)));
 			start_node_id = end_node_id = 0;
 			return (parse_result = REGEX_PARSE_OK);
 		}
 		this->pattern = pattern;
 		//add the start node
-		DirectedNode start_node;
-		start_node.set_id(0);
-		nodes.push_back(start_node);
+		nodes.push_back(DirectedNodePoint(new StartDirectedNode(0)));
 
 		//bgein to parse
 		parse_result = REGEX_PARSE_OK;
@@ -247,13 +245,12 @@ namespace anyun_regex
 		ConnectedFragment fragment = parse(pre_pattern);
 		if (parse_result == REGEX_PARSE_OK)
 		{
-			DirectedNode end_node;
-			end_node.set_id(nodes.size());
-			end_node.set_final(true);
+			//add the end node
+			DirectedNodePoint end_node(new EndDirectedNode(nodes.size()));
 			nodes.push_back(end_node);
 
 			connect_in_node(0, fragment);
-			connect_out_node(end_node.get_id(), fragment);
+			connect_out_node(end_node->get_id(), fragment);
 		}
 		else
 		{
@@ -268,32 +265,32 @@ namespace anyun_regex
 
 	inline void DirectedGraph::connect_in_node(size_t in_node_id, const ConnectedFragment & fragment)
 	{
-		edges[fragment.in_edge_id].set_start_node(in_node_id);
-		nodes[in_node_id].add_out_edge(fragment.in_edge_id);
+		edges[fragment.in_edge_id]->set_start_node(in_node_id);
+		nodes[in_node_id]->add_out_edge(fragment.in_edge_id);
 	}
 
 	inline void DirectedGraph::connect_out_node(size_t out_node_id, const ConnectedFragment & fragment)
 	{
-		edges[fragment.out_edge_id].set_end_node(out_node_id);
-		nodes[out_node_id].add_in_edge(fragment.out_edge_id);
+		edges[fragment.out_edge_id]->set_end_node(out_node_id);
+		nodes[out_node_id]->add_in_edge(fragment.out_edge_id);
 	}
 
 	inline size_t DirectedGraph::add_in_sigma_edge(size_t node_id)
 	{
 		//connect in  edge
-		DirectedEdge sigma_edge(edges.size());
+		DirectedEdgePoint sigma_edge(new SigmaDirectedEdge(edges.size()));
 		edges.push_back(sigma_edge);
-		connect_out_node_to_edge(node_id, sigma_edge.get_id());
-		return sigma_edge.get_id();  //return sigma_edge id
+		connect_out_node_to_edge(node_id, sigma_edge->get_id());
+		return sigma_edge->get_id();  //return sigma_edge id
 	}
 
 	inline size_t DirectedGraph::add_out_sigma_edge(size_t node_id)
 	{
 		//connect out edges
-		DirectedEdge sigma_edge(edges.size());
+		DirectedEdgePoint sigma_edge(new SigmaDirectedEdge(edges.size()));
 		edges.push_back(sigma_edge);
-		connect_in_node_to_edge(node_id, sigma_edge.get_id());
-		return sigma_edge.get_id();  //return sigma_edge id
+		connect_in_node_to_edge(node_id, sigma_edge->get_id());
+		return sigma_edge->get_id();  //return sigma_edge id
 	}
 	/*
 	connect fragment to itself
@@ -304,14 +301,14 @@ namespace anyun_regex
 	ConnectedFragment DirectedGraph::self_connect_fragment(const ConnectedFragment & fragment)
 	{
 		//the selfnode
-		DirectedNode node(nodes.size());
+		DirectedNodePoint node(new DirectedNode(nodes.size()));
 		nodes.push_back(node);
 		//connect to itself
-		connect_in_node(node.get_id(), fragment);
-		connect_out_node(node.get_id(), fragment);
+		connect_in_node(node->get_id(), fragment);
+		connect_out_node(node->get_id(), fragment);
 		//add in and out edge
-		size_t in_edge_id = add_in_sigma_edge(node.get_id());
-		size_t out_edge_id = add_out_sigma_edge(node.get_id());
+		size_t in_edge_id = add_in_sigma_edge(node->get_id());
+		size_t out_edge_id = add_out_sigma_edge(node->get_id());
 
 		return ConnectedFragment(in_edge_id, out_edge_id);
 	}
@@ -321,10 +318,10 @@ namespace anyun_regex
 	*/
 	inline ConnectedFragment DirectedGraph::connect_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
 	{
-		DirectedNode node(nodes.size());
+		DirectedNodePoint node(new DirectedNode(nodes.size()));
 		nodes.push_back(node);
-		connect_out_node(node.get_id(), fragment1);
-		connect_in_node(node.get_id(), fragment2);
+		connect_out_node(node->get_id(), fragment1);
+		connect_in_node(node->get_id(), fragment2);
 		return ConnectedFragment(fragment1.in_edge_id, fragment2.out_edge_id);
 	}
 
@@ -340,18 +337,18 @@ namespace anyun_regex
 	inline ConnectedFragment DirectedGraph::merge_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
 	{
 		//connect in node
-		DirectedNode in_node(nodes.size());
+		DirectedNodePoint in_node(new DirectedNode(nodes.size()));
 		nodes.push_back(in_node);
-		connect_in_node(in_node.get_id(), fragment1);
-		connect_in_node(in_node.get_id(), fragment2);
+		connect_in_node(in_node->get_id(), fragment1);
+		connect_in_node(in_node->get_id(), fragment2);
 		//connect out node
-		DirectedNode out_node(nodes.size());
+		DirectedNodePoint out_node(new DirectedNode(nodes.size()));
 		nodes.push_back(out_node);
-		connect_out_node(out_node.get_id(), fragment1);
-		connect_out_node(out_node.get_id(), fragment2);
+		connect_out_node(out_node->get_id(), fragment1);
+		connect_out_node(out_node->get_id(), fragment2);
 		//connect in and out edges
-		size_t in_edge_id = add_in_sigma_edge(in_node.get_id());
-		size_t out_edge_id = add_out_sigma_edge(out_node.get_id());
+		size_t in_edge_id = add_in_sigma_edge(in_node->get_id());
+		size_t out_edge_id = add_out_sigma_edge(out_node->get_id());
 
 		return ConnectedFragment(in_edge_id, out_edge_id);
 	}
@@ -370,19 +367,19 @@ namespace anyun_regex
 	ConnectedFragment DirectedGraph::merge_fragments(const vector<ConnectedFragment>& fragments)
 	{
 		//connect in node
-		DirectedNode in_node(nodes.size());
+		DirectedNodePoint in_node(new DirectedNode(nodes.size()));
 		nodes.push_back(in_node);
 		size_t fragments_size = fragments.size();
 		for (size_t i = 0; i < fragments_size; i++)
-			connect_in_node(in_node.get_id(), fragments[i]);
+			connect_in_node(in_node->get_id(), fragments[i]);
 		//connect out node
-		DirectedNode out_node(nodes.size());
+		DirectedNodePoint out_node(new DirectedNode(nodes.size()));
 		nodes.push_back(out_node);
 		for (size_t i = 0; i < fragments_size; i++)
-			connect_out_node(out_node.get_id(), fragments[i]);
+			connect_out_node(out_node->get_id(), fragments[i]);
 		//connect in and out edges
-		size_t in_edge_id = add_in_sigma_edge(in_node.get_id());
-		size_t out_edge_id = add_out_sigma_edge(out_node.get_id());
+		size_t in_edge_id = add_in_sigma_edge(in_node->get_id());
+		size_t out_edge_id = add_out_sigma_edge(out_node->get_id());
 
 		return ConnectedFragment(in_edge_id, out_edge_id);
 	}
@@ -398,32 +395,32 @@ namespace anyun_regex
 	inline ConnectedFragment DirectedGraph::reverse_merge_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
 	{
 		//connect in node
-		DirectedNode in_node(nodes.size());
+		DirectedNodePoint in_node(new DirectedNode(nodes.size()));
 		nodes.push_back(in_node);
-		connect_in_node(in_node.get_id(), fragment1);
-		connect_out_node(in_node.get_id(), fragment2);
+		connect_in_node(in_node->get_id(), fragment1);
+		connect_out_node(in_node->get_id(), fragment2);
 		//connect out node
-		DirectedNode out_node(nodes.size());
+		DirectedNodePoint out_node(new DirectedNode(nodes.size()));
 		nodes.push_back(out_node);
-		connect_out_node(out_node.get_id(), fragment1);
-		connect_in_node(out_node.get_id(), fragment2);
+		connect_out_node(out_node->get_id(), fragment1);
+		connect_in_node(out_node->get_id(), fragment2);
 		//connect in and out edges
-		size_t in_edge_id = add_in_sigma_edge(in_node.get_id());
-		size_t out_edge_id = add_out_sigma_edge(out_node.get_id());
+		size_t in_edge_id = add_in_sigma_edge(in_node->get_id());
+		size_t out_edge_id = add_out_sigma_edge(out_node->get_id());
 
 		return ConnectedFragment(in_edge_id, out_edge_id);
 	}
 
 	inline void DirectedGraph::connect_in_node_to_edge(size_t in_node_id, size_t edge_id)
 	{
-		edges[edge_id].set_start_node(in_node_id);
-		nodes[in_node_id].add_out_edge(edge_id);
+		edges[edge_id]->set_start_node(in_node_id);
+		nodes[in_node_id]->add_out_edge(edge_id);
 	}
 
 	inline void DirectedGraph::connect_out_node_to_edge(size_t out_node_id, size_t edge_id)
 	{
-		edges[edge_id].set_end_node(out_node_id);
-		nodes[out_node_id].add_in_edge(edge_id);
+		edges[edge_id]->set_end_node(out_node_id);
+		nodes[out_node_id]->add_in_edge(edge_id);
 	}
 
 
@@ -564,7 +561,7 @@ namespace anyun_regex
 				ConditionPoint condition(new OrCondtion(conditions));
 				if (complementary)condition.reset(new ComplmentCondtion(condition));
 
-				DirectedEdge edge(condition, edges.size());
+				DirectedEdgePoint edge(new SingleCharDirectedEdge(condition, edges.size()));
 				store_edge(edge, operands);
 				assert(p[parse_index] == ']');
 				parse_index++;
@@ -603,7 +600,7 @@ namespace anyun_regex
 				break;
 				//the single char
 			default:
-				DirectedEdge edge(p[parse_index], edges.size());
+				DirectedEdgePoint edge(new SingleCharDirectedEdge(p[parse_index], edges.size()));
 				store_edge(edge, operands);
 				parse_index++;
 				break;
@@ -634,7 +631,7 @@ namespace anyun_regex
 			{
 				if (is_special_char(next))
 				{
-					conditions.push_back(ConditionPoint(new SingleCharCondition(next)));
+					conditions.push_back(ConditionPoint(new CharCondition(next)));
 					parse_index += 2;
 				}
 				else return false;
@@ -643,7 +640,7 @@ namespace anyun_regex
 				return false;
 			else
 			{
-				conditions.push_back(ConditionPoint(new SingleCharCondition(current)));
+				conditions.push_back(ConditionPoint(new CharCondition(current)));
 				parse_index++;
 			}
 			current = p[parse_index], next = p[parse_index + 1];
@@ -665,10 +662,10 @@ namespace anyun_regex
 	}
 
 	//store the edge
-	inline void DirectedGraph::store_edge(const DirectedEdge & edge, stack<ConnectedFragment>& operands)
+	inline void DirectedGraph::store_edge(DirectedEdgePoint edge, stack<ConnectedFragment>& operands)
 	{
 		edges.push_back(edge);
-		operands.push(ConnectedFragment(edge.get_id(), edge.get_id()));
+		operands.push(ConnectedFragment(edge->get_id(), edge->get_id()));
 	}
 
 	/*

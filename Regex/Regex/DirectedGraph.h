@@ -5,6 +5,7 @@
 #include <stack>
 #include <list>
 #include <string>
+#include <memory>
 #include <assert.h>
 #include "DirectedNode.h"
 #include "DirectedEdge.h"
@@ -73,13 +74,8 @@ namespace anyun_regex
 #ifdef _DEBUG
 		friend class DirectedGraphTest;
 #endif // DEBUG
-
 	public:
-		DirectedGraph();
-		DirectedGraph(const char *pattern);
-		DirectedGraph(const string &pattern);
-		~DirectedGraph();
-		
+
 		static const char SINGLE_SPECAIL_CAHRS[];
 		static const size_t SINGLE_SPECAIL_CAHR_SIZE;
 		static bool is_special_char(size_t ch);
@@ -88,7 +84,14 @@ namespace anyun_regex
 		static bool is_letter(size_t ch);
 		static bool is_num(size_t ch);
 		static bool is_alpnum(size_t ch);
-		static bool is_char_in(size_t ch, const char *str,size_t length);
+		static bool is_char_in(size_t ch, const char *str, size_t length);
+
+	public:
+		DirectedGraph();
+		DirectedGraph(const char *pattern);
+		DirectedGraph(const string &pattern);
+		~DirectedGraph();
+
 		size_t v();
 
 		RegexParseCode compile(const string &pattern);
@@ -98,8 +101,8 @@ namespace anyun_regex
 		string pattern;
 		size_t start_node_id;
 		size_t end_node_id;
-		vector<DirectedNode> nodes;
-		vector<DirectedEdge> edges;
+		vector<DirectedNodePoint> nodes;
+		vector<DirectedEdgePoint> edges;
 		RegexParseCode parse_result;
 		
 		static int get_priority(size_t op1,size_t op2);
@@ -165,7 +168,7 @@ namespace anyun_regex
 		//check the range is right?
 		bool check_range(size_t from,size_t to);
 		//store the edge
-		void store_edge(const DirectedEdge &edge, stack<ConnectedFragment> &operands);
+		void store_edge(DirectedEdgePoint edge, stack<ConnectedFragment> &operands);
 		//compare op's priority with operators.top()'s
 		//accroding the result of  comparation to decide it should push or operate
 		void normal_priority_parse(size_t op, stack<size_t> &operators, stack<ConnectedFragment>& operands, size_t &parse_index);
