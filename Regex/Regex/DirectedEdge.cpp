@@ -11,6 +11,7 @@ namespace anyun_regex
 		return true;
 	}
 
+
 	CharCondition::CharCondition(size_t ch):ch(ch)
 	{
 	}
@@ -86,6 +87,11 @@ namespace anyun_regex
 		return id;
 	}
 
+	void DirectedEdge::action(Matcher & matcher) const
+	{
+		
+	}
+
 	DirectedEdge::~DirectedEdge()
 	{
 	}
@@ -115,6 +121,11 @@ namespace anyun_regex
 		return condition->match(text[index]);
 	}
 
+	void SingleCharDirectedEdge::action(Matcher & matcher) const
+	{
+		matcher.next();
+	}
+
 
 	SingleCharDirectedEdge::SingleCharDirectedEdge(size_t ch, size_t id, size_t s_id, size_t e_id)
 		:DirectedEdge(id, s_id, e_id)
@@ -135,5 +146,33 @@ namespace anyun_regex
 	{
 	}
 
+
+	LineStartDirectedEdge::LineStartDirectedEdge(size_t id):DirectedEdge(id)
+	{
+	}
+
+	DirectedEdgeType LineStartDirectedEdge::get_type() const
+	{
+		return LINE_START_DIRECTEDEDGE;
+	}
+
+	bool LineStartDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
+	{
+		return index == 0 || text[index-1] == '\n';
+	}
+
+	LineEndDirectedEdge::LineEndDirectedEdge(size_t id):DirectedEdge(id)
+	{
+	}
+
+	DirectedEdgeType LineEndDirectedEdge::get_type() const
+	{
+		return LINE_END_DIRECTEDEDGE;
+	}
+
+	bool LineEndDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
+	{
+		return text[index] == '\n';
+	}
 
 }

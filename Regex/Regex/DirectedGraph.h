@@ -16,6 +16,8 @@ namespace anyun_regex
 	using std::stack;
 	using std::list;
 	using std::string;
+	using std::shared_ptr;
+
 	enum RegexParseCode {
 		REGEX_PARSE_OK = 0,
 		REGEX_PARSE_NOT_FOUND,
@@ -173,6 +175,8 @@ namespace anyun_regex
 		//accroding the result of  comparation to decide it should push or operate
 		void normal_priority_parse(size_t op, stack<size_t> &operators, stack<ConnectedFragment>& operands, size_t &parse_index);
 	};
+
+	typedef shared_ptr<DirectedGraph> DirectedGraphPoint;
 }
 
 #endif

@@ -7,8 +7,9 @@
 #include <set>
 #include <queue>
 #include <iterator>
+#include <memory>
 #include "DirectedGraph.h"
-#include "Matcher.h"
+
 namespace anyun_regex
 {
 	using std::string;
@@ -17,6 +18,9 @@ namespace anyun_regex
 	using std::set;
 	using std::back_inserter;
 	using std::copy;
+	using std::shared_ptr;
+	class Matcher;
+	class NFAMatcher;
 	class NFA
 	{
 	public:
@@ -41,7 +45,7 @@ namespace anyun_regex
 
 
 	private:
-		DirectedGraph digraph;
+		DirectedGraphPoint digraph;
 		list<size_t> start_state;
 		string text;
 		size_t text_length;
@@ -50,7 +54,6 @@ namespace anyun_regex
 		postoin_type offset;
 		bool start_is_final;
 		bool is_find;
-		Matcher matcher;
 
 		bool get_sigma_closure(list<size_t> &source);
 		bool get_next_state(list<size_t> & state, const string &text, size_t index, Matcher &matcher);

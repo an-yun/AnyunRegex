@@ -9,7 +9,7 @@ namespace anyun_regex
 	using std::vector;
 	using std::string;
 	using std::shared_ptr;
-	class Matcher;			//forward declaration
+	class Matcher;
 	class Condition
 	{
 	public:
@@ -88,6 +88,7 @@ namespace anyun_regex
 		virtual size_t get_end_node_id(const Matcher &matcher) const;
 
 		virtual bool accept(const string &text, size_t index, Matcher &matcher) const = 0 ;
+		virtual void action(Matcher &matcher) const;
 
 		virtual ~DirectedEdge();	//the virtual destructor
 	private:
@@ -116,10 +117,26 @@ namespace anyun_regex
 
 		DirectedEdgeType get_type() const override;
 		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+		void action(Matcher &matcher) const override;
 	private:
 		ConditionPoint condition;
 	};
 
+	class LineStartDirectedEdge :public DirectedEdge
+	{
+	public:
+		LineStartDirectedEdge(size_t id);
+		DirectedEdgeType get_type() const override;
+		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+	};
+
+	class LineEndDirectedEdge :public DirectedEdge
+	{
+	public:
+		LineEndDirectedEdge(size_t id);
+		DirectedEdgeType get_type() const override;
+		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+	};
 }
 
 #endif

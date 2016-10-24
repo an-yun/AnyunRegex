@@ -162,6 +162,7 @@
     <ClCompile Include="DirectedNode.cpp" />
     <ClCompile Include="DirectedEdge.cpp" />
     <ClCompile Include="DirectedGraph.cpp" />
+    <ClCompile Include="Matcher.cpp" />
     <ClCompile Include="NFA.cpp" />
     <ClCompile Include="test\DirectedGraphTest.cpp" />
     <ClCompile Include="test\main.cpp" />

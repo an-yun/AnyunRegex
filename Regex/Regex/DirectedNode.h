@@ -2,14 +2,13 @@
 #define DIRECTED_NODE_H
 #include <vector>
 #include <memory>
-#include "DirectedEdge.h"
 
 namespace anyun_regex
 {
 	using std::vector;
 	using std::shared_ptr;
 	class Matcher;
-
+	class DirectedEdge;
 	enum DirectedNodeType
 	{
 		DIRECTEDNODE,
