@@ -131,7 +131,7 @@ namespace anyun_regex
 	}
 
 	SingleCharDirectedEdge::SingleCharDirectedEdge(ConditionPoint condition, size_t id, size_t s_id, size_t e_id) 
-		: DirectedEdge(id, s_id, e_id)
+		: DirectedEdge(id, s_id, e_id),condition(condition)
 	{
 	}
 
