@@ -4,6 +4,7 @@
 #include "DirectedGraphTest.h"
 #include "NFATest.h"
 #include "RegexTest.h"
+#include "../Matcher.h"
 
 using namespace anyun_regex;
 using namespace std;
@@ -12,11 +13,11 @@ int main()
 {
 
 	//anyun_regex::test_directedgraph();
-	//NFA nfa("[123]ab*");
-	//nfa.match("1ab2ab3abbb");
-	//while (nfa.find())
-	//	cout << nfa.get_match() <<endl;
-	//cout << endl;
+	NFA nfa("[123]ab*");
+	NFAMatcher matcher = NFAMatcher::match("1ab2ab3abbb", nfa);
+	while (matcher.find())
+		cout << matcher.group() <<endl;
+	cout << endl;
 	//nfa.compile("[a-zA-Z_][a-zA-Z0-9_]*");//the identifier
 	//nfa.match("nfa _hell 1a AB_c0 001");
 	//while (nfa.find())

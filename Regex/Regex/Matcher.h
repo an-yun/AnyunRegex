@@ -1,7 +1,8 @@
-#ifndef MATCHER
-#define MATCHER
+#ifndef MATCHER_H
+#define MATCHER_H
 #include <vector>
 #include <map>
+#include <utility>
 #include <string>
 #include "NFA.h"
 
@@ -9,7 +10,7 @@ namespace anyun_regex {
 	using std::vector;
 	using std::map;
 	using std::string;
-
+	using std::pair;
 
 	class NFAMatcher :public Matcher
 	{
@@ -25,9 +26,6 @@ namespace anyun_regex {
 		size_t group_count() const override;
 
 	protected:
-		size_t peek() override;
-		size_t next() override;
-		size_t back() override;
 
 		size_t get_edge_pass_count(size_t edge_id) const override ;
 		size_t get_node_pass_count(size_t node_id) const override;
@@ -35,15 +33,16 @@ namespace anyun_regex {
 		void add_node_pass_count(size_t node_id) override;
 	private:
 		NFA nfa;
-		vector<string> groups;
-		map<string, size_t> name_groups;
+
 		vector<size_t> edges_count;
 		vector<size_t> nodes_count;
 		list<size_t> start_state;
 		bool start_is_final;
+		bool is_find;
+		size_t text_length;
 
 		NFAMatcher(const string &text, const NFA &nfa, size_t offset);
 	};
 }
-#endif // !MATCHER
+#endif // !MATCHER_H
 

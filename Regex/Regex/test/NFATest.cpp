@@ -109,11 +109,11 @@ namespace anyun_regex
 		NFA nfa(pattern);
 		sregex_iterator begin(text.begin(), text.end(), standard_regex);
 		sregex_iterator end = std::sregex_iterator();
-		nfa.match(text);
-		int i = 1;
-		for (; begin != end && nfa.find(); begin++)
-			std::cout << "test " << i++ << ":" << (*begin).str() << " " << nfa.get_match() << std::endl;
-		std::cout << "Test pass?" << (begin == end && !nfa.find() ? "true" : "false") << std::endl;
+		//nfa.match(text);
+		//int i = 1;
+		//for (; begin != end && nfa.find(); begin++)
+		//	std::cout << "test " << i++ << ":" << (*begin).str() << " " << nfa.get_match() << std::endl;
+		//std::cout << "Test pass?" << (begin == end && !nfa.find() ? "true" : "false") << std::endl;
 		return 0;
 	}
 	int test_standard(const string& pattern, const string &text)

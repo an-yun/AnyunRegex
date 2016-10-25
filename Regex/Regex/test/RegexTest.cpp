@@ -70,10 +70,10 @@ namespace anyun_regex
 				getline(input, line);
 				getline(input, line);
 				for (unsigned line_no = 1; line_no <= case_num; getline(input, line)) {
-					nfa.match(line.c_str());
-					if (nfa.find())
-						cout << line << std::endl;
-					line_no++;
+					//nfa.match(line.c_str());
+					//if (nfa.find())
+					//	cout << line << std::endl;
+					//line_no++;
 				}
 				cout << endl;
 			}

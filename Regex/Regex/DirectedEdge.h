@@ -2,19 +2,23 @@
 #define DIRECTED_EDGE_H
 #include<vector>
 #include<string>
+#include<map>
+#include<utility>
 #include<memory>
 namespace anyun_regex
 {
 	using std::vector;
+	using std::map;
 	using std::string;
 	using std::shared_ptr;
+	using std::pair;
 	class Condition
 	{
 	public:
 		virtual bool match(size_t ch) const = 0;
 		virtual ~Condition();						//the virtual destrutor
 	};
-	
+
 	typedef shared_ptr<Condition> ConditionPoint;
 
 	//match any char
@@ -24,7 +28,7 @@ namespace anyun_regex
 		bool match(size_t ch) const override;
 	};
 
-	class CharCondition:public Condition
+	class CharCondition :public Condition
 	{
 	public:
 		CharCondition(size_t ch);
@@ -35,7 +39,7 @@ namespace anyun_regex
 
 	class RangeCondition :public Condition
 	{
-	public :
+	public:
 		RangeCondition(size_t from, size_t to);
 		bool match(size_t ch) const override;
 	private:
@@ -55,7 +59,7 @@ namespace anyun_regex
 	class OrCondtion :public Condition
 	{
 	public:
-		OrCondtion(ConditionPoint lhs,ConditionPoint rhs);
+		OrCondtion(ConditionPoint lhs, ConditionPoint rhs);
 		OrCondtion(vector<ConditionPoint> conditions);
 		bool match(size_t ch) const override;
 	private:
@@ -73,6 +77,7 @@ namespace anyun_regex
 
 	class Matcher
 	{
+		friend class NFA;
 		friend class SingleCharDirectedEdge;
 		friend class RepeatCountDirectedEdge;
 	public:
@@ -86,16 +91,19 @@ namespace anyun_regex
 	protected:
 		string text;
 		size_t cursor;
-		virtual size_t peek() = 0;
-		virtual size_t next() = 0;
-		virtual size_t back() = 0;
+		vector<pair<size_t, size_t>> groups;
+		map<string, size_t> name_groups;
+		virtual size_t current_cursor() const;
+		virtual size_t peek() ;
+		virtual size_t next() ;
+		virtual size_t back();
 
 		virtual size_t get_edge_pass_count(size_t edge_id) const = 0;
 		virtual size_t get_node_pass_count(size_t node_id) const = 0;
 		virtual void add_edge_pass_count(size_t edge_id) = 0;
 		virtual void add_node_pass_count(size_t node_id) = 0;
 
-		Matcher(string text, size_t cursor = 0);
+		Matcher(string text, size_t cursor = 0,size_t group_size = 1 );
 	private:
 
 	};
@@ -111,7 +119,7 @@ namespace anyun_regex
 		virtual size_t get_start_node_id() const;
 		virtual size_t get_end_node_id() const;
 
-		virtual bool accept(const string &text, size_t index, Matcher &matcher) const = 0 ;
+		virtual bool accept(const string &text, size_t index, Matcher &matcher) const = 0;
 
 		virtual ~DirectedEdge();	//the virtual destructor
 	private:
@@ -122,7 +130,7 @@ namespace anyun_regex
 
 	typedef shared_ptr<DirectedEdge> DirectedEdgePoint;
 
-	class SigmaDirectedEdge:public DirectedEdge
+	class SigmaDirectedEdge :public DirectedEdge
 	{
 	public:
 		SigmaDirectedEdge(size_t id, size_t s_id = 0, size_t e_id = 0);
@@ -163,7 +171,7 @@ namespace anyun_regex
 	class RepeatCountDirectedEdge :public DirectedEdge
 	{
 	public:
-		RepeatCountDirectedEdge(size_t id, size_t count_edge_id =0, size_t left =0,size_t right = UINT_MAX);
+		RepeatCountDirectedEdge(size_t id, size_t count_edge_id = 0, size_t left = 0, size_t right = UINT_MAX);
 		DirectedEdgeType get_type() const override;
 		bool accept(const string &text, size_t index, Matcher &matcher) const override;
 	private:

@@ -32,16 +32,20 @@ namespace anyun_regex
 		string get_compile_message() const;
 		string get_pattern() const;
 
+		size_t group_size() const;
+		size_t node_size() const;
+		size_t edge_size() const;
 
 	private:
 		DirectedGraphPoint digraph;
 		
-
 		//is there a group start state,if the answer is yes then mark it in matcher
-		vector<size_t> has_group_start_state(const list<size_t> &states);
-		vector<size_t> has_group_end_state(const list<size_t> &states);
+		void update_group_start_state(list<size_t> &states,Matcher &matcher);
+		void update_group_end_state(list<size_t> &states, Matcher &matcher);
 		void get_sigma_closure(list<size_t> &source);
 		void get_next_state(list<size_t> & state, const string &text, size_t index, Matcher &matcher);
+
+		bool has_final_state(list<size_t> &states);
 	};
 
 }

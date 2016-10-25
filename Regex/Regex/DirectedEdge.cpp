@@ -170,7 +170,7 @@ namespace anyun_regex
 		return text[index] == '\n';
 	}
 
-	Matcher::Matcher(string text, size_t cursor):text(text),cursor(cursor)
+	Matcher::Matcher(string text,size_t cursor,size_t group_size):text(text),cursor(cursor),groups(group_size)
 	{
 	}
 
@@ -189,6 +189,26 @@ namespace anyun_regex
 		size_t count = matcher.get_edge_pass_count(count_edge_id);
 		if (count >= left && count <= right) return true;
 		else return false;
+	}
+
+	size_t Matcher::current_cursor() const
+	{
+		return cursor;
+	}
+
+	size_t Matcher::peek()
+	{
+		return text[cursor];
+	}
+
+	size_t Matcher::next()
+	{
+		return text[cursor++];
+	}
+
+	size_t Matcher::back()
+	{
+		return text[cursor--];
 	}
 
 }

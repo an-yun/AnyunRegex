@@ -7,42 +7,63 @@ namespace anyun_regex {
 	}
 	bool NFAMatcher::find()
 	{
-		return false;
+		//if last search could not find,then return false
+		if (!is_find) return false;
+		if (cursor > text_length) return is_find = false;
+		//begin to match ,start from the offset
+		size_t start = cursor;
+		is_find = false;
+		while (!is_find && start <= text_length)
+		{
+			list<size_t> state = start_state;
+			if (nfa.has_final_state(state))
+			{
+				cursor = start + 1;
+				is_find = true;
+				//if greedy remove break
+			}
+			for (size_t index = start; !state.empty() && index < text_length; index++)
+			{
+
+				nfa.get_next_state(state, text, index, *this);
+				//if match,set is_find to true,save the result range to match ,else set false;
+				if (nfa.has_final_state(state))
+				{
+					cursor = index + 1;
+					is_find = true;
+					//if greedy remove break
+				}
+			}
+			start++;
+		}
+		return is_find;
 	}
 
 	bool NFAMatcher::find(size_t offset)
 	{
-		return false;
+		cursor = offset;
+		is_find = true;
+		return find();
 	}
 
 	string NFAMatcher::group(size_t index) const
 	{
-		return string();
+		return text.substr(groups[index].first, groups[index].second - groups[index].first);
 	}
 
 	string NFAMatcher::group(string group_name) const
 	{
-		return string();
+		map<string,size_t>::const_iterator result = name_groups.find(group_name);
+		if (result == name_groups.cend()) return string("");
+		else return group((*result).second);
 	}
 
 	size_t NFAMatcher::group_count() const
 	{
-		return size_t();
+		return nfa.group_size();
 	}
 
-	size_t NFAMatcher::peek()
-	{
-		return text[cursor];
-	}
-
-	size_t NFAMatcher::next()
-	{
-	}
-
-	size_t NFAMatcher::back()
-	{
-		return text[cursor--];
-	}
+	
 
 	size_t NFAMatcher::get_edge_pass_count(size_t edge_id) const
 	{
@@ -64,8 +85,13 @@ namespace anyun_regex {
 		nodes_count[node_id]++;
 	}
 
-	NFAMatcher::NFAMatcher(const string & text, const NFA & nfa, size_t offset):Matcher(text,offset)
+	NFAMatcher::NFAMatcher(const string & text, const NFA & nfa, size_t offset)
+		:Matcher(text,offset,nfa.group_size())
+		,nfa(nfa),edges_count(nfa.edge_size()),nodes_count(nfa.node_size())
+		,start_state{0}, start_is_final(false),is_find(false),text_length(text.length())
 	{
+		this->nfa.get_sigma_closure(start_state);
+		start_is_final = this->nfa.has_final_state(start_state);
 	}
 
 }
