@@ -1,11 +1,10 @@
 #include "Matcher.h"
 
 namespace anyun_regex {
-
-	Matcher::Matcher(string text, size_t cursor) :text(text), cursor(cursor)
+	NFAMatcher NFAMatcher::match(const string & text, const NFA & nfa, size_t offset)
 	{
+		return NFAMatcher(text,nfa,offset);
 	}
-
 	bool NFAMatcher::find()
 	{
 		return false;
@@ -55,14 +54,18 @@ namespace anyun_regex {
 		return nodes_count[node_id];
 	}
 
-	void NFAMatcher::set_edge_pass_count(size_t edge_id, size_t count)
+	void NFAMatcher::add_edge_pass_count(size_t edge_id)
 	{
-		edges_count[edge_id] = count;
+		edges_count[edge_id] ++;
 	}
 
-	void NFAMatcher::set_node_pass_count(size_t node_id, size_t count)
+	void NFAMatcher::add_node_pass_count(size_t node_id)
 	{
-		nodes_count[node_id] = count;
+		nodes_count[node_id]++;
+	}
+
+	NFAMatcher::NFAMatcher(const string & text, const NFA & nfa, size_t offset):Matcher(text,offset)
+	{
 	}
 
 }

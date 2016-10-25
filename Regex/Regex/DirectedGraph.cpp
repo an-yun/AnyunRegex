@@ -6,7 +6,7 @@ namespace anyun_regex
 	-----------------------these code can be used again------------------------------------
 	2016-10-18 10:23
 	*/
-	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' ,'\\'};
+	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' ,'\\','^','$'};
 	const size_t DirectedGraph::SINGLE_SPECAIL_CAHR_SIZE = sizeof(DirectedGraph::SINGLE_SPECAIL_CAHRS) / sizeof(char);
 	inline bool DirectedGraph::is_special_char(size_t ch)
 	{
@@ -230,14 +230,20 @@ namespace anyun_regex
 		if (pattern.size() == 0)
 		{
 			this->pattern = "";
-			nodes.push_back(DirectedNodePoint(new EndDirectedNode(0)));
-			start_node_id = end_node_id = 0;
+			nodes.push_back(DirectedNodePoint(new StartDirectedNode(0)));
+			start_node_id = 0;
+			nodes.push_back(DirectedNodePoint(new StartDirectedNode(1)));
+			end_node_id = 1;
+			DirectedEdgePoint sigma_edge(new SigmaDirectedEdge(0));
+			edges.push_back(sigma_edge);
+			connect_in_node_to_edge(0, 0);
+			connect_out_node_to_edge(1, 0);
 			return (parse_result = REGEX_PARSE_OK);
 		}
 		this->pattern = pattern;
 		//add the start node
 		nodes.push_back(DirectedNodePoint(new StartDirectedNode(0)));
-
+		groups.push_back(Group(0, 0));
 		//bgein to parse
 		parse_result = REGEX_PARSE_OK;
 		string pre_pattern = pre_process_pattern(this->pattern);
@@ -248,7 +254,7 @@ namespace anyun_regex
 			//add the end node
 			DirectedNodePoint end_node(new EndDirectedNode(nodes.size()));
 			nodes.push_back(end_node);
-
+			groups[0].group_end_node = end_node->get_id();
 			connect_in_node(0, fragment);
 			connect_out_node(end_node->get_id(), fragment);
 		}
@@ -525,6 +531,7 @@ namespace anyun_regex
 		operators.push('\0');//the start operator
 		parse_result = REGEX_PARSE_NOT_FOUND;
 		size_t parse_index = 0;
+
 		while (parse_result == REGEX_PARSE_NOT_FOUND)
 		{
 			/*

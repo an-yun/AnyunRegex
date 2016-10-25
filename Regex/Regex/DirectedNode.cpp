@@ -35,9 +35,6 @@ namespace anyun_regex
 		return id;
 	}
 
-	void DirectedNode::action(Matcher & matcher) const
-	{
-	}
 
 	DirectedNodeType DirectedNode::get_type() const
 	{
@@ -65,9 +62,6 @@ namespace anyun_regex
 	{
 	}
 
-	void StartDirectedNode::action(Matcher & matcher) const
-	{
-	}
 
 	DirectedNodeType StartDirectedNode::get_type() const
 	{
@@ -78,9 +72,6 @@ namespace anyun_regex
 	{
 	}
 
-	void EndDirectedNode::action(Matcher & matcher) const
-	{
-	}
 
 	DirectedNodeType EndDirectedNode::get_type() const
 	{

@@ -19,44 +19,29 @@ namespace anyun_regex
 	using std::back_inserter;
 	using std::copy;
 	using std::shared_ptr;
-	class Matcher;
-	class NFAMatcher;
 	class NFA
 	{
+		friend class NFAMatcher;
 	public:
-		typedef size_t postoin_type;
-
-		NFA();
-		NFA(const char *pattern);
+		NFA(const char *pattern = "");
 		NFA(const string & pattern);
 		~NFA();
-
+		//recompline another pattern,success return true else false
 		bool compile(const string &pattern);
-		RegexParseCode get_compile_result_code();
-		string get_compile_message();
-		void match(const char * text, postoin_type offset = 0);
-		void match(const string & text, postoin_type offset = 0);
-		bool find();
-		string get_match();
-
-		size_t get_match_start();
-		size_t get_match_end();
-		const char *get_pattern();
+		RegexParseCode get_compile_result_code() const;
+		string get_compile_message() const;
+		string get_pattern() const;
 
 
 	private:
 		DirectedGraphPoint digraph;
-		list<size_t> start_state;
-		string text;
-		size_t text_length;
-		size_t match_start;
-		size_t match_end;
-		postoin_type offset;
-		bool start_is_final;
-		bool is_find;
+		
 
-		bool get_sigma_closure(list<size_t> &source);
-		bool get_next_state(list<size_t> & state, const string &text, size_t index, Matcher &matcher);
+		//is there a group start state,if the answer is yes then mark it in matcher
+		vector<size_t> has_group_start_state(const list<size_t> &states);
+		vector<size_t> has_group_end_state(const list<size_t> &states);
+		void get_sigma_closure(list<size_t> &source);
+		void get_next_state(list<size_t> & state, const string &text, size_t index, Matcher &matcher);
 	};
 
 }

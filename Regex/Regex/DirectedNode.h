@@ -7,7 +7,6 @@ namespace anyun_regex
 {
 	using std::vector;
 	using std::shared_ptr;
-	class Matcher;
 	class DirectedEdge;
 	enum DirectedNodeType
 	{
@@ -28,7 +27,6 @@ namespace anyun_regex
 		size_t in_edges_num() const;
 		size_t get_id() const;
 
-		virtual void action(Matcher &matcher) const;
 		virtual DirectedNodeType get_type() const;
 
 	private:
@@ -48,7 +46,6 @@ namespace anyun_regex
 	public:
 		StartDirectedNode(size_t id = 0);
 
-		void action(Matcher &matcher) const override;
 		DirectedNodeType get_type() const override;
 	private:
 
@@ -59,7 +56,6 @@ namespace anyun_regex
 	public:
 		EndDirectedNode(size_t id = 0);
 
-		void action(Matcher &matcher) const override;
 		DirectedNodeType get_type() const override;
 	private:
 

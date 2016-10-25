@@ -70,6 +70,14 @@ namespace anyun_regex
 		size_t out_edge_id;
 		ConnectedFragment(size_t i_id, size_t o_id) :in_edge_id(i_id), out_edge_id(o_id) {}
 	};
+
+	struct Group
+	{
+		size_t group_start_node;
+		size_t group_end_node;
+		Group(size_t group_start, size_t group_end) :group_start_node(group_start), group_end_node(group_end) {}
+	};
+
 	class DirectedGraph
 	{
 		friend class NFA;
@@ -96,7 +104,6 @@ namespace anyun_regex
 
 		size_t v();
 
-		RegexParseCode compile(const string &pattern);
 
 
 	private:
@@ -105,9 +112,12 @@ namespace anyun_regex
 		size_t end_node_id;
 		vector<DirectedNodePoint> nodes;
 		vector<DirectedEdgePoint> edges;
+		vector<Group> groups;
 		RegexParseCode parse_result;
 		
 		static int get_priority(size_t op1,size_t op2);
+
+		RegexParseCode compile(const string &pattern);
 		void operate(size_t opt, stack<ConnectedFragment> &operands);
 		void connect_in_node(size_t in_node_id, const ConnectedFragment &fragment);
 		void connect_out_node(size_t out_node_id, const ConnectedFragment &fragment);
@@ -158,19 +168,24 @@ namespace anyun_regex
 		   <fra2<
 		*/
 		ConnectedFragment reverse_merge_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2);
+
 		void connect_in_node_to_edge(size_t in_node_id, size_t edge_id);
 		void connect_out_node_to_edge(size_t out_node_id, size_t edge_id);
 
 		//pre_process_pattern add the dot \N (means concatenation  operator) to pattern
 		string pre_process_pattern(const string &p);
+
 		ConnectedFragment parse(string p);
+
 		//parse or condition in []
 		bool parse_or_condition(vector<ConditionPoint> &conditions, const string &p, size_t &parse_index);
 
 		//check the range is right?
 		bool check_range(size_t from,size_t to);
+
 		//store the edge
 		void store_edge(DirectedEdgePoint edge, stack<ConnectedFragment> &operands);
+
 		//compare op's priority with operators.top()'s
 		//accroding the result of  comparation to decide it should push or operate
 		void normal_priority_parse(size_t op, stack<size_t> &operators, stack<ConnectedFragment>& operands, size_t &parse_index);
