@@ -1,6 +1,7 @@
 #include "Matcher.h"
 
 namespace anyun_regex {
+
 	NFAMatcher NFAMatcher::match(const string & text, const NFA & nfa, size_t offset)
 	{
 		return NFAMatcher(text,nfa,offset);
@@ -11,31 +12,36 @@ namespace anyun_regex {
 		if (!is_find) return false;
 		if (cursor > text_length) return is_find = false;
 		//begin to match ,start from the offset
-		size_t start = cursor;
+		size_t next_start = cursor,start = cursor;
 		is_find = false;
 		while (!is_find && start <= text_length)
 		{
 			list<size_t> state = start_state;
+			nfa.update_group_start_state(state, *this);
+			nfa.update_group_end_state(state, *this);
 			if (nfa.has_final_state(state))
 			{
-				cursor = start + 1;
+				next_start = start + 1;
 				is_find = true;
 				//if greedy remove break
 			}
-			for (size_t index = start; !state.empty() && index < text_length; index++)
+			for (; !state.empty() && cursor < text_length; next())
 			{
-
-				nfa.get_next_state(state, text, index, *this);
+				nfa.update_group_start_state(state, *this);
+				nfa.update_group_end_state(state, *this);
+				nfa.get_next_state(state, text, cursor, *this);
+				nfa.get_sigma_closure(state);
 				//if match,set is_find to true,save the result range to match ,else set false;
 				if (nfa.has_final_state(state))
 				{
-					cursor = index + 1;
+					next_start = cursor + 1;
 					is_find = true;
 					//if greedy remove break
 				}
 			}
 			start++;
 		}
+		cursor = next_start;
 		return is_find;
 	}
 
@@ -88,7 +94,7 @@ namespace anyun_regex {
 	NFAMatcher::NFAMatcher(const string & text, const NFA & nfa, size_t offset)
 		:Matcher(text,offset,nfa.group_size())
 		,nfa(nfa),edges_count(nfa.edge_size()),nodes_count(nfa.node_size())
-		,start_state{0}, start_is_final(false),is_find(false),text_length(text.length())
+		,start_state{0}, start_is_final(false),is_find(true),text_length(text.length())
 	{
 		this->nfa.get_sigma_closure(start_state);
 		start_is_final = this->nfa.has_final_state(start_state);

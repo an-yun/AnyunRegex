@@ -13,15 +13,15 @@ int main()
 {
 
 	//anyun_regex::test_directedgraph();
-	NFA nfa("[123]ab*");
-	NFAMatcher matcher = NFAMatcher::match("1ab2ab3abbb", nfa);
-	while (matcher.find())
-		cout << matcher.group() <<endl;
+	NFA nfa1("[123]ab*");
+	NFAMatcher matcher1 = NFAMatcher::match("1ab2ab3abbb", nfa1);
+	while (matcher1.find())
+		cout << matcher1.group() <<endl;
 	cout << endl;
-	//nfa.compile("[a-zA-Z_][a-zA-Z0-9_]*");//the identifier
-	//nfa.match("nfa _hell 1a AB_c0 001");
-	//while (nfa.find())
-	//	cout << nfa.get_match() << endl;
+	NFA nfa2("[a-zA-Z_][a-zA-Z0-9_]*");
+	NFAMatcher matcher2 = NFAMatcher::match("nfa _hell 1a AB_c0 001", nfa2);
+	while (matcher2.find())
+		cout << matcher2.group() << endl;
 #ifdef BOOST_TEST
 	boost_regex();
 #endif // BOOST_TEST
