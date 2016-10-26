@@ -2,6 +2,18 @@
 
 namespace anyun_regex
 {
+#define PRE_PROCESS_PATTERN_ERROR(assgin,code)  \
+			do {								\
+				(assgin) = (code);				\
+				return "" ;						\
+			} while(0)
+
+#define PARSE_ERROR(assgin,code)		\
+			do {								\
+				(assgin) = (code);				\
+				return ConnectedFragment(0,0);	\
+			} while(0)
+
 	/*
 	-----------------------these code can be used again------------------------------------
 	2016-10-18 10:23
@@ -433,13 +445,9 @@ namespace anyun_regex
 
 	string DirectedGraph::pre_process_pattern(const string & p)
 	{
-#define PRE_PROCESS_PATTERN_ERROR(assgin,code)  \
-			do {								\
-				(assgin) = (code);				\
-				return "" ;						\
-			} while(0)
-		static const char end_and_no_connect_operators[] = { '\0',')','{','|','*','+','?', };
-		static const char right_operators[] = { '*','+','?',']',')','}' };
+
+		static const char end_and_no_connect_operators[] = { '\0',')','{','|','*','+','?'};
+		static const char right_operators[] = { '*','+','?',']',')','}' ,'^','$'};
 		list<size_t> result;
 		size_t size = p.size();
 		stack<size_t> bracket_states;
@@ -521,12 +529,6 @@ namespace anyun_regex
 
 	ConnectedFragment DirectedGraph::parse(string p)
 	{
-#define PARSE_ERROR(assgin,code)		\
-			do {								\
-				(assgin) = (code);				\
-				return ConnectedFragment(0,0);	\
-			} while(0)
-
 		stack<ConnectedFragment> operands;
 		stack<size_t> operators;
 		operators.push('\0');//the start operator
@@ -551,6 +553,20 @@ namespace anyun_regex
 			case ')':
 				normal_priority_parse(')', operators, operands, parse_index);
 				break;
+			case '^':
+			{
+				DirectedEdgePoint edge(new LineStartDirectedEdge(edges.size()));
+				store_edge(edge, operands);
+				parse_index++;
+				break;
+			}
+			case '$':
+			{
+				DirectedEdgePoint edge(new LineEndDirectedEdge(edges.size()));
+				store_edge(edge, operands);
+				parse_index++;
+				break;
+			}
 			case '[':
 			{
 				// to test
@@ -581,6 +597,7 @@ namespace anyun_regex
 			case '|':
 				normal_priority_parse('|', operators, operands, parse_index);
 				break;
+			//the escape 
 			case '\\':
 				switch (p[++parse_index])
 				{
@@ -590,6 +607,8 @@ namespace anyun_regex
 					if (p[parse_index - 1] == '\\')parse_index--;
 					break;
 				default:
+					DirectedEdgePoint edge(new SingleCharDirectedEdge(p[parse_index], edges.size()));
+					store_edge(edge, operands);
 					parse_index++;
 					break;
 				}

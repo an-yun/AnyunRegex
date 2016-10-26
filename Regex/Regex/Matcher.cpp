@@ -16,19 +16,18 @@ namespace anyun_regex {
 		is_find = false;
 		while (!is_find && start <= text_length)
 		{
+			cursor = start;
 			list<size_t> state = start_state;
-			nfa.update_group_start_state(state, *this);
-			nfa.update_group_end_state(state, *this);
 			if (nfa.has_final_state(state))
 			{
 				next_start = start + 1;
 				is_find = true;
 				//if greedy remove break
-			}
+			}			
+			nfa.update_group_start_state(state, *this);
+			nfa.update_group_end_state(state, *this);
 			for (; !state.empty() && cursor < text_length; next())
 			{
-				nfa.update_group_start_state(state, *this);
-				nfa.update_group_end_state(state, *this);
 				nfa.get_next_state(state, text, cursor, *this);
 				nfa.get_sigma_closure(state);
 				//if match,set is_find to true,save the result range to match ,else set false;
@@ -38,6 +37,8 @@ namespace anyun_regex {
 					is_find = true;
 					//if greedy remove break
 				}
+				nfa.update_group_start_state(state, *this);
+				nfa.update_group_end_state(state, *this);
 			}
 			start++;
 		}
@@ -54,7 +55,8 @@ namespace anyun_regex {
 
 	string NFAMatcher::group(size_t index) const
 	{
-		return text.substr(groups[index].first, groups[index].second - groups[index].first);
+		if(is_find)return text.substr(groups[index].first, groups[index].second - groups[index].first);
+		else return string("");
 	}
 
 	string NFAMatcher::group(string group_name) const

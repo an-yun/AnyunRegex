@@ -7,6 +7,7 @@
 #include <regex>
 
 #include "../NFA.h"
+#include "../Matcher.h"
 
 
 namespace anyun_regex

@@ -9,6 +9,7 @@
 #include <assert.h>
 
 #include "../DirectedGraph.h"
+#include "NFATest.h"
 
 namespace anyun_regex
 {

@@ -80,7 +80,7 @@ namespace anyun_regex
 		{
 			for (size_t i = 0; i<groups_size; i++)
 			{
-				if (groups[i].group_end_node == (*b))matcher.groups[i].second = matcher.current_cursor();
+				if (groups[i].group_end_node == (*b))matcher.groups[i].second = matcher.current_cursor()+1;
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 #ifndef NFA_TEST_H
 #define NFA_TEST_H
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <iterator>
 #include <string>
@@ -8,6 +9,7 @@
 #include <algorithm>
 #include <regex>
 #include "../NFA.h"
+#include "../Matcher.h"
 
 
 namespace anyun_regex
@@ -19,12 +21,21 @@ namespace anyun_regex
 	using std::vector;
 	using std::string;
 	using std::ifstream;
+	using std::shared_ptr;
+	using std::setw;
 	using std::cout;
 	using std::endl;
 	using anyun_regex::NFA;
 
+	typedef shared_ptr<NFAMatcher> NFAMatcherPoint;
 #ifdef _DEBUG
 
+	void test_nfa();
+	 
+	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle= false);
+
+	template<typename NumType>
+	void print_number_format(size_t length, NumType num,  bool is_left = false);
 	class NFATest
 	{
 	public:
