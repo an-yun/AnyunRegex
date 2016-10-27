@@ -253,7 +253,7 @@ namespace anyun_regex
 			this->pattern = "";
 			nodes.push_back(DirectedNodePoint(new StartDirectedNode(0)));
 			start_node_id = 0;
-			nodes.push_back(DirectedNodePoint(new StartDirectedNode(1)));
+			nodes.push_back(DirectedNodePoint(new EndDirectedNode(1)));
 			end_node_id = 1;
 			DirectedEdgePoint sigma_edge(new SigmaDirectedEdge(0));
 			edges.push_back(sigma_edge);

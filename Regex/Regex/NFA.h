@@ -44,7 +44,7 @@ namespace anyun_regex
 		void update_group_end_state(set<size_t> &states, Matcher &matcher);
 		void get_sigma_closure(set<size_t> &source);
 		void get_next_state(set<size_t> & state, const string &text, size_t index, Matcher &matcher);
-		void read_boundry_edge(set<size_t> &state);
+		void read_boundry_edge(set<size_t> & state, const string &text, size_t index, Matcher &matcher);
 
 		bool has_final_state(set<size_t> &states);
 	};

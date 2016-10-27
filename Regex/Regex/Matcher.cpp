@@ -18,6 +18,8 @@ namespace anyun_regex {
 		{
 			cursor = start;
 			set<size_t> state = start_state;
+			nfa.read_boundry_edge(state, text, cursor, *this);
+			nfa.get_sigma_closure(state);
 			if (nfa.has_final_state(state))
 			{
 				next_start = start + 1;
@@ -29,6 +31,8 @@ namespace anyun_regex {
 			for (; !state.empty() && cursor < text_length; next())
 			{
 				nfa.get_next_state(state, text, cursor, *this);
+				nfa.get_sigma_closure(state);
+				nfa.read_boundry_edge(state, text, cursor, *this);
 				nfa.get_sigma_closure(state);
 				//if match,set is_find to true,save the result range to match ,else set false;
 				if (nfa.has_final_state(state))

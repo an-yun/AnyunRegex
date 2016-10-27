@@ -19,6 +19,7 @@ namespace anyun_regex
 		nfa_test.add_testcase("c23abcb");
 		nfa_test.add_testcase("1c23abcb");
 		nfa_test.add_testcase("1ab2ab3abbb");
+		nfa_test.add_testcase("1abbadafdasfdasfdasfdfdasf2abbb3abasdfbb");
 
 		nfa_test.test();
 
@@ -31,6 +32,18 @@ namespace anyun_regex
 		nfa_test.add_testcase("AB_Edsae12nfa_hell");
 		nfa_test.add_testcase("nfa&helld1a AB_c0 001");
 		nfa_test.add_testcase("nfa _hell 1a AB_c0 001");
+
+		nfa_test.test();
+
+		nfa_test.set_pattern("^ab*$");
+		nfa_test.add_testcase("abb");
+		nfa_test.add_testcase("a");
+		nfa_test.add_testcase("abbbb");
+		nfa_test.add_testcase("abaacdaa");
+		nfa_test.add_testcase("aaadbaaaaa");
+		nfa_test.add_testcase("ab\nabbb");
+		nfa_test.add_testcase("ab\nabbb\n");
+		nfa_test.add_testcase("ab\nabbb\n12");
 
 		nfa_test.test();
 	}

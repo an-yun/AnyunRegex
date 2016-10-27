@@ -132,8 +132,21 @@ namespace anyun_regex
 		state.swap(next_state);
 	}
 
-	void NFA::read_boundry_edge(set<size_t>& state)
+	void NFA::read_boundry_edge(set<size_t> & state, const string &text, size_t index, Matcher &matcher)
 	{
+		vector<DirectedEdgePoint> &edges = digraph->edges;
+		for (set<size_t>::iterator b = state.begin(), e = state.end(); b != e; b++)
+		{
+			//check every edge that can accept ch
+			const vector<size_t> &out_edges = digraph->nodes[*b]->get_out_edges();
+			for (vector<size_t>::const_iterator edge_b = out_edges.begin(), edge_e = out_edges.cend(); edge_b != edge_e; edge_b++)
+				if ((   edges[*edge_b]->get_type() == LINE_START_DIRECTEDEDGE
+					 || edges[*edge_b]->get_type() == LINE_END_DIRECTEDEDGE   )
+					&& edges[*edge_b]->accept(text, index, matcher))
+				{
+					state.insert(edges[*edge_b]->get_end_node_id());
+				}
+		}
 
 	}
 
