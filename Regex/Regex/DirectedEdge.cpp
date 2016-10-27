@@ -167,7 +167,7 @@ namespace anyun_regex
 
 	bool LineEndDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
 	{
-		return text[index] == '\n';
+		return index == text.size() || text[index+1] == '\n';
 	}
 
 	Matcher::Matcher(string text,size_t cursor,size_t group_size):text(text),cursor(cursor),groups(group_size)

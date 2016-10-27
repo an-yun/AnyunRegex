@@ -17,7 +17,7 @@ namespace anyun_regex {
 		while (!is_find && start <= text_length)
 		{
 			cursor = start;
-			list<size_t> state = start_state;
+			set<size_t> state = start_state;
 			if (nfa.has_final_state(state))
 			{
 				next_start = start + 1;

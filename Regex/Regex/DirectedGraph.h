@@ -2,6 +2,7 @@
 #define DIRECTED_GRAPH_H
 #include <map>
 #include <vector>
+#include <tuple>
 #include <stack>
 #include <list>
 #include <string>
@@ -17,6 +18,7 @@ namespace anyun_regex
 	using std::list;
 	using std::string;
 	using std::shared_ptr;
+	using std::tuple;
 
 	enum RegexParseCode {
 		REGEX_PARSE_OK = 0,

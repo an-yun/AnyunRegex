@@ -40,12 +40,13 @@ namespace anyun_regex
 		DirectedGraphPoint digraph;
 		
 		//is there a group start state,if the answer is yes then mark it in matcher
-		void update_group_start_state(list<size_t> &states,Matcher &matcher);
-		void update_group_end_state(list<size_t> &states, Matcher &matcher);
-		void get_sigma_closure(list<size_t> &source);
-		void get_next_state(list<size_t> & state, const string &text, size_t index, Matcher &matcher);
+		void update_group_start_state(set<size_t>& states, Matcher &matcher);
+		void update_group_end_state(set<size_t> &states, Matcher &matcher);
+		void get_sigma_closure(set<size_t> &source);
+		void get_next_state(set<size_t> & state, const string &text, size_t index, Matcher &matcher);
+		void read_boundry_edge(set<size_t> &state);
 
-		bool has_final_state(list<size_t> &states);
+		bool has_final_state(set<size_t> &states);
 	};
 
 }

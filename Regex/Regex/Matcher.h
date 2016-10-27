@@ -36,7 +36,7 @@ namespace anyun_regex {
 
 		vector<size_t> edges_count;
 		vector<size_t> nodes_count;
-		list<size_t> start_state;
+		set<size_t> start_state;
 		bool start_is_final;
 		bool is_find;
 		size_t text_length;

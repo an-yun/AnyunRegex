@@ -18,7 +18,7 @@ namespace anyun_regex
 	-----------------------these code can be used again------------------------------------
 	2016-10-18 10:23
 	*/
-	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' ,'\\','^','$'};
+	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' ,'\\','^','$' };
 	const size_t DirectedGraph::SINGLE_SPECAIL_CAHR_SIZE = sizeof(DirectedGraph::SINGLE_SPECAIL_CAHRS) / sizeof(char);
 	inline bool DirectedGraph::is_special_char(size_t ch)
 	{
@@ -62,92 +62,101 @@ namespace anyun_regex
 
 	int DirectedGraph::get_priority(size_t op1, size_t op2)
 	{
+		/*
+		the priority table
+
+		\metachar  (the escape char)
+		( )、(?: )、(?= )、[ ]
+		*、+、?、{n}、{n,}、{m,n}
+		^、$
+		concatenation  operator (I represent it here using .)
+		|
+		\0  (start or end)
+
+		*/
+		static vector<tuple<size_t, size_t, int>> priority_table =
+		{
+			{ '\0','\0', 0 },
+			{ '\0','(', -1 },
+			//{ '\0',')', 0 }miss left bracket
+			{ '\0','|', -1 },
+			{ '\0','.', -1 },
+			{ '\0','?', -1 },
+			{ '\0','*', -1 },
+			{ '\0','+', -1},
+
+			//{'(','\0'}  miss right bracket
+			{'(','(',-1},
+			{'(',')',0},
+			{'(','|',-1},
+			{'(','.',-1},
+			{'(','?',-1},
+			{'(','*',-1},
+			{'(','+',-1},
+
+			{')','\0',1},
+			{')','(',1},
+			{')',')',1},
+			{')','|',1},
+			{')','.',1},
+			{')','?',1},
+			{')','*',1},
+			{')','+',1},
+
+			{'|','\0',1},
+			{'|','(',-1},
+			{'|',')',1},
+			{'|','|',1},
+			{'|','.',-1},
+			{'|','?',-1},
+			{'|','*',-1},
+			{'|','+',-1},
+
+			{'.','\0',1},
+			{'.','(',-1},
+			{'.',')',1},
+			{'.','|',1},
+			{'.','.',1},
+			{'.','?',-1},
+			{'.','*',-1},
+			{'.','+',-1},
+
+			{'?','\0',1},
+			//{'?','('} miss concatenation  operator
+			{'?',')',1},
+			{'?','|',1},
+			{'?','.',1},
+			{'?','?',1},
+			{'?','*',1},
+			{'?','+',1},
+
+			{'*','\0',1},
+			//{'*','('} miss concatenation  operator
+			{'*',')',1},
+			{'*','|',1},
+			{'*','.',1},
+			{'*','?',1},
+			{'*','*',1},
+
+			{'+','\0',1},
+			//{'+','('} miss concatenation  operator
+			{'+',')',1},
+			{'+','|',1},
+			{'+','.',1},
+			{'+','?',1},
+			{'+','*',1},
+			{'+','+',1},
+		};
 		static map<size_t, map<size_t, int>> priority;
 		if (priority.empty())
 		{
-			/*
-			the priority table
-
-			\metachar  (the escape char)
-			( )、(?: )、(?= )、[ ]
-			*、+、?、{n}、{n,}、{m,n}
-			^、$
-			concatenation  operator (I represent it here using .)
-			|
-			\0  (start or end)
-
-			*/
-			priority['\0']['\0'] = 0;
-			priority['\0']['('] = -1;
-			//priority['\0'][')'] miss left bracket
-			priority['\0']['|'] = -1;
-			priority['\0']['.'] = -1;
-			priority['\0']['?'] = -1;
-			priority['\0']['*'] = -1;
-			priority['\0']['+'] = -1;
-
-			//priority['(']['\0']  miss right bracket
-			priority['(']['('] = -1;
-			priority['('][')'] = 0;
-			priority['(']['|'] = -1;
-			priority['(']['.'] = -1;
-			priority['(']['?'] = -1;
-			priority['(']['*'] = -1;
-			priority['(']['+'] = -1;
-
-			priority[')']['\0'] = 1;
-			priority[')']['('] = 1;
-			priority[')'][')'] = 1;
-			priority[')']['|'] = 1;
-			priority[')']['.'] = 1;
-			priority[')']['?'] = 1;
-			priority[')']['*'] = 1;
-			priority[')']['+'] = 1;
-
-			priority['|']['\0'] = 1;
-			priority['|']['('] = -1;
-			priority['|'][')'] = 1;
-			priority['|']['|'] = 1;
-			priority['|']['.'] = -1;
-			priority['|']['?'] = -1;
-			priority['|']['*'] = -1;
-			priority['|']['+'] = -1;
-
-			priority['.']['\0'] = 1;
-			priority['.']['('] = -1;
-			priority['.'][')'] = 1;
-			priority['.']['|'] = 1;
-			priority['.']['.'] = 1;
-			priority['.']['?'] = -1;
-			priority['.']['*'] = -1;
-			priority['.']['+'] = -1;
-
-			priority['?']['\0'] = 1;
-			//priority['?']['('] miss concatenation  operator
-			priority['?'][')'] = 1;
-			priority['?']['|'] = 1;
-			priority['?']['.'] = 1;
-			priority['?']['?'] = 1;
-			priority['?']['*'] = 1;
-			priority['?']['+'] = 1;
-
-			priority['*']['\0'] = 1;
-			//priority['*']['('] miss concatenation  operator
-			priority['*'][')'] = 1;
-			priority['*']['|'] = 1;
-			priority['*']['.'] = 1;
-			priority['*']['?'] = 1;
-			priority['*']['*'] = 1;
-
-			priority['+']['\0'] = 1;
-			//priority['+']['('] miss concatenation  operator
-			priority['+'][')'] = 1;
-			priority['+']['|'] = 1;
-			priority['+']['.'] = 1;
-			priority['+']['?'] = 1;
-			priority['+']['*'] = 1;
-			priority['+']['+'] = 1;
-
+			for (vector<tuple<size_t, size_t, int>>::iterator b = priority_table.begin(), e = priority_table.end(); b != e; b++)
+			{
+				size_t frist = std::get<0>(*b);
+				size_t seconde = std::get<1>(*b);
+				int p = std::get<2>(*b);
+				priority[frist][seconde] = p;
+			}
 		}
 		return priority[op1][op2];
 	}
@@ -257,6 +266,7 @@ namespace anyun_regex
 		//add the start node
 		nodes.push_back(DirectedNodePoint(new StartDirectedNode(0)));
 		groups.push_back(Group(0, 0));
+		start_node_id = 0;
 		//bgein to parse
 		parse_result = REGEX_PARSE_OK;
 		string pre_pattern = pre_process_pattern(this->pattern);
@@ -267,6 +277,7 @@ namespace anyun_regex
 			//add the end node
 			DirectedNodePoint end_node(new EndDirectedNode(nodes.size()));
 			nodes.push_back(end_node);
+			end_node_id = end_node->get_id();
 			groups[0].group_end_node = end_node->get_id();
 			connect_in_node(0, fragment);
 			connect_out_node(end_node->get_id(), fragment);
@@ -446,8 +457,8 @@ namespace anyun_regex
 	string DirectedGraph::pre_process_pattern(const string & p)
 	{
 
-		static const char end_and_no_connect_operators[] = { '\0',')','{','|','*','+','?'};
-		static const char right_operators[] = { '*','+','?',']',')','}' ,'^','$'};
+		static const char end_and_no_connect_operators[] = { '\0',')','{','|','*','+','?' };
+		static const char right_operators[] = { '*','+','?',']',')','}' ,'^','$' };
 		list<size_t> result;
 		size_t size = p.size();
 		stack<size_t> bracket_states;
@@ -597,7 +608,7 @@ namespace anyun_regex
 			case '|':
 				normal_priority_parse('|', operators, operands, parse_index);
 				break;
-			//the escape 
+				//the escape 
 			case '\\':
 				switch (p[++parse_index])
 				{
