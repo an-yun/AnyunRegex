@@ -174,17 +174,17 @@ namespace anyun_regex
 	{
 	}
 
-	RepeatCountDirectedEdge::RepeatCountDirectedEdge(size_t id, size_t count_edge_id, size_t left, size_t right )
+	CountDirectedEdge::CountDirectedEdge(size_t id, size_t count_edge_id, size_t left, size_t right )
 		:DirectedEdge(id), count_edge_id(count_edge_id),left(left),right(right)
 	{
 	}
 
-	DirectedEdgeType RepeatCountDirectedEdge::get_type() const
+	DirectedEdgeType CountDirectedEdge::get_type() const
 	{
-		return REPEAT_COUNT_DIRECTEDEDGE;
+		return COUNT_DIRECTEDEDGE;
 	}
 
-	bool RepeatCountDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
+	bool CountDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
 	{
 		size_t count = matcher.get_edge_pass_count(count_edge_id);
 		if (count >= left && count <= right) return true;
@@ -209,6 +209,20 @@ namespace anyun_regex
 	size_t Matcher::back()
 	{
 		return text[cursor--];
+	}
+
+	RepeatDirectedge::RepeatDirectedge(size_t id, size_t s_id, size_t e_id):DirectedEdge(id,s_id,e_id)
+	{
+	}
+
+	DirectedEdgeType RepeatDirectedge::get_type() const
+	{
+		return REPEAT_DIRECTEDEDGE;
+	}
+
+	bool RepeatDirectedge::accept(const string & text, size_t index, Matcher & matcher) const
+	{
+		return false;
 	}
 
 }

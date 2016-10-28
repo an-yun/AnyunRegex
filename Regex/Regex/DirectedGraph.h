@@ -188,6 +188,8 @@ namespace anyun_regex
 		//store the edge
 		void store_edge(DirectedEdgePoint edge, stack<ConnectedFragment> &operands);
 
+		//add groups node
+		void add_group_node(stack<ConnectedFragment>& operands);
 		//compare op's priority with operators.top()'s
 		//accroding the result of  comparation to decide it should push or operate
 		void normal_priority_parse(size_t op, stack<size_t> &operators, stack<ConnectedFragment>& operands, size_t &parse_index);

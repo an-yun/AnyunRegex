@@ -516,6 +516,10 @@ namespace anyun_regex
 				if (next_is_other)
 					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_ILLEGAL_CHAR_AFTER_OR);
 				break;
+			case '\\':
+				result.push_back(next);
+				i++;
+				break;
 			default:
 				break;
 			}
@@ -545,7 +549,6 @@ namespace anyun_regex
 		operators.push('\0');//the start operator
 		parse_result = REGEX_PARSE_NOT_FOUND;
 		size_t parse_index = 0;
-
 		while (parse_result == REGEX_PARSE_NOT_FOUND)
 		{
 			/*
@@ -562,8 +565,14 @@ namespace anyun_regex
 				normal_priority_parse('(', operators, operands, parse_index);
 				break;
 			case ')':
+			{
+				size_t temp = parse_index;
 				normal_priority_parse(')', operators, operands, parse_index);
+				//add group node
+				if (temp != parse_index)
+					add_group_node(operands);
 				break;
+			}
 			case '^':
 			{
 				DirectedEdgePoint edge(new LineStartDirectedEdge(edges.size()));
@@ -704,6 +713,27 @@ namespace anyun_regex
 	{
 		edges.push_back(edge);
 		operands.push(ConnectedFragment(edge->get_id(), edge->get_id()));
+	}
+
+	inline void DirectedGraph::add_group_node(stack<ConnectedFragment>& operands)
+	{
+		ConnectedFragment fragment = operands.top();
+		operands.pop();
+		//connect in node
+		DirectedNodePoint in_node(new DirectedNode(nodes.size()));
+		nodes.push_back(in_node);
+		connect_in_node(in_node->get_id(), fragment);
+		//connect out node
+		DirectedNodePoint out_node(new DirectedNode(nodes.size()));
+		nodes.push_back(out_node);
+		connect_out_node(out_node->get_id(), fragment);
+		//add group
+		groups.push_back(Group(in_node->get_id(), out_node->get_id()));
+
+		size_t in_edge_id = add_in_sigma_edge(in_node->get_id());
+		size_t out_edge_id = add_out_sigma_edge(out_node->get_id());
+
+		operands.push(ConnectedFragment(in_edge_id, out_edge_id));
 	}
 
 	/*

@@ -72,14 +72,16 @@ namespace anyun_regex
 		SINGLE_CHAR_DIRECTEDEDGE,
 		LINE_START_DIRECTEDEDGE,
 		LINE_END_DIRECTEDEDGE,
-		REPEAT_COUNT_DIRECTEDEDGE
+		REPEAT_DIRECTEDEDGE,
+		COUNT_DIRECTEDEDGE
 	};
 
 	class Matcher
 	{
 		friend class NFA;
 		friend class SingleCharDirectedEdge;
-		friend class RepeatCountDirectedEdge;
+		friend class RepeatDirectedEdge;
+		friend class CountDirectedEdge;
 	public:
 		virtual bool find() = 0;
 		virtual bool find(size_t offset) = 0;
@@ -168,16 +170,25 @@ namespace anyun_regex
 		bool accept(const string &text, size_t index, Matcher &matcher) const override;
 	};
 
-	class RepeatCountDirectedEdge :public DirectedEdge
+	class CountDirectedEdge :public DirectedEdge
 	{
 	public:
-		RepeatCountDirectedEdge(size_t id, size_t count_edge_id = 0, size_t left = 0, size_t right = UINT_MAX);
+		CountDirectedEdge(size_t id, size_t count_edge_id = 0, size_t left = 0, size_t right = UINT_MAX);
 		DirectedEdgeType get_type() const override;
 		bool accept(const string &text, size_t index, Matcher &matcher) const override;
 	private:
 		size_t count_edge_id;
 		size_t left;
 		size_t right;
+	};
+
+	class RepeatDirectedge :public DirectedEdge
+	{
+	public:
+		RepeatDirectedge(size_t id, size_t s_id = 0, size_t e_id = 0);
+
+		DirectedEdgeType get_type() const override;
+		bool accept(const string &text, size_t index, Matcher &matcher) const override;
 	};
 }
 

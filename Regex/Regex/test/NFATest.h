@@ -30,7 +30,8 @@ namespace anyun_regex
 	typedef shared_ptr<NFAMatcher> NFAMatcherPoint;
 #ifdef _DEBUG
 
-	void test_nfa();
+	void test_nfa_match();
+	void test_nfa_group();
 	 
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle= false);
 
@@ -49,7 +50,8 @@ namespace anyun_regex
 		void add_testcase(const string &testcase);
 		void add_testcases(const vector<string> &testcases);
 		void add_testcases(const string &test_file_path);
-		void test();
+		void test_match();
+		void test_group();
 	private:
 		string pattern;
 		regex standard_regex;
@@ -58,7 +60,8 @@ namespace anyun_regex
 
 		void read_testcases_from_file(const string &test_file_path);
 		void print_test_information();
-		bool test_one_testcase(const string &testcase);
+		bool test_one_match_testcase(const string &testcase);
+		bool test_one_group_testcase(const string &testcase);
 		void print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count);
 	};
 
