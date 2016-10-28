@@ -64,7 +64,7 @@ namespace anyun_regex
 		nfa_test.add_testcase("ab\nabbb");
 		nfa_test.add_testcase("ab\nabbb\n");
 		nfa_test.add_testcase("ab\nabbb\n12");
-
+		nfa_test.add_testcase("aacdabded");
 		nfa_test.test_group();
 	}
 
@@ -188,6 +188,34 @@ namespace anyun_regex
 	}
 	void NFATest::test_group()
 	{
+		print_test_information();
+		cout << endl;
+		size_t testcase_size = testcases.size();
+		size_t pass_count = 0, failed_count = 0;
+		for (size_t i = 0; i < testcase_size; i++)
+		{
+			cout << "Test case :";
+			print_number_format(5, i + 1);
+			if (test_one_group_testcase(testcases[i]))
+			{
+				pass_count++;
+				cout << " Passed!" << endl;
+			}
+			else
+			{
+				failed_count++;
+				cout << " Failed!" << endl;
+				print_string_format(10, "\tPattern", ' ');
+				cout << ":" << pattern << endl;
+				print_string_format(10, "\tText", ' ');
+				cout << ":" << endl << "\t\t";
+				print_string_format(70, testcases[i], ' ');
+				cout << endl;
+			}
+		}
+		cout << endl;
+		print_test_result_information(testcase_size, pass_count, failed_count);
+		cout << endl;
 	}
 	void NFATest::print_test_information()
 	{
@@ -202,7 +230,7 @@ namespace anyun_regex
 	{
 		NFAMatcher matcher = NFAMatcher::match(testcase, nfa);
 		sregex_iterator begin(testcase.begin(), testcase.end(), standard_regex);
-		sregex_iterator end = std::sregex_iterator();
+		sregex_iterator end;
 		for (; begin != end && matcher.find(); begin++)
 			if((*begin).str() != matcher.group()) return false;
 		return begin == end && !matcher.find();
@@ -210,7 +238,22 @@ namespace anyun_regex
 
 	bool NFATest::test_one_group_testcase(const string & testcase)
 	{
-		return false;
+		NFAMatcher matcher = NFAMatcher::match(testcase, nfa);
+		sregex_iterator begin(testcase.begin(), testcase.end(), standard_regex);
+		sregex_iterator end;
+		for (; begin != end && matcher.find(); begin++)
+		{
+			auto &result = *begin;
+			if (result.str() != matcher.group()) return false;
+			else
+			{
+				if (result.size() != matcher.group_count())return false;
+				size_t group_size = result.size();
+				for (size_t i = 1; i < group_size; i++)
+					if (result[i] != matcher.group(i))return false;
+			}
+		}
+		return begin == end && !matcher.find();
 	}
 
 	void NFATest::print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count)
@@ -225,7 +268,7 @@ namespace anyun_regex
 		regex standard_regex(pattern);
 		NFA nfa(pattern);
 		sregex_iterator begin(text.begin(), text.end(), standard_regex);
-		sregex_iterator end = std::sregex_iterator();
+		sregex_iterator end;
 		NFAMatcher matcher = NFAMatcher::match(text, nfa);
 		int i = 1;
 		for (; begin != end && matcher.find(); begin++)
@@ -235,12 +278,20 @@ namespace anyun_regex
 	}
 	int test_standard(const string& pattern, const string &text)
 	{
-		regex standard_regex(pattern, std::regex_constants::ECMAScript);
+		regex standard_regex(pattern);
 		sregex_iterator begin(text.begin(), text.end(), standard_regex);
-		sregex_iterator end = std::sregex_iterator();
+		sregex_iterator end ;
 		int i = 1;
 		for (; begin != end; begin++)
-			std::cout << i++ << ":" << (*begin).str() << std::endl;
+		{
+			auto &result = *begin;
+			std::cout << i++ << ":" << result.str() << std::endl;
+			size_t group_size = result.size();
+			for (size_t i = 0; i < group_size; i++)
+			{
+				cout << result[i] << endl;
+			}
+		}
 		return 0;
 	}
 #endif // DEBUG

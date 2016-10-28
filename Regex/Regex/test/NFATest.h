@@ -18,6 +18,7 @@ namespace anyun_regex
 	using std::regex;
 	using std::smatch;
 	using std::sregex_iterator;
+	using std::match_results;
 	using std::vector;
 	using std::string;
 	using std::ifstream;
