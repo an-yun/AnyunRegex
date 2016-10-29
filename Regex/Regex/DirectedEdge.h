@@ -94,6 +94,7 @@ namespace anyun_regex
 		size_t cursor;
 		vector<pair<size_t, size_t>> groups;
 		map<string, size_t> name_groups;
+		map<size_t, size_t> repeat_node_count;
 		virtual size_t current_cursor() const;
 		virtual size_t peek() ;
 		virtual size_t next() ;
