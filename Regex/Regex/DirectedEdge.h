@@ -80,8 +80,7 @@ namespace anyun_regex
 	{
 		friend class NFA;
 		friend class SingleCharDirectedEdge;
-		friend class RepeatDirectedEdge;
-		friend class CountDirectedEdge;
+		friend class RepeatCountDirectedNode;
 	public:
 		virtual bool find() = 0;
 		virtual bool find(size_t offset) = 0;
@@ -100,10 +99,6 @@ namespace anyun_regex
 		virtual size_t next() ;
 		virtual size_t back();
 
-		virtual size_t get_edge_pass_count(size_t edge_id) const = 0;
-		virtual size_t get_node_pass_count(size_t node_id) const = 0;
-		virtual void add_edge_pass_count(size_t edge_id) = 0;
-		virtual void add_node_pass_count(size_t node_id) = 0;
 
 		Matcher(string text, size_t cursor = 0,size_t group_size = 1 );
 	private:
@@ -173,13 +168,11 @@ namespace anyun_regex
 	class CountDirectedEdge :public DirectedEdge
 	{
 	public:
-		CountDirectedEdge(size_t id, size_t count_edge_id = 0, size_t left = 0, size_t right = UINT_MAX);
+		CountDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
 		bool accept(const string &text, size_t index, Matcher &matcher) const override;
 	private:
-		size_t count_edge_id;
-		size_t left;
-		size_t right;
+
 	};
 
 	class RepeatDirectedge :public DirectedEdge

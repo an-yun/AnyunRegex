@@ -174,8 +174,8 @@ namespace anyun_regex
 	{
 	}
 
-	CountDirectedEdge::CountDirectedEdge(size_t id, size_t count_edge_id, size_t left, size_t right )
-		:DirectedEdge(id), count_edge_id(count_edge_id),left(left),right(right)
+	CountDirectedEdge::CountDirectedEdge(size_t id)
+		:DirectedEdge(id)
 	{
 	}
 
@@ -186,9 +186,7 @@ namespace anyun_regex
 
 	bool CountDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
 	{
-		size_t count = matcher.get_edge_pass_count(count_edge_id);
-		if (count >= left && count <= right) return true;
-		else return false;
+		return false;
 	}
 
 	size_t Matcher::current_cursor() const

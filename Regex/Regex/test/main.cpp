@@ -11,7 +11,8 @@ using namespace std;
 
 int main()
 {
-	//test_directedgraph();
+	test_directedgraph();
+	test_nfa_match();
 	test_nfa_group();
 	return 0;
 }

@@ -75,32 +75,10 @@ namespace anyun_regex {
 		return nfa.group_size();
 	}
 
-	
-
-	size_t NFAMatcher::get_edge_pass_count(size_t edge_id) const
-	{
-		return edges_count[edge_id];
-	}
-
-	size_t NFAMatcher::get_node_pass_count(size_t node_id) const
-	{
-		return nodes_count[node_id];
-	}
-
-	void NFAMatcher::add_edge_pass_count(size_t edge_id)
-	{
-		edges_count[edge_id] ++;
-	}
-
-	void NFAMatcher::add_node_pass_count(size_t node_id)
-	{
-		nodes_count[node_id]++;
-	}
 
 	NFAMatcher::NFAMatcher(const string & text, const NFA & nfa, size_t offset)
 		:Matcher(text,offset,nfa.group_size())
-		,nfa(nfa),edges_count(nfa.edge_size()),nodes_count(nfa.node_size())
-		,start_state{0}, start_is_final(false),is_find(true),text_length(text.length())
+		,nfa(nfa),start_state{0}, start_is_final(false),is_find(true),text_length(text.length())
 	{
 		this->nfa.get_sigma_closure(start_state);
 		start_is_final = this->nfa.has_final_state(start_state);

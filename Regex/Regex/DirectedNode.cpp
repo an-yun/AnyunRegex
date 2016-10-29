@@ -78,4 +78,19 @@ namespace anyun_regex
 		return END_DIRECTEDNODE;
 	}
 
+	RepeatCountDirectedNode::RepeatCountDirectedNode(size_t id, size_t left, size_t right)
+		:DirectedNode(id),left(left),right(right)
+	{
+	}
+
+	DirectedNodeType RepeatCountDirectedNode::get_type() const
+	{
+		return REPEAT_COUNT_DIRECTEDNODE;
+	}
+
+	bool RepeatCountDirectedNode::accept_count(size_t count)
+	{
+		return count>= left && count <= right;
+	}
+
 }
