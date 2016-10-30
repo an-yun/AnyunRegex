@@ -88,9 +88,12 @@ namespace anyun_regex
 		return REPEAT_COUNT_DIRECTEDNODE;
 	}
 
-	bool RepeatCountDirectedNode::accept_count(size_t count)
+	int RepeatCountDirectedNode::accept_count(size_t count)
 	{
-		return count>= left && count <= right;
+		if (count < left) return -1;
+		else if( count>= left && count < right) return 0;
+		else if (count == right) return 1;
+		else return 2;
 	}
 
 }

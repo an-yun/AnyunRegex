@@ -2,6 +2,14 @@
 
 namespace anyun_regex
 {
+#define VISITED_ONE_NODE(visit_node_id,the_queue,the_states)\
+	do {										\
+		if(visited[visit_node_id] == false)		\
+		{										\
+			visited[visit_node_id] = true;		\
+			the_queue.push(visit_node_id);		\
+			the_states.insert(visit_node_id);}	\
+	} while (0)
 
 	NFA::NFA(const char * pattern)
 		: digraph(new DirectedGraph(pattern))
@@ -102,15 +110,8 @@ namespace anyun_regex
 			{
 				size_t edge_id = *b;
 				size_t end_node_id = digraph->edges[edge_id]->get_end_node_id();
-				if (!visited[end_node_id])
-				{
-					if (digraph->edges[edge_id]->get_type() == SIGMA_DIRECTEDEDGE)
-					{
-						visited[end_node_id] = true;
-						node_ids.push(end_node_id);
-						source.insert(end_node_id);
-					}
-				}
+				if (digraph->edges[edge_id]->get_type() == SIGMA_DIRECTEDEDGE)
+					VISITED_ONE_NODE(end_node_id,node_ids,source);
 
 			}
 
@@ -175,21 +176,39 @@ namespace anyun_regex
 				RepeatCountDirectedNode &repeat_node = *dynamic_cast<RepeatCountDirectedNode *>(digraph->nodes[node_id].get());
 				matcher.repeat_node_count[node_id]++;
 				state.erase(node_id);
-				size_t out_edge_id = 0;
-				if (repeat_node.accept_count(matcher.repeat_node_count[node_id]))
+				int judge = repeat_node.accept_count(matcher.repeat_node_count[node_id]);
+				/*
+				0 is the repeat edge
+				1 is the pass edge
+				*/
+				if (judge == -1)
 				{
+					//the continue repeat node
+					size_t out_edge_id = repeat_node.get_out_edges()[0];
+					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+					VISITED_ONE_NODE(end_node_id, node_ids, state);
+				}
+				else if(judge == 0)
+				{
+					//the end node
+					size_t out_edge_id = repeat_node.get_out_edges()[1];
+					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+					VISITED_ONE_NODE(end_node_id, node_ids, state);
+					//the continue repeat node
+					out_edge_id = repeat_node.get_out_edges()[0];
+					end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+					VISITED_ONE_NODE(end_node_id, node_ids, state);
+				}
+				else if (judge == 1)
+				{
+					//the end node
+					size_t out_edge_id = repeat_node.get_out_edges()[1];
+					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+					VISITED_ONE_NODE(end_node_id, node_ids, state);
 					matcher.repeat_node_count[node_id] = 0;
-					out_edge_id = repeat_node.get_out_edges()[1];//need more thought
 				}
 				else
-					out_edge_id = repeat_node.get_out_edges()[0];//need more thought
-				size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
-				if (!visited[end_node_id])
-				{
-					visited[end_node_id] = true;
-					node_ids.push(end_node_id);
-					state.insert(end_node_id);
-				}
+					matcher.repeat_node_count[node_id] = 0;
 			}
 			else
 			{
@@ -198,25 +217,15 @@ namespace anyun_regex
 				{
 					size_t edge_id = *b;
 					size_t end_node_id = digraph->edges[edge_id]->get_end_node_id();
-					if (!visited[end_node_id])
+					if (digraph->edges[edge_id]->get_type() == SIGMA_DIRECTEDEDGE)
+						VISITED_ONE_NODE(end_node_id,node_ids,state);
+					else if (digraph->edges[edge_id]->get_type() == LINE_START_DIRECTEDEDGE
+						|| digraph->edges[edge_id]->get_type() == LINE_END_DIRECTEDEDGE)
 					{
-						if (digraph->edges[edge_id]->get_type() == SIGMA_DIRECTEDEDGE)
-						{
-							visited[end_node_id] = true;
-							node_ids.push(end_node_id);
-							state.insert(end_node_id);
-						}
-						else if (digraph->edges[edge_id]->get_type() == LINE_START_DIRECTEDEDGE
-							|| digraph->edges[edge_id]->get_type() == LINE_END_DIRECTEDEDGE)
-						{
-							if (digraph->edges[edge_id]->accept(text, index, matcher))
-							{
-								visited[end_node_id] = true;
-								node_ids.push(end_node_id);
-								state.insert(end_node_id);
-							}
-						}
+						if (digraph->edges[edge_id]->accept(text, index, matcher))
+							VISITED_ONE_NODE(end_node_id, node_ids, state);
 					}
+
 
 				}
 			}

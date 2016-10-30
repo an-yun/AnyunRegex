@@ -24,7 +24,8 @@ namespace anyun_regex {
 				next_start = start + 1;
 				is_find = true;
 				//if greedy remove break
-			}			
+			}	
+			//here nedd to fix bug,add some track to the node
 			nfa.update_group_start_state(state, *this);
 			nfa.update_group_end_state(state, *this);
 			for (; !state.empty() && cursor < text_length; next())

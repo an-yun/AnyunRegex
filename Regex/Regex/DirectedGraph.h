@@ -36,7 +36,9 @@ namespace anyun_regex
 		REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET,
 		REGEX_PARSE_ILLEGAL_CHAR_IN_BRACES,
 		REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY,
-		REGEX_PARSE_BRACES_IS_EMPTY
+		REGEX_PARSE_BRACES_IS_EMPTY,
+		REGEX_PARSE_ILLEGAL_ESCAPE_CHAR,
+		REGEX_PARSE_ILLEGAL_GROUP_REFERENCE
 	};
 	static const char *PARSE_RESULT_MESSAGE[] =
 	{
@@ -56,6 +58,8 @@ namespace anyun_regex
 		"REGEX_PARSE_ILLEGAL_CHAR_IN_BRACES",
 		"REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY",
 		"REGEX_PARSE_BRACES_IS_EMPTY",
+		"REGEX_PARSE_ILLEGAL_ESCAPE_CHAR",
+		"REGEX_PARSE_ILLEGAL_GROUP_REFERENCE",
 		nullptr
 	};
 
@@ -185,6 +189,8 @@ namespace anyun_regex
 		//check the range is right?
 		bool check_range(size_t from,size_t to);
 
+		//add a single char edge
+		void add_single_char_edge(size_t ch, stack<ConnectedFragment> &operands);
 		//store the edge
 		void store_edge(DirectedEdgePoint edge, stack<ConnectedFragment> &operands);
 

@@ -14,6 +14,12 @@ namespace anyun_regex
 				return ConnectedFragment(0,0);	\
 			} while(0)
 
+#define DEFAULT_SINGLE_CHAR_PROCESS(ch)				\
+	do{												\
+		add_single_char_edge(ch, operands);			\
+		parse_index++;								\
+	}while(0)
+
 	/*
 	-----------------------these code can be used again------------------------------------
 	2016-10-18 10:23
@@ -458,7 +464,7 @@ namespace anyun_regex
 	{
 
 		static const char end_and_no_connect_operators[] = { '\0',')','{','|','*','+','?' };
-		static const char right_operators[] = { '*','+','?',']',')','}' ,'^','$' };
+		static const char right_operators[] = { '*','+','?',']',')','}' ,'^','$' ,'\\'};
 		list<size_t> result;
 		size_t size = p.size();
 		stack<size_t> bracket_states;
@@ -517,8 +523,12 @@ namespace anyun_regex
 					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_ILLEGAL_CHAR_AFTER_OR);
 				break;
 			case '\\':
+				if (next == 'N')
+					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_ILLEGAL_ESCAPE_CHAR);
 				result.push_back(next);
 				i++;
+				next = p[i + 1];
+				next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
 				break;
 			default:
 				break;
@@ -626,10 +636,33 @@ namespace anyun_regex
 					normal_priority_parse('.', operators, operands, parse_index);
 					if (p[parse_index - 1] == '\\')parse_index--;
 					break;
-				default:
-					DirectedEdgePoint edge(new SingleCharDirectedEdge(p[parse_index], edges.size()));
-					store_edge(edge, operands);
+				case 't':
+					DEFAULT_SINGLE_CHAR_PROCESS('\t');
+					break;
+				case 'n':
+					DEFAULT_SINGLE_CHAR_PROCESS('\n');
+					break;
+				case 'r':
+					DEFAULT_SINGLE_CHAR_PROCESS('\r');
+					break;
+				case 'f':
+					DEFAULT_SINGLE_CHAR_PROCESS('\f');
+					break;
+				case 0:
+					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
 					parse_index++;
+					break;
+				default:
+					DEFAULT_SINGLE_CHAR_PROCESS(p[parse_index]);
 					break;
 				}
 				break;
@@ -647,9 +680,7 @@ namespace anyun_regex
 				break;
 				//the single char
 			default:
-				DirectedEdgePoint edge(new SingleCharDirectedEdge(p[parse_index], edges.size()));
-				store_edge(edge, operands);
-				parse_index++;
+				DEFAULT_SINGLE_CHAR_PROCESS(p[parse_index]);
 				break;
 			}
 		}
@@ -706,6 +737,13 @@ namespace anyun_regex
 			else return false;
 		}
 		else return false;
+	}
+
+	//add a single char edge
+	inline void DirectedGraph::add_single_char_edge(size_t ch, stack<ConnectedFragment>& operands)
+	{
+		DirectedEdgePoint edge(new SingleCharDirectedEdge(ch, edges.size()));
+		store_edge(edge, operands);
 	}
 
 	//store the edge

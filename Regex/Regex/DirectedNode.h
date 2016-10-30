@@ -68,7 +68,7 @@ namespace anyun_regex
 		RepeatCountDirectedNode(size_t id = 0,size_t left= 1,size_t right = UINT_MAX);
 
 		DirectedNodeType get_type() const override;
-		bool accept_count(size_t count);
+		int accept_count(size_t count);
 	private:
 		size_t left;
 		size_t right;

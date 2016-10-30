@@ -105,6 +105,11 @@ namespace anyun_regex
 		TEST_PRE_PROCESS_PATTERN("^a$", "^\\Na\\N$");
 		TEST_PRE_PROCESS_PATTERN("^(ab|bc[123])$", "^\\N(a\\Nb|b\\Nc\\N[123])\\N$");
 		TEST_PRE_PROCESS_PATTERN("^[0-9](a|b|c|d){2,5}D$", "^\\N[0-9]\\N(a|b|c|d){2,5}\\ND\\N$");
+		TEST_PRE_PROCESS_PATTERN("\\n", "\\n");
+		TEST_PRE_PROCESS_PATTERN("a\\n", "a\\N\\n");
+		TEST_PRE_PROCESS_PATTERN("^ab$\\nc", "^\\Na\\Nb\\N$\\N\\n\\Nc");
+		TEST_PRE_PROCESS_PATTERN("ab\\nb\\rba", "a\\Nb\\N\\n\\Nb\\N\\r\\Nb\\Na");
+
 
 		cout << endl;
 
@@ -135,6 +140,8 @@ namespace anyun_regex
 		TEST_PRE_PROCESS_PATTERN_ERROR("^[a{2,3}$", REGEX_PARSE_MISS_RIGHT_SQUARE_BRACKET);
 		TEST_PRE_PROCESS_PATTERN_ERROR("^{", REGEX_PARSE_MISS_RIGHT_BRACES);
 		TEST_PRE_PROCESS_PATTERN_ERROR("}$", REGEX_PARSE_MISS_LEFT_BRACES);
+		TEST_PRE_PROCESS_PATTERN_ERROR("\\N", REGEX_PARSE_ILLEGAL_ESCAPE_CHAR);
+		TEST_PRE_PROCESS_PATTERN_ERROR("a\\N", REGEX_PARSE_ILLEGAL_ESCAPE_CHAR);
 		cout << endl;
 
 	}
