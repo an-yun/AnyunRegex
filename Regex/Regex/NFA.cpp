@@ -11,6 +11,7 @@ namespace anyun_regex
 			the_states.insert(visit_node_id);}	\
 	} while (0)
 
+
 	NFA::NFA(const char * pattern)
 		: digraph(new DirectedGraph(pattern))
 	{
@@ -233,6 +234,21 @@ namespace anyun_regex
 	}
 
 	bool NFA::has_final_state(set<size_t>& states)
+	{
+		return states.find(digraph->end_node_id) != states.end();
+	}
+
+
+
+	void NFA::get_next_state(map<size_t, TrackRecode>& state, const string & text, size_t index, Matcher & matcher)
+	{
+	}
+
+	void NFA::read_nochar_edge(map<size_t, TrackRecode>& state, const string & text, size_t index, Matcher & matcher)
+	{
+	}
+
+	bool NFA::has_final_state(map<size_t, TrackRecode>& states)
 	{
 		return states.find(digraph->end_node_id) != states.end();
 	}

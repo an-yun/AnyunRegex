@@ -223,4 +223,9 @@ namespace anyun_regex
 		return false;
 	}
 
+	DirectedEdgeType GroupReferenceDirectedge::get_type() const
+	{
+		return GROUP_REFERENCE_DIRECTEDGE;
+	}
+
 }

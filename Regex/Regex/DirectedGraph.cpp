@@ -648,17 +648,17 @@ namespace anyun_regex
 				case 'f':
 					DEFAULT_SINGLE_CHAR_PROCESS('\f');
 					break;
-				case 0:
+				case '0':
 					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-				case 7:
-				case 8:
-				case 9:
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
 					parse_index++;
 					break;
 				default:
@@ -724,6 +724,17 @@ namespace anyun_regex
 			current = p[parse_index], next = p[parse_index + 1];
 		}
 		return true;
+	}
+
+	DirectedEdgePoint DirectedGraph::parse_group_reference(const string & p, size_t & parse_index)
+	{
+		return DirectedEdgePoint();
+	}
+
+	//parse repeat count in {}
+	DirectedNodePoint DirectedGraph::parse_repeat_count_node(const string & p, size_t & parse_index)
+	{
+		return DirectedNodePoint();
 	}
 
 	//check the range is right?

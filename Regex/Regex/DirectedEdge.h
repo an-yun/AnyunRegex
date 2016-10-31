@@ -73,7 +73,8 @@ namespace anyun_regex
 		LINE_START_DIRECTEDEDGE,
 		LINE_END_DIRECTEDEDGE,
 		REPEAT_DIRECTEDEDGE,
-		COUNT_DIRECTEDEDGE
+		COUNT_DIRECTEDEDGE,
+		GROUP_REFERENCE_DIRECTEDGE
 	};
 
 	class Matcher
@@ -180,6 +181,15 @@ namespace anyun_regex
 	{
 	public:
 		RepeatDirectedge(size_t id, size_t s_id = 0, size_t e_id = 0);
+
+		DirectedEdgeType get_type() const override;
+		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+	};
+
+	class GroupReferenceDirectedge :public DirectedEdge
+	{
+	public:
+		GroupReferenceDirectedge(size_t id, size_t s_id = 0, size_t e_id = 0);
 
 		DirectedEdgeType get_type() const override;
 		bool accept(const string &text, size_t index, Matcher &matcher) const override;

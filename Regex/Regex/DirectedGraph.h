@@ -186,6 +186,12 @@ namespace anyun_regex
 		//parse or condition in []
 		bool parse_or_condition(vector<ConditionPoint> &conditions, const string &p, size_t &parse_index);
 
+		//parse group reference \num
+		DirectedEdgePoint parse_group_reference(const string &p, size_t &parse_index);
+
+		//parse repeat count in {}
+		DirectedNodePoint parse_repeat_count_node(const string &p, size_t &parse_index);
+
 		//check the range is right?
 		bool check_range(size_t from,size_t to);
 

@@ -5,6 +5,8 @@
 #include <string>
 #include <list>
 #include <set>
+#include <utility>
+#include <map>
 #include <queue>
 #include <iterator>
 #include <memory>
@@ -15,10 +17,13 @@ namespace anyun_regex
 	using std::string;
 	using std::list;
 	using std::queue;
+	using std::map;
+	using std::pair;
 	using std::set;
 	using std::back_inserter;
 	using std::copy;
 	using std::shared_ptr;
+	typedef list<pair<size_t, size_t>> TrackRecode;
 	class NFA
 	{
 		friend class NFAMatcher;
@@ -49,6 +54,11 @@ namespace anyun_regex
 		void read_nochar_edge(set<size_t> & state, const string &text, size_t index, Matcher &matcher);
 
 		bool has_final_state(set<size_t> &states);
+
+		//the new design for NFAMatcher
+		bool has_final_state(map<size_t, TrackRecode> &states);
+		void get_next_state(map<size_t, TrackRecode> & state, const string &text, size_t index, Matcher &matcher);
+		void read_nochar_edge(map<size_t, TrackRecode> & state, const string &text, size_t index, Matcher &matcher);
 	};
 
 }
