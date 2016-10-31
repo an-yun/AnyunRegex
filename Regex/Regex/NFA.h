@@ -23,7 +23,8 @@ namespace anyun_regex
 	using std::back_inserter;
 	using std::copy;
 	using std::shared_ptr;
-	typedef list<pair<size_t, size_t>> TrackRecode;
+	typedef map<size_t, size_t> TrackRecode;
+	typedef list<pair<size_t, TrackRecode>> State;
 	class NFA
 	{
 		friend class NFAMatcher;
@@ -56,9 +57,12 @@ namespace anyun_regex
 		bool has_final_state(set<size_t> &states);
 
 		//the new design for NFAMatcher
-		bool has_final_state(map<size_t, TrackRecode> &states);
-		void get_next_state(map<size_t, TrackRecode> & state, const string &text, size_t index, Matcher &matcher);
-		void read_nochar_edge(map<size_t, TrackRecode> & state, const string &text, size_t index, Matcher &matcher);
+		bool has_final_state(State &states);
+		void get_sigma_closure(map<size_t, TrackRecode> &source);
+		void get_next_state(State & state, const string &text, size_t index, Matcher &matcher);
+		void read_nochar_edge(State & state, const string &text, size_t index, Matcher &matcher);
+		void update_group_node_record(State & state, Matcher &matcher,bool is_start = false);
+		void visit_one_node(size_t parent_node_id, size_t visit_node_id, State & state, queue<size_t> &node_ids,vector<bool> &visited,Matcher &matcher);
 	};
 
 }

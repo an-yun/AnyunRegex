@@ -109,7 +109,8 @@ namespace anyun_regex
 		~DirectedGraph();
 
 		size_t v();
-
+		size_t get_start_node_id();
+		size_t get_end_node_id();
 
 
 	private:

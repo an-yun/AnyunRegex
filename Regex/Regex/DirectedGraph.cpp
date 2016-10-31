@@ -248,6 +248,16 @@ namespace anyun_regex
 		return nodes.size();
 	}
 
+	size_t DirectedGraph::get_start_node_id()
+	{
+		return start_node_id;
+	}
+
+	size_t DirectedGraph::get_end_node_id()
+	{
+		return end_node_id;
+	}
+
 	//rewite the follow bad code
 	RegexParseCode DirectedGraph::compile(const string &pattern)
 	{

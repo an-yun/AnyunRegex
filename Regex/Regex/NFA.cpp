@@ -12,6 +12,7 @@ namespace anyun_regex
 	} while (0)
 
 
+
 	NFA::NFA(const char * pattern)
 		: digraph(new DirectedGraph(pattern))
 	{
@@ -112,7 +113,7 @@ namespace anyun_regex
 				size_t edge_id = *b;
 				size_t end_node_id = digraph->edges[edge_id]->get_end_node_id();
 				if (digraph->edges[edge_id]->get_type() == SIGMA_DIRECTEDEDGE)
-					VISITED_ONE_NODE(end_node_id,node_ids,source);
+					VISITED_ONE_NODE(end_node_id, node_ids, source);
 
 			}
 
@@ -189,7 +190,7 @@ namespace anyun_regex
 					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
 					VISITED_ONE_NODE(end_node_id, node_ids, state);
 				}
-				else if(judge == 0)
+				else if (judge == 0)
 				{
 					//the end node
 					size_t out_edge_id = repeat_node.get_out_edges()[1];
@@ -219,7 +220,7 @@ namespace anyun_regex
 					size_t edge_id = *b;
 					size_t end_node_id = digraph->edges[edge_id]->get_end_node_id();
 					if (digraph->edges[edge_id]->get_type() == SIGMA_DIRECTEDEDGE)
-						VISITED_ONE_NODE(end_node_id,node_ids,state);
+						VISITED_ONE_NODE(end_node_id, node_ids, state);
 					else if (digraph->edges[edge_id]->get_type() == LINE_START_DIRECTEDEDGE
 						|| digraph->edges[edge_id]->get_type() == LINE_END_DIRECTEDEDGE)
 					{
@@ -240,16 +241,216 @@ namespace anyun_regex
 
 
 
-	void NFA::get_next_state(map<size_t, TrackRecode>& state, const string & text, size_t index, Matcher & matcher)
+	void NFA::get_next_state(State& state, const string & text, size_t index, Matcher & matcher)
 	{
+		//breath first search
+		vector<bool> visited(digraph->v(), false);
+		State next_state;
+		vector<DirectedEdgePoint> &edges = digraph->edges;
+		for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
+		{
+			//check every edge that can accept ch
+			size_t node_id = (*b).first;
+			const vector<size_t> &out_edges = digraph->nodes[node_id]->get_out_edges();
+			for (vector<size_t>::const_iterator edge_b = out_edges.begin(), edge_e = out_edges.cend(); edge_b != edge_e; edge_b++)
+				if (edges[*edge_b]->get_type() == SINGLE_CHAR_DIRECTEDEDGE && edges[*edge_b]->accept(text, index, matcher))
+				{
+					size_t end_node_id = edges[*edge_b]->get_end_node_id();
+					if (!visited[end_node_id])
+					{
+						visited[end_node_id] = true;
+						next_state.push_back({ end_node_id,(*b).second });
+						next_state.back().second[end_node_id] = matcher.current_cursor();
+					}
+				}
+		}
+
+		state.swap(next_state);
 	}
 
-	void NFA::read_nochar_edge(map<size_t, TrackRecode>& state, const string & text, size_t index, Matcher & matcher)
+	void NFA::read_nochar_edge(State& state, const string & text, size_t index, Matcher & matcher)
 	{
+		//breath first search
+		vector<bool> visited(digraph->v(), false);
+		queue<size_t> node_ids;
+
+		//add all source nodes
+		for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
+		{
+			size_t id = (*b).first;
+			visited[id] = true;
+			node_ids.push(id);
+		}
+
+		while (!node_ids.empty())
+		{
+			size_t node_id = node_ids.front();
+			node_ids.pop();
+			if (digraph->nodes[node_id]->get_type() == REPEAT_COUNT_DIRECTEDNODE)
+			{
+				RepeatCountDirectedNode &repeat_node = *dynamic_cast<RepeatCountDirectedNode *>(digraph->nodes[node_id].get());
+				matcher.repeat_node_count[node_id]++;
+				for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
+				{
+					if ((*b).first == node_id)
+					{
+						state.remove(*b);
+						break;
+					}
+				}
+				int judge = repeat_node.accept_count(matcher.repeat_node_count[node_id]);
+				/*
+				0 is the repeat edge
+				1 is the pass edge
+				*/
+				if (judge == -1)
+				{
+					//the continue repeat node
+					size_t out_edge_id = repeat_node.get_out_edges()[0];
+					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+					visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+				}
+				else if (judge == 0)
+				{
+					//the end node
+					size_t out_edge_id = repeat_node.get_out_edges()[1];
+					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+					visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+					//the continue repeat node
+					out_edge_id = repeat_node.get_out_edges()[0];
+					end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+					visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+				}
+				else if (judge == 1)
+				{
+					//the end node
+					size_t out_edge_id = repeat_node.get_out_edges()[1];
+					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+					visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+					matcher.repeat_node_count[node_id] = 0;
+				}
+				else
+					matcher.repeat_node_count[node_id] = 0;
+			}
+			else
+			{
+				const vector<size_t> &out_edges = digraph->nodes[node_id]->get_out_edges();
+				for (vector<size_t>::const_iterator b = out_edges.cbegin(), e = out_edges.cend(); b != e; b++)
+				{
+					size_t edge_id = *b;
+					size_t end_node_id = digraph->edges[edge_id]->get_end_node_id();
+					if (digraph->edges[edge_id]->get_type() == SIGMA_DIRECTEDEDGE)
+						visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+					else if (digraph->edges[edge_id]->get_type() == LINE_START_DIRECTEDEDGE
+						|| digraph->edges[edge_id]->get_type() == LINE_END_DIRECTEDEDGE)
+					{
+						if (digraph->edges[edge_id]->accept(text, index, matcher))
+							visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+					}
+
+
+				}
+			}
+		}
 	}
 
-	bool NFA::has_final_state(map<size_t, TrackRecode>& states)
+	void NFA::update_group_node_record(State & state, Matcher & matcher, bool is_start)
 	{
-		return states.find(digraph->end_node_id) != states.end();
+		for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
+		{
+			if ((*b).first == digraph->end_node_id)
+			{
+				TrackRecode &record = (*b).second;
+				vector<Group> &groups = digraph->groups;
+				size_t groups_size = groups.size();
+
+				for (size_t i = 0; i < groups_size; i++)
+				{
+					size_t group_start_node_id = groups[i].group_start_node;
+					size_t group_end_node_id = groups[i].group_end_node;
+					matcher.groups[i].first = record[group_start_node_id];
+					matcher.groups[i].second = is_start ? record[group_end_node_id] : record[group_end_node_id] + 1;
+				}
+			}
+		}
+	}
+
+	inline void NFA::visit_one_node(size_t parent_node_id, size_t visit_node_id, State & state, queue<size_t>& node_ids, vector<bool> &visited, Matcher & matcher)
+	{
+		//find the parent node
+		for (State::iterator p_b = state.begin(), p_e = state.end(); p_b != p_e; p_b++)
+		{
+			if ((*p_b).first == parent_node_id)
+			{
+				TrackRecode &parent_record = (*p_b).second;
+				if (visited[visit_node_id])
+				{
+					//find the child node
+					for (State::iterator c_b = state.begin(), c_e = state.end(); c_b != c_e; c_b++)
+					{
+						//if find the child
+						if ((*c_b).first == visit_node_id)
+						{
+							(*c_b).second = parent_record;
+							(*c_b).second[visit_node_id] = matcher.current_cursor();
+							break;
+						}
+					}
+
+				}
+				else
+				{
+					visited[visit_node_id] = true;
+					node_ids.push(visit_node_id);
+					state.push_back({ visit_node_id ,parent_record });
+					state.back().second[visit_node_id] = matcher.current_cursor();
+				}
+				break;
+			}
+		}
+
+	}
+
+	bool NFA::has_final_state(State& states)
+	{
+		for (State::iterator b = states.begin(), e = states.end(); b != e; b++)
+			if ((*b).first == digraph->end_node_id) return true;
+		return false;
+	}
+	void NFA::get_sigma_closure(map<size_t, TrackRecode>& source)
+	{
+		//breath first search
+		vector<bool> visited(digraph->v(), false);
+		queue<size_t> node_ids;
+
+		//add all source nodes
+		for (map<size_t, TrackRecode>::iterator b = source.begin(), e = source.end(); b != e; b++)
+		{
+			size_t id = (*b).first;
+			visited[id] = true;
+			node_ids.push(id);
+		}
+
+		while (!node_ids.empty())
+		{
+			size_t node_id = node_ids.front();
+			node_ids.pop();
+			const vector<size_t> &out_edges = digraph->nodes[node_id]->get_out_edges();
+			for (vector<size_t>::const_iterator b = out_edges.cbegin(), e = out_edges.cend(); b != e; b++)
+			{
+				size_t edge_id = *b;
+				size_t end_node_id = digraph->edges[edge_id]->get_end_node_id();
+				if (digraph->edges[edge_id]->get_type() == SIGMA_DIRECTEDEDGE)
+					if (visited[end_node_id] == false)
+					{
+						visited[end_node_id] = true;
+						node_ids.push(end_node_id);
+						source[end_node_id] = source[node_id];
+						source[end_node_id][end_node_id] = 0;
+					}
+
+			}
+
+		}
 	}
 }

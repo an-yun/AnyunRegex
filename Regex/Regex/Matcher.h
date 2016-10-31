@@ -30,8 +30,6 @@ namespace anyun_regex {
 	private:
 		NFA nfa;
 
-		set<size_t> start_state;
-		bool start_is_final;
 		bool is_find;
 		size_t text_length;
 

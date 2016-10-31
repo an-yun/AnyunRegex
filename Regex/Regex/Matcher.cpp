@@ -17,17 +17,18 @@ namespace anyun_regex {
 		while (!is_find && start <= text_length)
 		{
 			cursor = start;
-			set<size_t> state = start_state;
+			State state;
+			TrackRecode temp_record;
+			temp_record[0] = current_cursor();
+			state.push_back({ 0,temp_record });
 			nfa.read_nochar_edge(state, text, cursor, *this);
 			if (nfa.has_final_state(state))
 			{
+				nfa.update_group_node_record(state,*this,true);
 				next_start = start + 1;
 				is_find = true;
 				//if greedy remove break
 			}	
-			//here nedd to fix bug,add some track to the node
-			nfa.update_group_start_state(state, *this);
-			nfa.update_group_end_state(state, *this);
 			for (; !state.empty() && cursor < text_length; next())
 			{
 				nfa.get_next_state(state, text, cursor, *this);
@@ -35,12 +36,11 @@ namespace anyun_regex {
 				//if match,set is_find to true,save the result range to match ,else set false;
 				if (nfa.has_final_state(state))
 				{
+					nfa.update_group_node_record(state, *this);
 					next_start = cursor + 1;
 					is_find = true;
 					//if greedy remove break
 				}
-				nfa.update_group_start_state(state, *this);
-				nfa.update_group_end_state(state, *this);
 			}
 			start++;
 		}
@@ -76,10 +76,8 @@ namespace anyun_regex {
 
 	NFAMatcher::NFAMatcher(const string & text, const NFA & nfa, size_t offset)
 		:Matcher(text,offset,nfa.group_size())
-		,nfa(nfa),start_state{0}, start_is_final(false),is_find(true),text_length(text.length())
+		, nfa(nfa), is_find(true), text_length(text.length())
 	{
-		this->nfa.get_sigma_closure(start_state);
-		start_is_final = this->nfa.has_final_state(start_state);
 	}
 
 }
