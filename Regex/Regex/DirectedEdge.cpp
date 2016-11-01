@@ -152,7 +152,7 @@ namespace anyun_regex
 
 	bool LineStartDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
 	{
-		return index == 0 || text[index-1] == '\n';
+		return index == string::npos || text[index] == '\n';
 	}
 
 	LineEndDirectedEdge::LineEndDirectedEdge(size_t id)

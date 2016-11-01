@@ -61,7 +61,7 @@ namespace anyun_regex
 		void get_sigma_closure(map<size_t, TrackRecode> &source);
 		void get_next_state(State & state, const string &text, size_t index, Matcher &matcher);
 		void read_nochar_edge(State & state, const string &text, size_t index, Matcher &matcher);
-		void update_group_node_record(State & state, Matcher &matcher,bool is_start = false);
+		void update_group_node_record(State & state, Matcher &matcher);
 		void visit_one_node(size_t parent_node_id, size_t visit_node_id, State & state, queue<size_t> &node_ids,vector<bool> &visited,Matcher &matcher);
 	};
 

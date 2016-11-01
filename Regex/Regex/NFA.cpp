@@ -348,13 +348,12 @@ namespace anyun_regex
 							visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
 					}
 
-
 				}
 			}
 		}
 	}
 
-	void NFA::update_group_node_record(State & state, Matcher & matcher, bool is_start)
+	void NFA::update_group_node_record(State & state, Matcher & matcher)
 	{
 		for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
 		{
@@ -368,8 +367,8 @@ namespace anyun_regex
 				{
 					size_t group_start_node_id = groups[i].group_start_node;
 					size_t group_end_node_id = groups[i].group_end_node;
-					matcher.groups[i].first = record[group_start_node_id];
-					matcher.groups[i].second = is_start ? record[group_end_node_id] : record[group_end_node_id] + 1;
+					matcher.groups[i].first = record[group_start_node_id]+1;
+					matcher.groups[i].second = record[group_end_node_id] + 1;
 				}
 			}
 		}
@@ -401,10 +400,10 @@ namespace anyun_regex
 				else
 				{
 					visited[visit_node_id] = true;
-					node_ids.push(visit_node_id);
 					state.push_back({ visit_node_id ,parent_record });
 					state.back().second[visit_node_id] = matcher.current_cursor();
 				}
+				node_ids.push(visit_node_id);
 				break;
 			}
 		}

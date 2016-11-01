@@ -16,7 +16,7 @@ namespace anyun_regex {
 		is_find = false;
 		while (!is_find && start <= text_length)
 		{
-			cursor = start;
+			cursor = start-1;
 			State state;
 			TrackRecode temp_record;
 			temp_record[0] = current_cursor();
@@ -24,12 +24,12 @@ namespace anyun_regex {
 			nfa.read_nochar_edge(state, text, cursor, *this);
 			if (nfa.has_final_state(state))
 			{
-				nfa.update_group_node_record(state,*this,true);
+				nfa.update_group_node_record(state,*this);
 				next_start = start + 1;
 				is_find = true;
 				//if greedy remove break
 			}	
-			for (; !state.empty() && cursor < text_length; next())
+			for (cursor = start; !state.empty() && cursor < text_length; next())
 			{
 				nfa.get_next_state(state, text, cursor, *this);
 				nfa.read_nochar_edge(state, text, cursor, *this);
