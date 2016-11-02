@@ -58,7 +58,6 @@ namespace anyun_regex
 
 		//the new design for NFAMatcher
 		bool has_final_state(State &states);
-		void get_sigma_closure(map<size_t, TrackRecode> &source);
 		void get_next_state(State & state, const string &text, size_t index, Matcher &matcher);
 		void read_nochar_edge(State & state, const string &text, size_t index, Matcher &matcher);
 		void update_group_node_record(State & state, Matcher &matcher);

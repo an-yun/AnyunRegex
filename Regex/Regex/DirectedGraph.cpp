@@ -475,6 +475,7 @@ namespace anyun_regex
 
 		static const char end_and_no_connect_operators[] = { '\0',')','{','|','*','+','?' };
 		static const char right_operators[] = { '*','+','?',']',')','}' ,'^','$' ,'\\'};
+		static const char qulifier_operatior[] = { '*','+','?','^' };
 		list<size_t> result;
 		size_t size = p.size();
 		stack<size_t> bracket_states;
@@ -482,8 +483,10 @@ namespace anyun_regex
 		for (size_t i = 0; i < size; i++)
 		{
 			size_t current = p[i], next = p[i + 1];
+			bool pre_is_qulifoer_operator = i == 0 ? true : is_char_in(p[i-1], qulifier_operatior, sizeof(qulifier_operatior) / sizeof(char));
 			bool statest_empty = bracket_states.empty();
 			bool current_is_special = is_special_char(current);
+			bool current_qulifoer_operator = is_char_in(current, qulifier_operatior, sizeof(qulifier_operatior) / sizeof(char));
 			bool current_is_right = is_char_in(current, right_operators, sizeof(right_operators) / sizeof(char));
 			bool next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
 			result.push_back(current);
@@ -549,7 +552,6 @@ namespace anyun_regex
 				result.push_back('\\');
 				result.push_back('N');
 			}
-
 		}
 		if (!bracket_states.empty())
 		{
@@ -559,6 +561,7 @@ namespace anyun_regex
 		}
 		else if (bracket_count > 0)
 			PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_RIGHT_BRACKET);
+
 		else return string(result.begin(), result.end());
 	}
 

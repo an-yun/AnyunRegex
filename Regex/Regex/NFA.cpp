@@ -416,40 +416,4 @@ namespace anyun_regex
 			if ((*b).first == digraph->end_node_id) return true;
 		return false;
 	}
-	void NFA::get_sigma_closure(map<size_t, TrackRecode>& source)
-	{
-		//breath first search
-		vector<bool> visited(digraph->v(), false);
-		queue<size_t> node_ids;
-
-		//add all source nodes
-		for (map<size_t, TrackRecode>::iterator b = source.begin(), e = source.end(); b != e; b++)
-		{
-			size_t id = (*b).first;
-			visited[id] = true;
-			node_ids.push(id);
-		}
-
-		while (!node_ids.empty())
-		{
-			size_t node_id = node_ids.front();
-			node_ids.pop();
-			const vector<size_t> &out_edges = digraph->nodes[node_id]->get_out_edges();
-			for (vector<size_t>::const_iterator b = out_edges.cbegin(), e = out_edges.cend(); b != e; b++)
-			{
-				size_t edge_id = *b;
-				size_t end_node_id = digraph->edges[edge_id]->get_end_node_id();
-				if (digraph->edges[edge_id]->get_type() == SIGMA_DIRECTEDEDGE)
-					if (visited[end_node_id] == false)
-					{
-						visited[end_node_id] = true;
-						node_ids.push(end_node_id);
-						source[end_node_id] = source[node_id];
-						source[end_node_id][end_node_id] = 0;
-					}
-
-			}
-
-		}
-	}
 }

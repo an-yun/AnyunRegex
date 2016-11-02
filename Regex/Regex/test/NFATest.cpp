@@ -10,6 +10,34 @@ namespace anyun_regex
 		print_string_format(80, "Test class NFA and NFAMatcher ", '-', true);
 		cout << endl;
 		NFATest nfa_test;
+		nfa_test.set_pattern("");
+		nfa_test.add_testcase("1a");
+		nfa_test.add_testcase("1234");
+		nfa_test.add_testcase("1b");
+		nfa_test.add_testcase("4a");
+		nfa_test.add_testcase("!@#");
+		nfa_test.add_testcase("2abb");
+		nfa_test.add_testcase("23abb");
+		nfa_test.add_testcase("c23abcb");
+		nfa_test.add_testcase("1c23abcb");
+		nfa_test.add_testcase("1ab2ab3abbb");
+		nfa_test.add_testcase("1)*&^$3b3abbb");
+		nfa_test.test_match();
+
+		nfa_test.set_pattern(".*");
+		nfa_test.add_testcase("1b");
+		nfa_test.add_testcase("4a");
+		nfa_test.add_testcase("Mayflies, also known as shadflies or fishflies in Canada");
+		nfa_test.add_testcase(".cc .cpp .cxx .C .c++ .h .hh .hpp .hxx .h++");
+		nfa_test.add_testcase("are aquatic insects belonging to the order Ephemeroptera");
+		nfa_test.add_testcase("Immature mayflies are aquatic");
+		nfa_test.add_testcase("Adult mayflies, or imagos, are relatively primitive in structure");
+		nfa_test.add_testcase("Often, all the mayflies in a population mature at once (a hatch), and for a day or two in the spring or autumn");
+		nfa_test.add_testcase("1c23abcb");
+		nfa_test.add_testcase("1ab2ab3abbb");
+		nfa_test.add_testcase("1)*&^$3b3abbb");
+		nfa_test.test_match();
+
 		nfa_test.set_pattern("[123]ab*");
 		nfa_test.add_testcase("1a");
 		nfa_test.add_testcase("1b");
@@ -55,6 +83,20 @@ namespace anyun_regex
 		print_string_format(80, "Test class NFA and NFAMatcher ", '-', true);
 		cout << endl;
 		NFATest nfa_test;
+		nfa_test.set_pattern("(a)+(acd)");
+		nfa_test.add_testcase("abb");
+		nfa_test.add_testcase("a");
+		nfa_test.add_testcase("abbbb");
+		nfa_test.add_testcase("acdbbbb");
+		nfa_test.add_testcase("abaaacdbbb");
+		nfa_test.add_testcase("abaacdaa");
+		nfa_test.add_testcase("aaadbaaaaa");
+		nfa_test.add_testcase("ab\nabbb");
+		nfa_test.add_testcase("ab\nabbb\n");
+		nfa_test.add_testcase("ab\nabbb\n12");
+		nfa_test.add_testcase("aacdabded");
+		nfa_test.test_group();
+
 		nfa_test.set_pattern("(a|b)+(a.*d)");
 		nfa_test.add_testcase("abb");
 		nfa_test.add_testcase("a");
@@ -65,6 +107,9 @@ namespace anyun_regex
 		nfa_test.add_testcase("ab\nabbb\n");
 		nfa_test.add_testcase("ab\nabbb\n12");
 		nfa_test.add_testcase("aacdabded");
+		nfa_test.add_testcase("aaabababacdabded");
+		nfa_test.add_testcase("aaaaaaaaaaaaacdabdbed");
+		nfa_test.add_testcase("acdadbadeadafgacdabded");
 		nfa_test.test_group();
 	}
 
