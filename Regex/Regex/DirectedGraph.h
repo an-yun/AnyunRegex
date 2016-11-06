@@ -10,6 +10,7 @@
 #include <assert.h>
 #include "DirectedNode.h"
 #include "DirectedEdge.h"
+#include<cstdlib>
 
 namespace anyun_regex
 {

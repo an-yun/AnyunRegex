@@ -82,6 +82,7 @@ namespace anyun_regex
 		friend class NFA;
 		friend class SingleCharDirectedEdge;
 		friend class RepeatCountDirectedNode;
+		friend class GroupReferenceDirectedge;
 	public:
 		virtual bool find() = 0;
 		virtual bool find(size_t offset) = 0;
@@ -189,10 +190,12 @@ namespace anyun_regex
 	class GroupReferenceDirectedge :public DirectedEdge
 	{
 	public:
-		GroupReferenceDirectedge(size_t id, size_t s_id = 0, size_t e_id = 0);
+		GroupReferenceDirectedge(size_t id, size_t group_id, size_t s_id = 0, size_t e_id = 0);
 
 		DirectedEdgeType get_type() const override;
 		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+	private:
+		size_t reference_id;
 	};
 }
 

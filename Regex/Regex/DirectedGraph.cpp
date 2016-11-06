@@ -474,7 +474,7 @@ namespace anyun_regex
 	{
 
 		static const char end_and_no_connect_operators[] = { '\0',')','{','|','*','+','?' };
-		static const char right_operators[] = { '*','+','?',']',')','}' ,'^','$' ,'\\'};
+		static const char right_operators[] = { '*','+','?',']',')','}' ,'^','$' ,'\\' };
 		static const char qulifier_operatior[] = { '*','+','?','^' };
 		list<size_t> result;
 		size_t size = p.size();
@@ -483,7 +483,7 @@ namespace anyun_regex
 		for (size_t i = 0; i < size; i++)
 		{
 			size_t current = p[i], next = p[i + 1];
-			bool pre_is_qulifoer_operator = i == 0 ? true : is_char_in(p[i-1], qulifier_operatior, sizeof(qulifier_operatior) / sizeof(char));
+			bool pre_is_qulifoer_operator = i == 0 ? true : is_char_in(p[i - 1], qulifier_operatior, sizeof(qulifier_operatior) / sizeof(char));
 			bool statest_empty = bracket_states.empty();
 			bool current_is_special = is_special_char(current);
 			bool current_qulifoer_operator = is_char_in(current, qulifier_operatior, sizeof(qulifier_operatior) / sizeof(char));
@@ -636,6 +636,7 @@ namespace anyun_regex
 			}
 			case '{':
 				//to do
+
 				break;
 			case '|':
 				normal_priority_parse('|', operators, operands, parse_index);
@@ -672,8 +673,13 @@ namespace anyun_regex
 				case '7':
 				case '8':
 				case '9':
+				{
+					DirectedEdgePoint directed_edge = parse_group_reference(p, parse_index);
+					if (directed_edge == nullptr)(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+					else store_edge(directed_edge, operands);
 					parse_index++;
 					break;
+				}
 				default:
 					DEFAULT_SINGLE_CHAR_PROCESS(p[parse_index]);
 					break;
@@ -741,7 +747,13 @@ namespace anyun_regex
 
 	DirectedEdgePoint DirectedGraph::parse_group_reference(const string & p, size_t & parse_index)
 	{
-		return DirectedEdgePoint();
+		//to do
+		char *end_point = nullptr;
+		const char *start = p.c_str() + parse_index;
+		size_t capture_num = (size_t)strtol(start, &end_point, 10);
+		if (capture_num == 0 || end_point == start || capture_num >= groups.size())
+			return DirectedEdgePoint();
+		else return DirectedEdgePoint(new GroupReferenceDirectedge(edges.size(), capture_num));
 	}
 
 	//parse repeat count in {}

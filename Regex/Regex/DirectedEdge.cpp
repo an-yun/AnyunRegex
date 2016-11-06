@@ -209,7 +209,8 @@ namespace anyun_regex
 		return text[cursor--];
 	}
 
-	RepeatDirectedge::RepeatDirectedge(size_t id, size_t s_id, size_t e_id):DirectedEdge(id,s_id,e_id)
+	RepeatDirectedge::RepeatDirectedge(size_t id, size_t s_id, size_t e_id)
+		:DirectedEdge(id,s_id,e_id)
 	{
 	}
 
@@ -223,9 +224,24 @@ namespace anyun_regex
 		return false;
 	}
 
+	GroupReferenceDirectedge::GroupReferenceDirectedge(size_t id, size_t group_id, size_t s_id, size_t e_id) 
+		:DirectedEdge(id, s_id, e_id),reference_id(group_id)
+	{
+	}
+
 	DirectedEdgeType GroupReferenceDirectedge::get_type() const
 	{
 		return GROUP_REFERENCE_DIRECTEDGE;
+	}
+
+	bool GroupReferenceDirectedge::accept(const string & text, size_t index, Matcher & matcher) const
+	{
+		pair<size_t, size_t> reference_group = matcher.groups[reference_id];
+		size_t length = reference_group.second - reference_group.first;
+		string group_str = text.substr(reference_group.first, length);
+		for (size_t i = 0; i < length; i++)
+			if (group_str[i] != text[index + i])return false;
+		return true;
 	}
 
 }
