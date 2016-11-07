@@ -194,19 +194,15 @@ namespace anyun_regex
 		return cursor;
 	}
 
-	size_t Matcher::peek()
+
+	void Matcher::next()
 	{
-		return text[cursor];
+		cursor++;
 	}
 
-	size_t Matcher::next()
+	void Matcher::back()
 	{
-		return text[cursor++];
-	}
-
-	size_t Matcher::back()
-	{
-		return text[cursor--];
+		cursor--;
 	}
 
 	RepeatDirectedge::RepeatDirectedge(size_t id, size_t s_id, size_t e_id)

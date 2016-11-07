@@ -98,9 +98,8 @@ namespace anyun_regex
 		map<string, size_t> name_groups;
 		map<size_t, size_t> repeat_node_count;
 		virtual size_t current_cursor() const;
-		virtual size_t peek() ;
-		virtual size_t next() ;
-		virtual size_t back();
+		virtual void next() ;
+		virtual void back();
 
 
 		Matcher(string text, size_t cursor = 0,size_t group_size = 1 );
