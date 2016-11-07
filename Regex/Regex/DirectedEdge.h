@@ -1,17 +1,19 @@
 #ifndef DIRECTED_EDGE_H
 #define DIRECTED_EDGE_H
 #include<vector>
-#include<string>
 #include<map>
+#include <string>
 #include<utility>
 #include<memory>
 namespace anyun_regex
 {
+	typedef unsigned size_t;
 	using std::vector;
-	using std::map;
 	using std::string;
+	using std::map;
 	using std::shared_ptr;
 	using std::pair;
+
 	class Condition
 	{
 	public:
@@ -31,7 +33,7 @@ namespace anyun_regex
 	class CharCondition :public Condition
 	{
 	public:
-		CharCondition(size_t ch);
+		explicit CharCondition(size_t ch);
 		bool match(size_t ch)  const override;
 	private:
 		size_t ch;
@@ -50,7 +52,7 @@ namespace anyun_regex
 	class ComplmentCondtion :public Condition
 	{
 	public:
-		ComplmentCondtion(ConditionPoint condition_ptr);
+		explicit ComplmentCondtion(ConditionPoint condition_ptr);
 		bool match(size_t ch) const override;
 	private:
 		ConditionPoint original_condition;
