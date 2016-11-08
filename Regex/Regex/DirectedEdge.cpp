@@ -237,6 +237,8 @@ namespace anyun_regex
 		string group_str = text.substr(reference_group.first, length);
 		for (size_t i = 0; i < length; i++)
 			if (group_str[i] != text[index + i])return false;
+		//more the cursor
+		matcher.cursor += length - 1;
 		return true;
 	}
 

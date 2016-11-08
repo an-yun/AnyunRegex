@@ -677,7 +677,7 @@ namespace anyun_regex
 				case '9':
 				{
 					DirectedEdgePoint directed_edge = parse_group_reference(p, parse_index);
-					if (directed_edge == nullptr)(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+					if (directed_edge == nullptr)PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
 					else store_edge(directed_edge, operands);
 					parse_index++;
 					break;
@@ -755,7 +755,7 @@ namespace anyun_regex
 		size_t capture_num = (size_t)strtol(start, &end_point, 10);
 		if (capture_num == 0 || end_point == start || capture_num >= groups.size())
 			return DirectedEdgePoint();
-		else return DirectedEdgePoint(new GroupReferenceDirectedge(edges.size(), capture_num));
+		return DirectedEdgePoint(new GroupReferenceDirectedge(edges.size(), capture_num));
 	}
 
 	//parse repeat count in {}

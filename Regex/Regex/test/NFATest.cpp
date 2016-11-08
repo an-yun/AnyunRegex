@@ -111,6 +111,15 @@ namespace anyun_regex
 		nfa_test.add_testcase("aaaaaaaaaaaaacdabdbed");
 		nfa_test.add_testcase("acdadbadeadafgacdabded");
 		nfa_test.test_group();
+
+		nfa_test.set_pattern("([ab]+).\\1");
+		nfa_test.add_testcase("a.a");
+		nfa_test.add_testcase("b.b");
+		nfa_test.add_testcase("ab.ab");
+		nfa_test.add_testcase("abaacdaa");
+		nfa_test.add_testcase("ababab.ababab");
+		nfa_test.add_testcase("aaaaa.aaaaaaa");
+		nfa_test.test_group();
 	}
 
 
