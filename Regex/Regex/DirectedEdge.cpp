@@ -104,7 +104,7 @@ namespace anyun_regex
 	{
 		return SIGMA_DIRECTEDEDGE;
 	}
-	bool SigmaDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
+	bool SigmaDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
 	{
 		return false;
 	}
@@ -113,7 +113,7 @@ namespace anyun_regex
 		return SINGLE_CHAR_DIRECTEDEDGE;
 	}
 
-	bool SingleCharDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
+	bool SingleCharDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
 	{
 		return condition->match(text[index]);
 	}
@@ -150,7 +150,7 @@ namespace anyun_regex
 		return LINE_START_DIRECTEDEDGE;
 	}
 
-	bool LineStartDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
+	bool LineStartDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
 	{
 		return index == string::npos || text[index] == '\n';
 	}
@@ -165,7 +165,7 @@ namespace anyun_regex
 		return LINE_END_DIRECTEDEDGE;
 	}
 
-	bool LineEndDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
+	bool LineEndDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
 	{
 		return index == text.size()-1 || text[index+1] == '\n';
 	}
@@ -184,7 +184,7 @@ namespace anyun_regex
 		return COUNT_DIRECTEDEDGE;
 	}
 
-	bool CountDirectedEdge::accept(const string & text, size_t index, Matcher & matcher) const
+	bool CountDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
 	{
 		return false;
 	}
@@ -215,7 +215,7 @@ namespace anyun_regex
 		return REPEAT_DIRECTEDEDGE;
 	}
 
-	bool RepeatDirectedge::accept(const string & text, size_t index, Matcher & matcher) const
+	bool RepeatDirectedge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
 	{
 		return false;
 	}
@@ -230,16 +230,30 @@ namespace anyun_regex
 		return GROUP_REFERENCE_DIRECTEDGE;
 	}
 
-	bool GroupReferenceDirectedge::accept(const string & text, size_t index, Matcher & matcher) const
+	bool GroupReferenceDirectedge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
 	{
-		pair<size_t, size_t> reference_group = matcher.groups[reference_id];
-		size_t length = reference_group.second - reference_group.first;
-		string group_str = text.substr(reference_group.first, length);
-		for (size_t i = 0; i < length; i++)
-			if (group_str[i] != text[index + i])return false;
-		//more the cursor
-		matcher.cursor += length - 1;
-		return true;
+		pair<size_t, size_t> reference_group = matcher.get_groups_node(reference_id);
+		bool result = false;
+		for(State::iterator st_b = state.begin(),st_e = state.end();st_b != st_e && (!result);st_b++)
+		{
+			result = true;
+			TrackRecode &track_recode = (*st_b).second;
+			size_t length = track_recode[reference_group.second] - track_recode[reference_group.first];
+			string group_str = text.substr(track_recode[reference_group.first]+1, length);
+			for (size_t i = 0; i < length; i++)
+				if (group_str[i] != text[index + i])
+				{
+					result = false;
+					break;
+				}
+			//more the cursor
+			if (result)
+			{
+				matcher.cursor += length - 1;
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

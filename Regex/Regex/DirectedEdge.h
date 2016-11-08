@@ -5,14 +5,23 @@
 #include <string>
 #include<utility>
 #include<memory>
+#include <algorithm>
+#include <list>
+#include <utility>
+#include <iterator>
 namespace anyun_regex
 {
 	typedef unsigned size_t;
-	using std::vector;
 	using std::string;
+	using std::list;
 	using std::map;
-	using std::shared_ptr;
 	using std::pair;
+	using std::back_inserter;
+	using std::copy;
+	using std::vector;
+	using std::shared_ptr;
+	typedef map<size_t, size_t> TrackRecode;
+	typedef list<pair<size_t, TrackRecode>> State;
 
 	class Condition
 	{
@@ -78,7 +87,10 @@ namespace anyun_regex
 		COUNT_DIRECTEDEDGE,
 		GROUP_REFERENCE_DIRECTEDGE
 	};
-
+	typedef map<size_t, size_t> TrackRecode;
+	typedef list<pair<size_t, TrackRecode>> State;
+	class DirectedGraph;
+	typedef shared_ptr<DirectedGraph> DirectedGraphPoint;
 	class Matcher
 	{
 		friend class NFA;
@@ -102,7 +114,7 @@ namespace anyun_regex
 		virtual size_t current_cursor() const;
 		virtual void next() ;
 		virtual void back();
-
+		virtual pair<size_t, size_t> get_groups_node(size_t group_id) = 0;
 
 		Matcher(string text, size_t cursor = 0,size_t group_size = 1 );
 	private:
@@ -120,7 +132,7 @@ namespace anyun_regex
 		virtual size_t get_start_node_id() const;
 		virtual size_t get_end_node_id() const;
 
-		virtual bool accept(const string &text, size_t index, Matcher &matcher) const = 0;
+		virtual bool accept(const string &text, size_t index, Matcher &matcher, State& state) const = 0;
 
 		virtual ~DirectedEdge();	//the virtual destructor
 	private:
@@ -137,7 +149,7 @@ namespace anyun_regex
 		SigmaDirectedEdge(size_t id, size_t s_id = 0, size_t e_id = 0);
 
 		DirectedEdgeType get_type() const override;
-		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+		bool accept(const string &text, size_t index, Matcher &matcher, State& state) const override;
 	};
 
 	class SingleCharDirectedEdge :public DirectedEdge
@@ -148,7 +160,7 @@ namespace anyun_regex
 		SingleCharDirectedEdge(ConditionPoint condition, size_t id, size_t s_id = 0, size_t  e_id = 0);
 
 		DirectedEdgeType get_type() const override;
-		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+		bool accept(const string &text, size_t index, Matcher &matcher, State& state) const override;
 	private:
 		ConditionPoint condition;
 	};
@@ -158,7 +170,7 @@ namespace anyun_regex
 	public:
 		LineStartDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
-		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+		bool accept(const string &text, size_t index, Matcher &matcher, State& state) const override;
 	};
 
 	class LineEndDirectedEdge :public DirectedEdge
@@ -166,7 +178,7 @@ namespace anyun_regex
 	public:
 		LineEndDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
-		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+		bool accept(const string &text, size_t index, Matcher &matcher, State& state) const override;
 	};
 
 	class CountDirectedEdge :public DirectedEdge
@@ -174,7 +186,7 @@ namespace anyun_regex
 	public:
 		CountDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
-		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+		bool accept(const string &text, size_t index, Matcher &matcher, State& state) const override;
 	private:
 
 	};
@@ -185,7 +197,7 @@ namespace anyun_regex
 		RepeatDirectedge(size_t id, size_t s_id = 0, size_t e_id = 0);
 
 		DirectedEdgeType get_type() const override;
-		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+		bool accept(const string &text, size_t index, Matcher &matcher, State& state) const override;
 	};
 
 	class GroupReferenceDirectedge :public DirectedEdge
@@ -194,7 +206,7 @@ namespace anyun_regex
 		GroupReferenceDirectedge(size_t id, size_t group_id, size_t s_id = 0, size_t e_id = 0);
 
 		DirectedEdgeType get_type() const override;
-		bool accept(const string &text, size_t index, Matcher &matcher) const override;
+		bool accept(const string &text, size_t index, Matcher &matcher, State& state) const override;
 	private:
 		size_t reference_id;
 	};

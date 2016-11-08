@@ -15,6 +15,7 @@ namespace anyun_regex {
 	class NFAMatcher :public Matcher
 	{
 		friend class NFA;
+		friend class GroupReferenceDirectedge;
 	public:
 		static NFAMatcher match(const string &text, const NFA &nfa, size_t offset = 0);
 		bool find() override;
@@ -26,6 +27,7 @@ namespace anyun_regex {
 		size_t group_count() const override;
 
 	protected:
+		virtual pair<size_t, size_t> get_groups_node(size_t group_id) override;
 
 	private:
 		NFA nfa;

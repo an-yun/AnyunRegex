@@ -73,6 +73,12 @@ namespace anyun_regex {
 		return nfa.group_size();
 	}
 
+	pair<size_t, size_t> NFAMatcher::get_groups_node(size_t group_id)
+	{
+		Group &group = nfa.digraph->groups[group_id];
+		return pair<size_t, size_t>(group.group_start_node,group.group_end_node);
+	}
+
 
 	NFAMatcher::NFAMatcher(const string & text, const NFA & nfa, size_t offset)
 		:Matcher(text,offset,nfa.group_size())

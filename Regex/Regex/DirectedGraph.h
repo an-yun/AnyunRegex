@@ -91,6 +91,8 @@ namespace anyun_regex
 	class DirectedGraph
 	{
 		friend class NFA;
+		friend class NFAMatcher;
+		friend class GroupReferenceDirectedge;
 #ifdef _DEBUG
 		friend class DirectedGraphTest;
 #endif // DEBUG
