@@ -119,6 +119,8 @@ namespace anyun_regex
 		nfa_test.add_testcase("abaacdaa");
 		nfa_test.add_testcase("ababab.ababab");
 		nfa_test.add_testcase("aaaaa.aaaaaaa");
+		nfa_test.add_testcase("aaabaadbab.aaabaadbab");
+		nfa_test.add_testcase("aaabaadbabaaaaaaabaadbab");
 		nfa_test.test_group();
 	}
 
