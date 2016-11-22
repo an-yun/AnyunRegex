@@ -77,3 +77,5 @@ $RECYCLE.BIN/
 *.lnk
 /Regex/Regex.VC.VC.opendb
 *.db
+*.VC.db
+.vs
