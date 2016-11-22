@@ -21,7 +21,7 @@ namespace anyun_regex {
 			TrackRecode temp_record;
 			temp_record[0] = current_cursor();
 			state.push_back({ 0,temp_record });
-			nfa.read_nochar_edge(state, text, cursor, *this);
+			nfa.read_nochar_edge(state, text,  *this);
 			if (nfa.has_final_state(state))
 			{
 				nfa.update_group_node_record(state,*this);
@@ -29,15 +29,17 @@ namespace anyun_regex {
 				is_find = true;
 				//if greedy remove break
 			}	
-			for (cursor = start; !state.empty() && cursor < text_length; next())
+			for (cursor = start; !state.empty(); )
 			{
-				nfa.get_next_state(state, text, cursor, *this);
-				nfa.read_nochar_edge(state, text, cursor, *this);
+				nfa.get_next_state(state, text,  *this);
+				nfa.read_nochar_edge(state, text,  *this);
 				//if match,set is_find to true,save the result range to match ,else set false;
-				if (nfa.has_final_state(state))
+				pair<size_t, TrackRecode>  *node_record_ptr = nullptr;
+				if ((node_record_ptr = nfa.has_final_state(state)) != nullptr)
 				{
 					nfa.update_group_node_record(state, *this);
-					next_start = cursor + 1;
+					pair<size_t, TrackRecode>  &node_record = *node_record_ptr;
+					next_start = node_record.second[node_record.first] + 1;
 					is_find = true;
 					//if greedy remove break
 				}

@@ -12,7 +12,7 @@ namespace anyun_regex
 	}
 
 
-	CharCondition::CharCondition(size_t ch):ch(ch)
+	CharCondition::CharCondition(size_t ch) :ch(ch)
 	{
 	}
 
@@ -21,7 +21,7 @@ namespace anyun_regex
 		return this->ch == ch;
 	}
 
-	RangeCondition::RangeCondition(size_t from, size_t to):from(from),to(to)
+	RangeCondition::RangeCondition(size_t from, size_t to) :from(from), to(to)
 	{
 	}
 
@@ -30,7 +30,7 @@ namespace anyun_regex
 		return ch >= from && ch <= to;
 	}
 
-	ComplmentCondtion::ComplmentCondtion(ConditionPoint condition_ptr):original_condition(condition_ptr)
+	ComplmentCondtion::ComplmentCondtion(ConditionPoint condition_ptr) :original_condition(condition_ptr)
 	{
 	}
 
@@ -45,7 +45,7 @@ namespace anyun_regex
 		conditions.push_back(rhs);
 	}
 
-	OrCondtion::OrCondtion(vector<ConditionPoint> conditions):conditions(conditions)
+	OrCondtion::OrCondtion(vector<ConditionPoint> conditions) :conditions(conditions)
 	{
 	}
 
@@ -57,7 +57,7 @@ namespace anyun_regex
 	}
 
 
-	DirectedEdge::DirectedEdge(size_t id, size_t s_id, size_t e_id):id(id),start_id(s_id),end_id(e_id)
+	DirectedEdge::DirectedEdge(size_t id, size_t s_id, size_t e_id) :id(id), start_id(s_id), end_id(e_id)
 	{
 	}
 
@@ -95,7 +95,7 @@ namespace anyun_regex
 
 
 
-	SigmaDirectedEdge::SigmaDirectedEdge(size_t id, size_t s_id, size_t e_id) 
+	SigmaDirectedEdge::SigmaDirectedEdge(size_t id, size_t s_id, size_t e_id)
 		:DirectedEdge(id, s_id, e_id)
 	{
 	}
@@ -104,18 +104,19 @@ namespace anyun_regex
 	{
 		return SIGMA_DIRECTEDEDGE;
 	}
-	bool SigmaDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
+
+	size_t SigmaDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
 	{
-		return false;
+		return 0;
 	}
 	DirectedEdgeType SingleCharDirectedEdge::get_type() const
 	{
 		return SINGLE_CHAR_DIRECTEDEDGE;
 	}
 
-	bool SingleCharDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
+	size_t SingleCharDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
 	{
-		return condition->match(text[index]);
+		return index < matcher.text.length() && condition->match(text[index]) ? 1 : static_cast<unsigned>(-1);
 	}
 
 
@@ -135,13 +136,13 @@ namespace anyun_regex
 		else condition = range_condition;
 	}
 
-	SingleCharDirectedEdge::SingleCharDirectedEdge(ConditionPoint condition, size_t id, size_t s_id, size_t e_id) 
-		: DirectedEdge(id, s_id, e_id),condition(condition)
+	SingleCharDirectedEdge::SingleCharDirectedEdge(ConditionPoint condition, size_t id, size_t s_id, size_t e_id)
+		: DirectedEdge(id, s_id, e_id), condition(condition)
 	{
 	}
 
 
-	LineStartDirectedEdge::LineStartDirectedEdge(size_t id):DirectedEdge(id)
+	LineStartDirectedEdge::LineStartDirectedEdge(size_t id) : DirectedEdge(id)
 	{
 	}
 
@@ -150,9 +151,9 @@ namespace anyun_regex
 		return LINE_START_DIRECTEDEDGE;
 	}
 
-	bool LineStartDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
+	size_t LineStartDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
 	{
-		return index == string::npos || text[index] == '\n';
+		return (index == string::npos || text[index] == '\n') ? 0 : static_cast<unsigned>(-1);
 	}
 
 	LineEndDirectedEdge::LineEndDirectedEdge(size_t id)
@@ -165,17 +166,17 @@ namespace anyun_regex
 		return LINE_END_DIRECTEDEDGE;
 	}
 
-	bool LineEndDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
+	size_t LineEndDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
 	{
-		return index == text.size()-1 || text[index+1] == '\n';
+		return (index == text.size() - 1 || text[index + 1] == '\n') ? 0 : static_cast<unsigned>(-1);
 	}
 
-	Matcher::Matcher(string text,size_t cursor,size_t group_size):text(text),cursor(cursor),groups(group_size)
+	Matcher::Matcher(string text, size_t cursor, size_t group_size) :text(text), cursor(cursor), groups(group_size)
 	{
 	}
 
 	CountDirectedEdge::CountDirectedEdge(size_t id)
-		:DirectedEdge(id)
+		: DirectedEdge(id)
 	{
 	}
 
@@ -184,7 +185,7 @@ namespace anyun_regex
 		return COUNT_DIRECTEDEDGE;
 	}
 
-	bool CountDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
+	size_t CountDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
 	{
 		return false;
 	}
@@ -206,7 +207,7 @@ namespace anyun_regex
 	}
 
 	RepeatDirectedge::RepeatDirectedge(size_t id, size_t s_id, size_t e_id)
-		:DirectedEdge(id,s_id,e_id)
+		:DirectedEdge(id, s_id, e_id)
 	{
 	}
 
@@ -215,13 +216,13 @@ namespace anyun_regex
 		return REPEAT_DIRECTEDEDGE;
 	}
 
-	bool RepeatDirectedge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
+	size_t RepeatDirectedge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
 	{
 		return false;
 	}
 
-	GroupReferenceDirectedge::GroupReferenceDirectedge(size_t id, size_t group_id, size_t s_id, size_t e_id) 
-		:DirectedEdge(id, s_id, e_id),reference_id(group_id)
+	GroupReferenceDirectedge::GroupReferenceDirectedge(size_t id, size_t group_id, size_t s_id, size_t e_id)
+		:DirectedEdge(id, s_id, e_id), reference_id(group_id)
 	{
 	}
 
@@ -230,30 +231,18 @@ namespace anyun_regex
 		return GROUP_REFERENCE_DIRECTEDGE;
 	}
 
-	bool GroupReferenceDirectedge::accept(const string & text, size_t index, Matcher & matcher, State& state) const
+	size_t GroupReferenceDirectedge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
 	{
+		if (index >= matcher.text.length()) return static_cast<unsigned>(-1);
 		pair<size_t, size_t> reference_group = matcher.get_groups_node(reference_id);
-		bool result = false;
-		for(State::iterator st_b = state.begin(),st_e = state.end();st_b != st_e && (!result);st_b++)
-		{
-			result = true;
-			TrackRecode &track_recode = (*st_b).second;
-			size_t length = track_recode[reference_group.second] - track_recode[reference_group.first];
-			string group_str = text.substr(track_recode[reference_group.first]+1, length);
-			for (size_t i = 0; i < length; i++)
-				if (group_str[i] != text[index + i])
-				{
-					result = false;
-					break;
-				}
-			//more the cursor
-			if (result)
-			{
-				matcher.cursor += length - 1;
-				return true;
-			}
-		}
-		return false;
+		TrackRecode &track_recode = one_state.second;
+		size_t length = track_recode[reference_group.second] - track_recode[reference_group.first];
+		string group_str = text.substr(track_recode[reference_group.first] + 1, length);
+		for (size_t i = 0; i < length; i++)
+			if (group_str[i] != text[index + i])
+				return static_cast<unsigned>(-1);
+		//ther shouldn't move the cursor
+		return length;
 	}
 
 }

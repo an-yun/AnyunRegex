@@ -23,8 +23,7 @@ namespace anyun_regex
 	using std::back_inserter;
 	using std::copy;
 	using std::shared_ptr;
-	typedef map<size_t, size_t> TrackRecode;
-	typedef list<pair<size_t, TrackRecode>> State;
+
 	class NFA
 	{
 		friend class NFAMatcher;
@@ -44,24 +43,15 @@ namespace anyun_regex
 
 	private:
 		DirectedGraphPoint digraph;
-		
-		//is there a group start state,if the answer is yes then mark it in matcher
-		void update_group_start_state(set<size_t>& states, Matcher &matcher);
-		void update_group_end_state(set<size_t> &states, Matcher &matcher);
-		void get_sigma_closure(set<size_t> &source);
-		void get_next_state(set<size_t> & state, const string &text, size_t index, Matcher &matcher);
-		void read_boundry_edge(set<size_t> & state, const string &text, size_t index, Matcher &matcher);
-
-		void read_nochar_edge(set<size_t> & state, const string &text, size_t index, Matcher &matcher);
-
-		bool has_final_state(set<size_t> &states);
 
 		//the new design for NFAMatcher
-		bool has_final_state(State &states);
-		void get_next_state(State & state, const string &text, size_t index, Matcher &matcher);
-		void read_nochar_edge(State & state, const string &text, size_t index, Matcher &matcher);
+		pair<size_t, TrackRecode>  * has_final_state(State &states);
+		void get_next_state(State & state, const string &text,  Matcher &matcher);
+		void read_nochar_edge(State & state, const string &text, Matcher &matcher);
 		void update_group_node_record(State & state, Matcher &matcher);
 		void visit_one_node(size_t parent_node_id, size_t visit_node_id, State & state, queue<size_t> &node_ids,vector<bool> &visited,Matcher &matcher);
+
+		OneState &get_one_node_record(size_t node_id, State& state);
 	};
 
 }

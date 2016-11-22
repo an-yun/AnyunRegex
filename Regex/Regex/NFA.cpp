@@ -68,7 +68,7 @@ namespace anyun_regex
 
 
 
-	void NFA::get_next_state(State& state, const string & text, size_t index, Matcher & matcher)
+	void NFA::get_next_state(State& state, const string & text, Matcher & matcher)
 	{
 		//breath first search
 		vector<bool> visited(digraph->v(), false);
@@ -77,20 +77,22 @@ namespace anyun_regex
 		for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
 		{
 			//check every edge that can accept ch
-			size_t node_id = (*b).first;
+			OneState &current_node_record = *b;
+			size_t node_id = current_node_record.first;
 			const vector<size_t> &out_edges = digraph->nodes[node_id]->get_out_edges();
+			size_t step = static_cast<unsigned>(-1);
 			for (vector<size_t>::const_iterator edge_b = out_edges.begin(), edge_e = out_edges.cend(); edge_b != edge_e; edge_b++)
 				if (  (edges[*edge_b]->get_type() == SINGLE_CHAR_DIRECTEDEDGE || 
 						edges[*edge_b]->get_type() == GROUP_REFERENCE_DIRECTEDGE
 					   )
-					&& edges[*edge_b]->accept(text, index, matcher, state))
+					&& (step =edges[*edge_b]->accept(text, current_node_record.second[node_id]+1, matcher, current_node_record)) != static_cast<unsigned>(-1))
 				{
 					size_t end_node_id = edges[*edge_b]->get_end_node_id();
 					if (!visited[end_node_id])
 					{
 						visited[end_node_id] = true;
-						next_state.push_back({ end_node_id,(*b).second });
-						next_state.back().second[end_node_id] = matcher.current_cursor();
+						current_node_record.second[end_node_id] = current_node_record.second[node_id] + step;
+						next_state.push_back({ end_node_id,current_node_record.second });
 					}
 				}
 		}
@@ -98,7 +100,7 @@ namespace anyun_regex
 		state.swap(next_state);
 	}
 
-	void NFA::read_nochar_edge(State& state, const string & text, size_t index, Matcher & matcher)
+	void NFA::read_nochar_edge(State& state, const string & text, Matcher & matcher)
 	{
 		//breath first search
 		vector<bool> visited(digraph->v(), false);
@@ -174,7 +176,8 @@ namespace anyun_regex
 					else if (digraph->edges[edge_id]->get_type() == LINE_START_DIRECTEDEDGE
 						|| digraph->edges[edge_id]->get_type() == LINE_END_DIRECTEDEDGE)
 					{
-						if (digraph->edges[edge_id]->accept(text, index, matcher, state))
+						OneState &node_record = get_one_node_record(node_id ,state);
+						if (digraph->edges[edge_id]->accept(text, node_record.second[node_id], matcher, node_record) != static_cast<unsigned>(-1))
 							visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
 					}
 
@@ -221,7 +224,7 @@ namespace anyun_regex
 						if ((*c_b).first == visit_node_id)
 						{
 							(*c_b).second = parent_record;
-							(*c_b).second[visit_node_id] = matcher.current_cursor();
+							(*c_b).second[visit_node_id] = parent_record[parent_node_id];
 							break;
 						}
 					}
@@ -231,7 +234,7 @@ namespace anyun_regex
 				{
 					visited[visit_node_id] = true;
 					state.push_back({ visit_node_id ,parent_record });
-					state.back().second[visit_node_id] = matcher.current_cursor();
+					state.back().second[visit_node_id] = parent_record[parent_node_id];
 				}
 				node_ids.push(visit_node_id);
 				break;
@@ -240,10 +243,18 @@ namespace anyun_regex
 
 	}
 
-	bool NFA::has_final_state(State& states)
+	OneState& NFA::get_one_node_record(size_t node_id, State& state)
+	{
+		for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
+			if ((*b).first == node_id) return *b;
+		return state.front();
+		// TODO: 在此处插入 return 语句
+	}
+
+	pair<size_t, TrackRecode>  * NFA::has_final_state(State& states)
 	{
 		for (State::iterator b = states.begin(), e = states.end(); b != e; b++)
-			if ((*b).first == digraph->end_node_id) return true;
-		return false;
+			if ((*b).first == digraph->end_node_id) return &(*b);
+		return nullptr;
 	}
 }
