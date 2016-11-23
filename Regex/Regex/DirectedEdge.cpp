@@ -236,8 +236,8 @@ namespace anyun_regex
 		if (index >= matcher.text.length()) return static_cast<unsigned>(-1);
 		pair<size_t, size_t> reference_group = matcher.get_groups_node(reference_id);
 		TrackRecode &track_recode = one_state.second;
-		size_t length = track_recode[reference_group.second] - track_recode[reference_group.first];
-		string group_str = text.substr(track_recode[reference_group.first] + 1, length);
+		size_t length = track_recode[reference_group.second].first - track_recode[reference_group.first].first;
+		string group_str = text.substr(track_recode[reference_group.first].first + 1, length);
 		for (size_t i = 0; i < length; i++)
 			if (group_str[i] != text[index + i])
 				return static_cast<unsigned>(-1);

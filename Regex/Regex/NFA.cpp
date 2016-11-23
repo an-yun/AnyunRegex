@@ -85,13 +85,13 @@ namespace anyun_regex
 				if (  (edges[*edge_b]->get_type() == SINGLE_CHAR_DIRECTEDEDGE || 
 						edges[*edge_b]->get_type() == GROUP_REFERENCE_DIRECTEDGE
 					   )
-					&& (step =edges[*edge_b]->accept(text, current_node_record.second[node_id]+1, matcher, current_node_record)) != static_cast<unsigned>(-1))
+					&& (step =edges[*edge_b]->accept(text, current_node_record.second[node_id].first+1, matcher, current_node_record)) != static_cast<unsigned>(-1))
 				{
 					size_t end_node_id = edges[*edge_b]->get_end_node_id();
 					if (!visited[end_node_id])
 					{
 						visited[end_node_id] = true;
-						current_node_record.second[end_node_id] = current_node_record.second[node_id] + step;
+						current_node_record.second[end_node_id] = { current_node_record.second[node_id].first + step ,1 };
 						next_state.push_back({ end_node_id,current_node_record.second });
 					}
 				}
@@ -248,7 +248,6 @@ namespace anyun_regex
 		for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
 			if ((*b).first == node_id) return *b;
 		return state.front();
-		// TODO: 在此处插入 return 语句
 	}
 
 	pair<size_t, TrackRecode>  * NFA::has_final_state(State& states)

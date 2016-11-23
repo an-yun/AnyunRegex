@@ -638,7 +638,7 @@ namespace anyun_regex
 			}
 			case '{':
 				//to do
-
+				ConnectedFragment &repeat_fragment = operands.top();
 				break;
 			case '|':
 				normal_priority_parse('|', operators, operands, parse_index);
@@ -759,9 +759,9 @@ namespace anyun_regex
 	}
 
 	//parse repeat count in {}
-	DirectedNodePoint DirectedGraph::parse_repeat_count_node(const string & p, size_t & parse_index)
+	bool DirectedGraph::parse_repeat_count_node(const string & p, size_t & parse_index, ConnectedFragment& repeat_fragment)
 	{
-		return DirectedNodePoint();
+		return false;
 	}
 
 	//check the range is right?

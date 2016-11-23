@@ -20,7 +20,7 @@ namespace anyun_regex
 	using std::copy;
 	using std::vector;
 	using std::shared_ptr;
-	typedef map<size_t, size_t> TrackRecode;
+	typedef map<size_t, pair<size_t,size_t>> TrackRecode;
 	typedef pair<size_t, TrackRecode> OneState;
 	typedef list<OneState> State;
 
@@ -110,7 +110,6 @@ namespace anyun_regex
 		size_t cursor;
 		vector<pair<size_t, size_t>> groups;
 		map<string, size_t> name_groups;
-		map<size_t, size_t> repeat_node_count;
 		virtual size_t current_cursor() const;
 		virtual void next() ;
 		virtual void back();
