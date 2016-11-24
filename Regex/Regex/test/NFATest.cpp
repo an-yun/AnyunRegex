@@ -3,7 +3,7 @@
 namespace anyun_regex
 {
 #ifdef _DEBUG
-	
+
 	void test_nfa_match()
 	{
 		cout << endl;
@@ -123,6 +123,18 @@ namespace anyun_regex
 		nfa_test.add_testcase("aaabaadbab.aaabaadbab");
 		nfa_test.add_testcase("aaabaadbabaaaaaaabaadbab");
 		nfa_test.test_group();
+
+		nfa_test.set_pattern("\\d(\\w+)");
+		nfa_test.add_testcase("12");
+		nfa_test.add_testcase("234a");
+		nfa_test.add_testcase("1235");
+		nfa_test.add_testcase("567g");
+		nfa_test.add_testcase("abc#d124");
+		nfa_test.add_testcase("aaaaa.aaaaaaa");
+		nfa_test.add_testcase("aaaaab@aaaaabaa");
+		nfa_test.add_testcase("aaaba123adaadbab");
+		nfa_test.add_testcase("1a_c_b");
+		nfa_test.test_group();
 	}
 
 
@@ -146,11 +158,11 @@ namespace anyun_regex
 	{
 	}
 
-	NFATest::NFATest(const string & pattern) :pattern(pattern), standard_regex(pattern),nfa(pattern)
+	NFATest::NFATest(const string & pattern) :pattern(pattern), standard_regex(pattern), nfa(pattern)
 	{
 	}
 
-	NFATest::NFATest(const string & pattern, const string & test_file_path) : pattern(pattern), standard_regex(pattern),nfa(pattern)
+	NFATest::NFATest(const string & pattern, const string & test_file_path) : pattern(pattern), standard_regex(pattern), nfa(pattern)
 	{
 		read_testcases_from_file(test_file_path);
 	}
@@ -203,7 +215,7 @@ namespace anyun_regex
 		if (input.bad())
 		{
 			std::cout << test_file_path << " file error!" << std::endl;
-			return ;
+			return;
 		}
 		string line;
 		while (input >> line)testcases.push_back(line);
@@ -233,7 +245,7 @@ namespace anyun_regex
 				print_string_format(10, "\tPattern", ' ');
 				cout << ":" << pattern << endl;
 				print_string_format(10, "\tText", ' ');
-				cout <<":" <<endl<<"\t\t";
+				cout << ":" << endl << "\t\t";
 				print_string_format(70, testcases[i], ' ');
 				cout << endl;
 			}
@@ -289,7 +301,7 @@ namespace anyun_regex
 		sregex_iterator begin(testcase.begin(), testcase.end(), standard_regex);
 		sregex_iterator end;
 		for (; begin != end && matcher.find(); begin++)
-			if((*begin).str() != matcher.group()) return false;
+			if ((*begin).str() != matcher.group()) return false;
 		return begin == end && !matcher.find();
 	}
 
@@ -317,7 +329,7 @@ namespace anyun_regex
 	{
 		cout << pass_count << "/" << total_test_count << " ";
 		print_number_format(10, (100.0*pass_count / total_test_count));
-		cout<< "% Passed!"<<endl;
+		cout << "% Passed!" << endl;
 	}
 
 	int singal_test(const string& pattern, const string &text)
@@ -337,7 +349,7 @@ namespace anyun_regex
 	{
 		regex standard_regex(pattern);
 		sregex_iterator begin(text.begin(), text.end(), standard_regex);
-		sregex_iterator end ;
+		sregex_iterator end;
 		int i = 1;
 		for (; begin != end; begin++)
 		{

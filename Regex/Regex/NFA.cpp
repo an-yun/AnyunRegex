@@ -121,16 +121,20 @@ namespace anyun_regex
 			if (digraph->nodes[node_id]->get_type() == REPEAT_COUNT_DIRECTEDNODE)
 			{
 				RepeatCountDirectedNode &repeat_node = *dynamic_cast<RepeatCountDirectedNode *>(digraph->nodes[node_id].get());
-				matcher.repeat_node_count[node_id]++;
+				OneState one_state;
 				for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
 				{
 					if ((*b).first == node_id)
 					{
+						one_state = *b;
 						state.remove(*b);
 						break;
 					}
 				}
-				int judge = repeat_node.accept_count(matcher.repeat_node_count[node_id]);
+				size_t &repeat_times = one_state.second[node_id].second;
+				if (!visited[node_id]) repeat_times++;
+				visited[node_id] = false;
+				int judge = repeat_node.accept_count(repeat_times);
 				/*
 				0 is the repeat edge
 				1 is the pass edge
@@ -159,10 +163,10 @@ namespace anyun_regex
 					size_t out_edge_id = repeat_node.get_out_edges()[1];
 					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
 					visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
-					matcher.repeat_node_count[node_id] = 0;
+					repeat_times = 0;
 				}
 				else
-					matcher.repeat_node_count[node_id] = 0;
+					repeat_times = 0;
 			}
 			else
 			{
@@ -177,7 +181,7 @@ namespace anyun_regex
 						|| digraph->edges[edge_id]->get_type() == LINE_END_DIRECTEDEDGE)
 					{
 						OneState &node_record = get_one_node_record(node_id ,state);
-						if (digraph->edges[edge_id]->accept(text, node_record.second[node_id], matcher, node_record) != static_cast<unsigned>(-1))
+						if (digraph->edges[edge_id]->accept(text, node_record.second[node_id].first, matcher, node_record) != static_cast<unsigned>(-1))
 							visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
 					}
 
@@ -200,8 +204,8 @@ namespace anyun_regex
 				{
 					size_t group_start_node_id = groups[i].group_start_node;
 					size_t group_end_node_id = groups[i].group_end_node;
-					matcher.groups[i].first = record[group_start_node_id]+1;
-					matcher.groups[i].second = record[group_end_node_id] + 1;
+					matcher.groups[i].first = record[group_start_node_id].first+1;
+					matcher.groups[i].second = record[group_end_node_id].first+ 1;
 				}
 			}
 		}
@@ -225,6 +229,7 @@ namespace anyun_regex
 						{
 							(*c_b).second = parent_record;
 							(*c_b).second[visit_node_id] = parent_record[parent_node_id];
+							(*c_b).second[visit_node_id].second++;
 							break;
 						}
 					}

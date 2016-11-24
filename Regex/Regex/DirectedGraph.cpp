@@ -615,31 +615,34 @@ namespace anyun_regex
 			case '[':
 			{
 				// to test
-				bool complementary = p[++parse_index] == '^';
-				if (complementary)parse_index++;
-
-				//check whether is nothing in []
-				if (p[parse_index + 1] == ']')
-					PARSE_ERROR(parse_result, REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY);
-
-				//parse all or condition
-				vector<ConditionPoint> conditions;
-				if (!parse_or_condition(conditions, p, parse_index))
-					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET);
-				//is complement?
-				ConditionPoint condition(new OrCondtion(conditions));
-				if (complementary)condition.reset(new ComplmentCondtion(condition));
-
-				DirectedEdgePoint edge(new SingleCharDirectedEdge(condition, edges.size()));
-				store_edge(edge, operands);
-				assert(p[parse_index] == ']');
-				parse_index++;
+				
+				//p parse_index
+	#define PARSE_OR_STRING(the_string,the_index)											\
+				bool complementary = the_string[++the_index] == '^';/*is complementary?*/	\
+				if (complementary)the_index++;												\
+				if (p[the_index + 1] == ']')												\
+					PARSE_ERROR(parse_result, REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY);			\
+				vector<ConditionPoint> conditions;											\
+				if (!parse_or_condition(conditions, the_string, the_index))					\
+					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET);	\
+				ConditionPoint condition(new OrCondtion(conditions));						\
+				if (complementary)condition.reset(new ComplmentCondtion(condition));		\
+				DirectedEdgePoint edge(new SingleCharDirectedEdge(condition, edges.size()));\
+				store_edge(edge, operands);													\
+				assert(the_string[the_index] == ']');										\
+				the_index++;
+				PARSE_OR_STRING(p, parse_index);
 				break;
 			}
 			case '{':
-				//to do
+			//to do
+			{
 				ConnectedFragment &repeat_fragment = operands.top();
+				if(!parse_repeat_count_node(p, parse_index,repeat_fragment))
+					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
 				break;
+			}
+				
 			case '|':
 				normal_priority_parse('|', operators, operands, parse_index);
 				break;
@@ -664,8 +667,25 @@ namespace anyun_regex
 				case 'f':
 					DEFAULT_SINGLE_CHAR_PROCESS('\f');
 					break;
+				case 'w':
+				{
+					string d_string = "[a-zA-Z0-9_]";
+					size_t d_index = 0;
+					PARSE_OR_STRING(d_string, d_index);
+					parse_index++;
+					break;
+				}
+				case 'd':
+				{
+					string d_string = "[0-9]";
+					size_t d_index = 0;
+					PARSE_OR_STRING(d_string, d_index);
+					parse_index++;
+					break;
+				}
 				case '0':
 					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+					break;
 				case '1':
 				case '2':
 				case '3':
@@ -749,7 +769,6 @@ namespace anyun_regex
 
 	DirectedEdgePoint DirectedGraph::parse_group_reference(const string & p, size_t & parse_index)
 	{
-		//to do
 		char *end_point = nullptr;
 		const char *start = p.c_str() + parse_index;
 		size_t capture_num = (size_t)strtol(start, &end_point, 10);
@@ -761,6 +780,7 @@ namespace anyun_regex
 	//parse repeat count in {}
 	bool DirectedGraph::parse_repeat_count_node(const string & p, size_t & parse_index, ConnectedFragment& repeat_fragment)
 	{
+		//to do
 		return false;
 	}
 
