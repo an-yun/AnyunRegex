@@ -675,6 +675,14 @@ namespace anyun_regex
 					parse_index++;
 					break;
 				}
+				case 'W':
+				{
+					string d_string = "[^a-zA-Z0-9_]";
+					size_t d_index = 0;
+					PARSE_OR_STRING(d_string, d_index);
+					parse_index++;
+					break;
+				}
 				case 'd':
 				{
 					string d_string = "[0-9]";
@@ -683,9 +691,32 @@ namespace anyun_regex
 					parse_index++;
 					break;
 				}
+				case 'D':
+				{
+					string d_string = "[^0-9]";
+					size_t d_index = 0;
+					PARSE_OR_STRING(d_string, d_index);
+					parse_index++;
+					break;
+				}
+				case 's':
+				{
+					string d_string = "[\n\t\r\f ]";
+					size_t d_index = 0;
+					PARSE_OR_STRING(d_string, d_index);
+					parse_index++;
+					break;
+				}
+				case 'S':
+				{
+					string d_string = "[^\n\t\r\f ]";
+					size_t d_index = 0;
+					PARSE_OR_STRING(d_string, d_index);
+					parse_index++;
+					break;
+				}
 				case '0':
 					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
-					break;
 				case '1':
 				case '2':
 				case '3':
