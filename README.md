@@ -47,7 +47,6 @@ $$E=mc^2$$
 
 ## 使用示例及说明
 
-您可以使用很多工具书写 Markdown，但是 Cmd Markdown 是这个星球上我们已知的、最好的 Markdown 工具——没有之一 ：）因为深信文字的力量，所以我们和你一样，对流畅书写，分享思想和知识，以及阅读体验有极致的追求，我们把对于这些诉求的回应整合在 Cmd Markdown，并且一次，两次，三次，乃至无数次地提升这个工具的体验，最终将它演化成一个 **编辑/发布/阅读** Markdown 的在线平台——您可以在任何地方，任何系统/设备上管理这里的文字。
 
 ### 1. 代码示例
 
@@ -126,9 +125,7 @@ ccc
 
 
 ### 2. 包含文件说明
-Regex/Matcher.h
-Regex/NFA.h
+Regex/Matcher.h<br>
+Regex/NFA.h<br>
 Regex/DirectedGraph.h
-
-
 
