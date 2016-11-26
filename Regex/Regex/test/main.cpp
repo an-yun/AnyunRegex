@@ -12,12 +12,8 @@ using namespace std;
 #define Println(content) \
 	cout<<content<<endl;
 
-int main()
+void password_validate()
 {
-	test_directedgraph();
-	test_nfa_match();
-	test_nfa_group();
-	cout << endl;
 	string passwords[] =
 	{ "aaaa1111",
 		"aa123",
@@ -26,7 +22,7 @@ int main()
 		"abcd",
 		"aabbccc",
 		"11123" };
-	NFA pattern("(\\w)\\1(\\1)+");
+	NFA pattern("(\\w)\\1{2,}");
 	for (string &password : passwords)
 	{
 		NFAMatcher matcher = NFAMatcher::match(password, pattern);
@@ -40,7 +36,13 @@ int main()
 			Println("OK");
 		Println("");
 	}
-
-
+	cout << endl;
+}
+int main()
+{
+	test_directedgraph();
+	test_nfa_match();
+	test_nfa_group(); 
+	password_validate();
 	return 0;
 }

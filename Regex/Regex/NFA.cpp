@@ -91,7 +91,7 @@ namespace anyun_regex
 					if (!visited[end_node_id])
 					{
 						visited[end_node_id] = true;
-						current_node_record.second[end_node_id] = { current_node_record.second[node_id].first + step ,1 };
+						current_node_record.second[end_node_id] = { current_node_record.second[node_id].first + step ,current_node_record.second[end_node_id].second + 1 };
 						next_state.push_back({ end_node_id,current_node_record.second });
 					}
 				}
@@ -121,52 +121,52 @@ namespace anyun_regex
 			if (digraph->nodes[node_id]->get_type() == REPEAT_COUNT_DIRECTEDNODE)
 			{
 				RepeatCountDirectedNode &repeat_node = *dynamic_cast<RepeatCountDirectedNode *>(digraph->nodes[node_id].get());
-				OneState one_state;
 				for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
 				{
 					if ((*b).first == node_id)
 					{
-						one_state = *b;
-						state.remove(*b);
+						OneState &one_state = *b;
+						size_t &repeat_times = one_state.second[node_id].second;
+						if (!visited[node_id]) repeat_times++;
+						visited[node_id] = false;
+						int judge = repeat_node.accept_count(repeat_times);
+						/*
+						0 is the repeat edge
+						1 is the pass edge
+						*/
+						if (judge == -1)
+						{
+							//the continue repeat node
+							size_t out_edge_id = repeat_node.get_out_edges()[0];
+							size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+							visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+						}
+						else if (judge == 0)
+						{
+							//the end node
+							size_t out_edge_id = repeat_node.get_out_edges()[1];
+							size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+							visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+							//the continue repeat node
+							out_edge_id = repeat_node.get_out_edges()[0];
+							end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+							visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+						}
+						else if (judge == 1)
+						{
+							//the end node
+							size_t out_edge_id = repeat_node.get_out_edges()[1];
+							size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+							visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
+							repeat_times = 0;
+						}
+						else
+							repeat_times = 0;
+						state.remove(one_state);
 						break;
 					}
 				}
-				size_t &repeat_times = one_state.second[node_id].second;
-				if (!visited[node_id]) repeat_times++;
-				visited[node_id] = false;
-				int judge = repeat_node.accept_count(repeat_times);
-				/*
-				0 is the repeat edge
-				1 is the pass edge
-				*/
-				if (judge == -1)
-				{
-					//the continue repeat node
-					size_t out_edge_id = repeat_node.get_out_edges()[0];
-					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
-					visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
-				}
-				else if (judge == 0)
-				{
-					//the end node
-					size_t out_edge_id = repeat_node.get_out_edges()[1];
-					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
-					visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
-					//the continue repeat node
-					out_edge_id = repeat_node.get_out_edges()[0];
-					end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
-					visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
-				}
-				else if (judge == 1)
-				{
-					//the end node
-					size_t out_edge_id = repeat_node.get_out_edges()[1];
-					size_t end_node_id = digraph->edges[out_edge_id]->get_end_node_id();
-					visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
-					repeat_times = 0;
-				}
-				else
-					repeat_times = 0;
+				
 			}
 			else
 			{

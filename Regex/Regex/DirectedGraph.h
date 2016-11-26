@@ -198,7 +198,7 @@ namespace anyun_regex
 		DirectedEdgePoint parse_group_reference(const string &p, size_t &parse_index);
 
 		//parse repeat count in {}
-		bool parse_repeat_count_node(const string &p, size_t &parse_index, ConnectedFragment& repeat_fragment);
+		bool parse_repeat_count_node(const string &p, size_t &parse_index, stack<ConnectedFragment>& operands);
 
 		//check the range is right?
 		bool check_range(size_t from,size_t to);
@@ -208,6 +208,7 @@ namespace anyun_regex
 		//store the edge
 		void store_edge(DirectedEdgePoint edge, stack<ConnectedFragment> &operands);
 
+		void store_repeat_node(DirectedNodePoint repeat_node, stack<ConnectedFragment> &operands);
 		//add groups node
 		void add_group_node(stack<ConnectedFragment>& operands);
 		//compare op's priority with operators.top()'s

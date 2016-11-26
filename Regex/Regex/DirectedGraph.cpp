@@ -615,9 +615,9 @@ namespace anyun_regex
 			case '[':
 			{
 				// to test
-				
+
 				//p parse_index
-	#define PARSE_OR_STRING(the_string,the_index)											\
+#define PARSE_OR_STRING(the_string,the_index)											\
 				bool complementary = the_string[++the_index] == '^';/*is complementary?*/	\
 				if (complementary)the_index++;												\
 				if (p[the_index + 1] == ']')												\
@@ -635,14 +635,15 @@ namespace anyun_regex
 				break;
 			}
 			case '{':
-			//to do
+				//to do
 			{
-				ConnectedFragment &repeat_fragment = operands.top();
-				if(!parse_repeat_count_node(p, parse_index,repeat_fragment))
+				if (!parse_repeat_count_node(p, parse_index, operands))
 					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
+				assert(p[parse_index] == '}');
+				parse_index++;
 				break;
 			}
-				
+
 			case '|':
 				normal_priority_parse('|', operators, operands, parse_index);
 				break;
@@ -809,10 +810,56 @@ namespace anyun_regex
 	}
 
 	//parse repeat count in {}
-	bool DirectedGraph::parse_repeat_count_node(const string & p, size_t & parse_index, ConnectedFragment& repeat_fragment)
+	bool DirectedGraph::parse_repeat_count_node(const string & p, size_t & parse_index, stack<ConnectedFragment>& operands)
 	{
-		//to do
-		return false;
+		assert(p[parse_index] == '{');
+		char *end_point = nullptr;
+		const char *start = p.c_str() + parse_index + 1;
+		size_t from = static_cast<size_t>(strtol(start, &end_point, 10));
+		if (end_point == start)
+			return false;
+		while ((*end_point) == ' ')end_point++;
+		switch (*end_point)
+		{
+			case ',':
+			{
+				end_point++;
+				while ((*end_point) == ' ')end_point++;
+				if ((*end_point) == '}')// from to infinity
+				{
+					//the end node
+					DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from));
+					nodes.push_back(repeat_node);
+					store_repeat_node(repeat_node,operands);
+					parse_index = end_point - p.c_str();
+					return true;
+				}
+				//from,to 
+				start = end_point;
+				size_t to = static_cast<size_t>(strtol(start, &end_point, 10));
+				if (end_point == start || from > to)
+					return false;
+				//the end node
+				DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from, to));
+				nodes.push_back(repeat_node);
+				store_repeat_node(repeat_node, operands);
+				while ((*end_point) == ' ')end_point++;
+				parse_index = end_point - p.c_str();
+				return true;
+			}
+			case '}':// spcific one repeat count
+			{
+				//the end node
+				DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from,from));
+				nodes.push_back(repeat_node);
+				store_repeat_node(repeat_node, operands);
+				parse_index = end_point - p.c_str();
+				return true;
+			}
+			default:
+				return false;
+		}
+
 	}
 
 	//check the range is right?
@@ -840,6 +887,35 @@ namespace anyun_regex
 	{
 		edges.push_back(edge);
 		operands.push(ConnectedFragment(edge->get_id(), edge->get_id()));
+	}
+
+	void DirectedGraph::store_repeat_node(DirectedNodePoint repeat_node, stack<ConnectedFragment>& operands)
+	{
+		//the repeat fragment
+		ConnectedFragment repeat_fragment = operands.top();
+		operands.pop();
+		//the start node
+		DirectedNodePoint repeat_start_node(new DirectedNode(nodes.size()));
+		nodes.push_back(repeat_start_node);
+		size_t the_start_node_id = add_in_sigma_edge(repeat_start_node->get_id());
+		//the end_node id
+		size_t repeat_node_id = repeat_node->get_id();
+		//connect it
+		connect_in_node(repeat_start_node->get_id(), repeat_fragment);
+		connect_out_node(repeat_node_id, repeat_fragment);
+		//repeat edge
+		DirectedEdgePoint repeat_edge(new RepeatDirectedge(edges.size()));
+		edges.push_back(repeat_edge);
+		//connect the repeat position
+		connect_out_node_to_edge(the_start_node_id, repeat_edge->get_id());
+		//pass edge
+		DirectedEdgePoint count_edge(new CountDirectedEdge(edges.size()));
+		edges.push_back(count_edge);
+		//connet to repeat node
+		connect_in_node_to_edge(repeat_node_id, repeat_edge->get_id());
+		connect_in_node_to_edge(repeat_node_id, count_edge->get_id());
+		//save to stack
+		operands.push(ConnectedFragment(the_start_node_id, count_edge->get_id()));
 	}
 
 	inline void DirectedGraph::add_group_node(stack<ConnectedFragment>& operands)
