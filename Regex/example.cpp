@@ -1,10 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "DirectedGraphTest.h"
-#include "NFATest.h"
-#include "RegexTest.h"
-#include "../Matcher.h"
+#include "Regex/Matcher.h"
 
 using namespace anyun_regex;
 using namespace std;
@@ -26,10 +23,10 @@ void password_validate()
 	for (string &password : passwords)
 	{
 		NFAMatcher matcher = NFAMatcher::match(password, pattern);
-		Println("ÑéÖ¤ÃÜÂë£º" + password);
+		Println("éªŒè¯å¯†ç ï¼š" + password);
 		if (matcher.find())
 		{
-			Println("°üº¬ÖØ¸´3¸öÒÔÉÏ,ÖØ¸´¶ÎÎª");
+			Println("åŒ…å«é‡å¤3ä¸ªä»¥ä¸Š,é‡å¤æ®µä¸º");
 			Println(matcher.group());
 		}
 		else
@@ -40,9 +37,6 @@ void password_validate()
 }
 int main()
 {
-	//test_directedgraph();
-	//test_nfa_match();
-	//test_nfa_group(); 
 	password_validate();
 	return 0;
 }
