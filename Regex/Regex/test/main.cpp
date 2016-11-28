@@ -40,9 +40,9 @@ void password_validate()
 }
 int main()
 {
-	//test_directedgraph();
-	//test_nfa_match();
-	//test_nfa_group(); 
-	password_validate();
+	test_directedgraph();
+	test_nfa_match();
+	test_nfa_group(); 
+	//password_validate();
 	return 0;
 }

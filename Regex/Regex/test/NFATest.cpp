@@ -175,6 +175,16 @@ namespace anyun_regex
 		nfa_test.add_testcase("aabbccc");
 		nfa_test.add_testcase("11123");
 		nfa_test.test_group();
+
+		nfa_test.set_pattern("(\\w+)(\\1)(\\2)");
+		nfa_test.add_testcase("aaaa1111");
+		nfa_test.add_testcase("aa123");
+		nfa_test.add_testcase("123");
+		nfa_test.add_testcase("1123445690aaa");
+		nfa_test.add_testcase("abcd");
+		nfa_test.add_testcase("aabbccc");
+		nfa_test.add_testcase("11123");
+		nfa_test.test_group();
 	}
 
 

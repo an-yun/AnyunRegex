@@ -587,6 +587,10 @@ namespace anyun_regex
 				if (operators.empty()) parse_result = REGEX_PARSE_OK;
 				break;
 			case '(':
+				if(p[parse_index] == '?' && p[parse_index+1] == '<')
+				{
+					//do something
+				}
 				normal_priority_parse('(', operators, operands, parse_index);
 				break;
 			case ')':
