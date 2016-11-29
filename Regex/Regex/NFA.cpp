@@ -66,8 +66,6 @@ namespace anyun_regex
 	}
 
 
-
-
 	void NFA::get_next_state(State& state, const string & text, Matcher & matcher)
 	{
 		//breath first search
