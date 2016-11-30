@@ -190,6 +190,11 @@ namespace anyun_regex
 		return false;
 	}
 
+	pair<size_t, size_t> Matcher::get_group(size_t group_index)
+	{
+		return groups[group_index];
+	}
+
 	size_t Matcher::current_cursor() const
 	{
 		return cursor;

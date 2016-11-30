@@ -66,7 +66,7 @@ namespace anyun_regex
 	}
 
 
-	void NFA::get_next_state(State& state, const string & text, Matcher & matcher)
+	void NFA::get_next_state(State& state, const string & text, Matcher & matcher) const
 	{
 		//breath first search
 		vector<bool> visited(digraph->v(), false);
@@ -98,7 +98,7 @@ namespace anyun_regex
 		state.swap(next_state);
 	}
 
-	void NFA::read_nochar_edge(State& state, const string & text, Matcher & matcher)
+	void NFA::read_nochar_edge(State& state, const string & text, Matcher & matcher) const
 	{
 		//breath first search
 		vector<bool> visited(digraph->v(), false);
@@ -188,7 +188,7 @@ namespace anyun_regex
 		}
 	}
 
-	void NFA::update_group_node_record(State & state, Matcher & matcher)
+	void NFA::update_group_node_record(State & state, Matcher & matcher) const
 	{
 		for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
 		{
@@ -209,7 +209,7 @@ namespace anyun_regex
 		}
 	}
 
-	inline void NFA::visit_one_node(size_t parent_node_id, size_t visit_node_id, State & state, queue<size_t>& node_ids, vector<bool> &visited, Matcher & matcher)
+	inline void NFA::visit_one_node(size_t parent_node_id, size_t visit_node_id, State & state, queue<size_t>& node_ids, vector<bool> &visited, Matcher & matcher) const
 	{
 		//find the parent node
 		for (State::iterator p_b = state.begin(), p_e = state.end(); p_b != p_e; p_b++)
@@ -246,14 +246,14 @@ namespace anyun_regex
 
 	}
 
-	OneState& NFA::get_one_node_record(size_t node_id, State& state)
+	OneState& NFA::get_one_node_record(size_t node_id, State& state) const
 	{
 		for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
 			if ((*b).first == node_id) return *b;
 		return state.front();
 	}
 
-	pair<size_t, TrackRecode>  * NFA::has_final_state(State& states)
+	pair<size_t, TrackRecode>  * NFA::has_final_state(State& states) const
 	{
 		for (State::iterator b = states.begin(), e = states.end(); b != e; b++)
 			if ((*b).first == digraph->end_node_id) return &(*b);

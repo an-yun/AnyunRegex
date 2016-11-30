@@ -100,10 +100,12 @@ namespace anyun_regex
 	public:
 		virtual bool find() = 0;
 		virtual bool find(size_t offset) = 0;
+		virtual pair<size_t, size_t> get_group(size_t group_index = 0 );
 
 		virtual string group(size_t index = 0) const = 0;
 		virtual string group(string group_name) const = 0;
 		virtual size_t group_count() const = 0;
+
 
 	protected:
 		string text;

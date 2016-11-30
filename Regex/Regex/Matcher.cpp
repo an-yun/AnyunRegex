@@ -6,10 +6,7 @@ namespace anyun_regex {
 	{
 		return NFAMatcher(text,nfa,offset);
 	}
-	string NFAMatcher::replace(const string & pattern, const string & new_string, const string & text, size_t off_set)
-	{
-		return NFAMatcher(pattern,NFA(pattern), off_set).replace(text,new_string);
-	}
+
 	bool NFAMatcher::find()
 	{
 		//if last search could not find,then return false
@@ -77,12 +74,6 @@ namespace anyun_regex {
 	size_t NFAMatcher::group_count() const
 	{
 		return nfa.group_size();
-	}
-
-	string NFAMatcher::replace(const string & text, const string & new_string) const
-	{
-		//to do
-		return string();
 	}
 
 	pair<size_t, size_t> NFAMatcher::get_groups_node(size_t group_id)

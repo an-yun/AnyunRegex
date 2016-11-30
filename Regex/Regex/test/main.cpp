@@ -15,7 +15,9 @@ using namespace std;
 void password_validate()
 {
 	string passwords[] =
-	{ "aaaa1111",
+	{ 
+		"1aaaa2",
+		"aaaa1111",
 		"aa123",
 		"123",
 		"1123445690aaa",
@@ -43,6 +45,7 @@ int main()
 	test_directedgraph();
 	test_nfa_match();
 	test_nfa_group(); 
+	test_nfa_replace();
 	//password_validate();
 	return 0;
 }

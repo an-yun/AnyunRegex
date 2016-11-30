@@ -45,6 +45,9 @@
     <ClInclude Include="Matcher.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Replacer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedEdge.cpp">
@@ -72,6 +75,9 @@
       <Filter>源文件\test</Filter>
     </ClCompile>
     <ClCompile Include="Matcher.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Replacer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
