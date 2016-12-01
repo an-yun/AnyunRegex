@@ -127,6 +127,7 @@ namespace anyun_regex
 		vector<DirectedNodePoint> nodes;
 		vector<DirectedEdgePoint> edges;
 		vector<Group> groups;
+		map<string, size_t> name_groups;
 		RegexParseCode parse_result;
 		
 		static int get_priority(size_t op1,size_t op2);
@@ -210,7 +211,7 @@ namespace anyun_regex
 
 		void store_repeat_node(DirectedNodePoint repeat_node, stack<ConnectedFragment> &operands);
 		//add groups node
-		void add_group_node(stack<ConnectedFragment>& operands);
+		void add_group_node(stack<ConnectedFragment>& operands, stack<string> &group_names);
 		//compare op's priority with operators.top()'s
 		//accroding the result of  comparation to decide it should push or operate
 		void normal_priority_parse(size_t op, stack<size_t> &operators, stack<ConnectedFragment>& operands, size_t &parse_index);

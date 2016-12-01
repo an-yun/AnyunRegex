@@ -36,6 +36,7 @@ namespace anyun_regex
 	void test_nfa_match();
 	void test_nfa_group();
 	void test_nfa_replace();
+	void test_nfa_capture();
 	 
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle= false);
 
@@ -58,6 +59,7 @@ namespace anyun_regex
 		void test_match();
 		void test_group();
 		void test_replace();
+		void test_group_capture();
 	private:
 		string pattern;
 		regex standard_regex;
@@ -70,6 +72,7 @@ namespace anyun_regex
 		bool test_one_match_testcase(const string &testcase);
 		bool test_one_group_testcase(const string &testcase);
 		bool test_one_replace_testcase(const string &testcase, const string &new_string);
+		bool test_one_capture_testcase(const string &testcase, const string &group_name);
 		void print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count);
 	};
 

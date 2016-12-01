@@ -18,7 +18,8 @@ namespace  anyun_regex
 	private:
 		string new_string;
 	};
-
+	string replace(const char * pattern, const string & new_string, const string & text, size_t offset = 0);
+	string replace(const char * pattern, const char * new_string, const string & text, size_t offset = 0);
 	string replace(const string &pattern, const string &new_string, const string &text, size_t offset = 0);
 	string replace(const string &pattern, const Replacer &repalcer, const string &text, size_t offset = 0);
 	string replace(const NFA &pattern, const string &new_string, const string &text, size_t offset = 0);

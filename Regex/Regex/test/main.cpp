@@ -28,10 +28,10 @@ void password_validate()
 	for (string &password : passwords)
 	{
 		NFAMatcher matcher = NFAMatcher::match(password, pattern);
-		Println("验证密码：" + password);
+		Println("validate the password:" + password);
 		if (matcher.find())
 		{
-			Println("包含重复3个以上,重复段为");
+			Println("contain repeated chars more than three times,the repeat string i");
 			Println(matcher.group());
 		}
 		else
@@ -46,6 +46,7 @@ int main()
 	test_nfa_match();
 	test_nfa_group(); 
 	test_nfa_replace();
+	test_nfa_capture();
 	//password_validate();
 	return 0;
 }

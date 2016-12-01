@@ -66,9 +66,16 @@ namespace anyun_regex {
 
 	string NFAMatcher::group(string group_name) const
 	{
-		map<string,size_t>::const_iterator result = name_groups.find(group_name);
-		if (result == name_groups.cend()) return string("");
+		map<string,size_t>::const_iterator result = nfa.digraph->name_groups.find(group_name);
+		if (result == nfa.digraph->name_groups.cend()) return string("");
 		else return group((*result).second);
+	}
+
+	size_t NFAMatcher::group_index(string group_name) const
+	{
+		map<string, size_t>::const_iterator result = nfa.digraph->name_groups.find(group_name);
+		if (result == nfa.digraph->name_groups.cend()) return static_cast<size_t>(-1);
+		return (*result).second;
 	}
 
 	size_t NFAMatcher::group_count() const

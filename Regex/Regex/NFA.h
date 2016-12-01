@@ -28,7 +28,7 @@ namespace anyun_regex
 	{
 		friend class NFAMatcher;
 	public:
-		NFA(const char *pattern = "");
+		explicit NFA(const char *pattern = "");
 		NFA(const string & pattern);
 		~NFA();
 		//recompline another pattern,success return true else false

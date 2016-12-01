@@ -23,7 +23,7 @@ namespace anyun_regex {
 
 		string group(size_t index = 0) const override;
 		string group(string group_name) const override;
-
+		size_t group_index(string group_name) const override;
 		size_t group_count() const override;
 
 	protected:

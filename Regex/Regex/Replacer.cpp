@@ -8,6 +8,15 @@ namespace  anyun_regex
 	{
 		return new_string;
 	}
+	string replace(const char * pattern, const string & new_string, const string & text, size_t offset)
+	{
+		return replace(NFA(pattern), CommonReplacer(new_string), text, offset);
+	}
+
+	string replace(const char * pattern, const char * new_string, const string & text, size_t offset)
+	{
+		return replace(NFA(pattern), CommonReplacer(new_string), text, offset);
+	}
 
 	string replace(const string & pattern, const string & new_string, const string & text, size_t offset)
 	{

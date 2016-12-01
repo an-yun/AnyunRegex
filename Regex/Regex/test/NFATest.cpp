@@ -244,6 +244,39 @@ namespace anyun_regex
 
 	}
 
+	void test_nfa_capture()
+	{
+		cout << endl;
+		print_string_format(80, "Test class NFA and Repalacer ", '-', true);
+		cout << endl;
+		NFATest nfa_test;
+		nfa_test.set_pattern("(a|b)+(?<captrue_name>a.*d)");
+		// for convinient, I reuse the add_replace_testcase
+		nfa_test.add_replace_testcase("abb", "captrue_name");
+		nfa_test.add_replace_testcase("a", "captrue_name");
+		nfa_test.add_replace_testcase("abbbb", "captrue_name");
+		nfa_test.add_replace_testcase("abaacdaa", "captrue_name");
+		nfa_test.add_replace_testcase("aaadbaaaaa", "captrue_name");
+		nfa_test.add_replace_testcase("ab\nabbb", "captrue_name");
+		nfa_test.add_replace_testcase("ab\nabbb\n", "captrue_name");
+		nfa_test.add_replace_testcase("ab\nabbb\n12", "captrue_name");
+		nfa_test.add_replace_testcase("aacdabded", "captrue_name");
+		nfa_test.add_replace_testcase("aaabababacdabded", "captrue_name");
+		nfa_test.add_replace_testcase("aaaaaaaaaaaaacdabdbed", "captrue_name");
+		nfa_test.add_replace_testcase("acdadbadeadafgacdabded", "captrue_name");
+		nfa_test.test_group_capture();
+
+		nfa_test.set_pattern("(?'repeat'(\\w)\\1{2,})");
+		nfa_test.add_replace_testcase("aaaa1111", "repeat");
+		nfa_test.add_replace_testcase("aa123", "repeat");
+		nfa_test.add_replace_testcase("123", "repeat");
+		nfa_test.add_replace_testcase("1123445690aaa", "repeat");
+		nfa_test.add_replace_testcase("abcd", "repeat");
+		nfa_test.add_replace_testcase("aabbccc", "repeat");
+		nfa_test.add_replace_testcase("11123", "repeat");
+		nfa_test.test_group_capture();
+	}
+
 
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle)
 	{
@@ -277,7 +310,7 @@ namespace anyun_regex
 	void NFATest::set_pattern(const string & pattern)
 	{
 		this->pattern = pattern;
-		standard_regex = regex(pattern);
+		standard_regex = regex(replace("\\?[<'].*[>']","",pattern));
 		nfa = NFA(pattern);
 		testcases.clear();
 		replaec_strs.clear();
@@ -435,6 +468,41 @@ namespace anyun_regex
 		print_test_result_information(testcase_size, pass_count, failed_count);
 		cout << endl;
 	}
+	void NFATest::test_group_capture()
+	{
+		print_test_information();
+		cout << endl;
+		size_t testcase_size = testcases.size();
+		size_t pass_count = 0, failed_count = 0;
+		for (size_t i = 0; i < testcase_size; i++)
+		{
+			cout << "Test case :";
+			print_number_format(5, i + 1);
+			if (test_one_capture_testcase(testcases[i], replaec_strs[i]))
+			{
+				pass_count++;
+				cout << " Passed!" << endl;
+			}
+			else
+			{
+				failed_count++;
+				cout << " Failed!" << endl;
+				print_string_format(10, "\tPattern", ' ');
+				cout << ":" << pattern << endl;
+				print_string_format(10, "\tText", ' ');
+				cout << ":" << endl << "\t\t";
+				print_string_format(70, testcases[i], ' ');
+				cout << endl;
+				print_string_format(10, "\tGroup Name", ' ');
+				cout << ":" << endl << "\t\t";
+				print_string_format(30, testcases[i], ' ');
+				cout << endl;
+			}
+		}
+		cout << endl;
+		print_test_result_information(testcase_size, pass_count, failed_count);
+		cout << endl;
+	}
 	void NFATest::print_test_information()
 	{
 		cout << endl;
@@ -477,6 +545,21 @@ namespace anyun_regex
 	bool NFATest::test_one_replace_testcase(const string & testcase,const string &new_string)
 	{
 		return regex_replace(testcase, standard_regex, new_string) == replace(nfa,new_string,testcase);
+	}
+
+	bool NFATest::test_one_capture_testcase(const string & testcase, const string & group_name)
+	{
+
+		NFAMatcher matcher = NFAMatcher::match(testcase, nfa);
+		sregex_iterator begin(testcase.begin(), testcase.end(), standard_regex);
+		sregex_iterator end;
+		for (; begin != end && matcher.find(); begin++)
+		{
+			auto &result = *begin;
+			if (result.str() != matcher.group()) return false;
+			if (result[matcher.group_index(group_name)] != matcher.group(group_name)) return false;
+		}
+		return begin == end && !matcher.find();
 	}
 
 	void NFATest::print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count)

@@ -104,6 +104,7 @@ namespace anyun_regex
 
 		virtual string group(size_t index = 0) const = 0;
 		virtual string group(string group_name) const = 0;
+		virtual size_t group_index(string group_name)const = 0;
 		virtual size_t group_count() const = 0;
 
 
@@ -111,7 +112,6 @@ namespace anyun_regex
 		string text;
 		size_t cursor;
 		vector<pair<size_t, size_t>> groups;
-		map<string, size_t> name_groups;
 		virtual size_t current_cursor() const;
 		virtual void next() ;
 		virtual void back();
