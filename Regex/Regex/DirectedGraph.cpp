@@ -495,6 +495,33 @@ namespace anyun_regex
 			switch (current)
 			{
 			case '(':
+				if (next == '?')
+				{
+					i++;
+					current = p[i], next = p[i + 1];
+					result.push_back(current);
+					if (next == '<' || next == '\'')
+					{
+						//do something for name capture (?<group_name>##) or (?'group_name'##)
+						i++;
+						current = p[i], next = p[i + 1];
+						result.push_back(current);
+						char find_char = current == '\'' ? '\'' : '>';
+						size_t end_group_name_position = p.find_first_of(find_char, ++i);
+						string group_name = p.substr(i, end_group_name_position - i);
+						for (size_t ch : group_name) { result.push_back(ch); }
+						result.push_back(p[end_group_name_position]);
+						i = end_group_name_position;
+					}
+
+					else if (next == ':')
+					{
+						//don't capture this group (?:###)
+						i++;
+						current = p[i], next = p[i + 1];
+						result.push_back(current);
+					}
+				}
 				bracket_count++;
 				break;
 			case ')':
@@ -588,7 +615,7 @@ namespace anyun_regex
 				if (operators.empty()) parse_result = REGEX_PARSE_OK;
 				break;
 			case '(':
-				if(p[parse_index+1] == '?')
+				if (p[parse_index + 1] == '?')
 				{
 					parse_index++;
 					if (p[parse_index + 1] == '<' || p[parse_index + 1] == '\'')
@@ -596,18 +623,18 @@ namespace anyun_regex
 						//do something for name capture (?<group_name>##) or (?'group_name'##)
 						parse_index++;
 						char find_char = p[parse_index] == '\'' ? '\'' : '>';
-						size_t end_group_name_position = p.find_first_of(find_char, parse_index+1);
-						string group_name = p.substr(parse_index, end_group_name_position - parse_index);  
+						size_t end_group_name_position = p.find_first_of(find_char, ++parse_index );
+						string group_name = p.substr(parse_index, end_group_name_position - parse_index);
 						// the stack will store like "?<group_name" or "?'group_name" 
-						group_names.push(p.substr(parse_index-1,2) + group_name);
+						group_names.push(p.substr(parse_index - 2, 2) + group_name);
 						parse_index = end_group_name_position;
 					}
-				}
-				else if(p[parse_index + 1] == ':')
-				{
-					//don't capture this group (?:###)
-					group_names.push(":");
-					parse_index++;
+					else if (p[parse_index + 1] == ':')
+					{
+						//don't capture this group (?:###)
+						group_names.push(":");
+						parse_index++;
+					}
 				}
 				else group_names.push("");
 				normal_priority_parse('(', operators, operands, parse_index);

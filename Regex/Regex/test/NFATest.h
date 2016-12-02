@@ -48,7 +48,7 @@ namespace anyun_regex
 		NFATest();
 		NFATest(const string &pattern);
 		NFATest(const string &pattern,const string& test_file_path);
-		void set_pattern(const string &pattern);
+		void set_pattern(const string &pattern, bool no_std_regex = false);
 		void set_testcases(const vector<string> &testcases);
 		void set_testcases(const string &test_file_path);
 		void set_testcase(const string &testcase);
@@ -60,6 +60,7 @@ namespace anyun_regex
 		void test_group();
 		void test_replace();
 		void test_group_capture();
+		void test_single_group_capture();
 	private:
 		string pattern;
 		regex standard_regex;
