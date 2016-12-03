@@ -917,11 +917,11 @@ namespace anyun_regex
 		if (from < to)
 		{
 			if (is_num(from) && is_num(to)) return true;
-			else if (is_upper_case(from) && is_upper_case(to))return true;
-			else if (is_lower_case(from) && is_lower_case(to))return true;
-			else return false;
+			if (is_upper_case(from) && is_upper_case(to))return true;
+			if (is_lower_case(from) && is_lower_case(to))return true;
+			return false;
 		}
-		else return false;
+		return false;
 	}
 
 	//add a single char edge
