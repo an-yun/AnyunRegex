@@ -9,6 +9,8 @@
 #include <list>
 #include <utility>
 #include <iterator>
+#include <stack>
+
 namespace anyun_regex
 {
 	typedef unsigned size_t;
@@ -20,9 +22,12 @@ namespace anyun_regex
 	using std::copy;
 	using std::vector;
 	using std::shared_ptr;
+	using std::stack;
 	typedef map<size_t, pair<size_t,size_t>> TrackRecode;
 	typedef pair<size_t, TrackRecode> OneState;
 	typedef list<OneState> State;
+	//we can use the stack to implement the lazy match
+	typedef stack<OneState> SaveState;
 
 	class Condition
 	{

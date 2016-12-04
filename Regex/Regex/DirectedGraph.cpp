@@ -765,6 +765,14 @@ namespace anyun_regex
 					parse_index++;
 					break;
 				}
+				case 'b':
+				{
+					break;
+				}
+				case 'B':
+				{
+					break;
+				}
 				case '0':
 					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
 				case '1':
@@ -789,15 +797,24 @@ namespace anyun_regex
 				}
 				break;
 			case '?':
-				//to test
+				if (p[parse_index + 1] == '?') //lazy match
+				{
+					//do something
+				}
 				normal_priority_parse('?', operators, operands, parse_index);
 				break;
 			case '*':
-				//to test
+				if(p[parse_index + 1 ] == '?') //lazy match
+				{
+					//do something
+				}
 				normal_priority_parse('*', operators, operands, parse_index);
 				break;
 			case '+':
-				//to test
+				if (p[parse_index + 1] == '?') //lazy match
+				{
+					//do something
+				}
 				normal_priority_parse('+', operators, operands, parse_index);
 				break;
 				//the single char
