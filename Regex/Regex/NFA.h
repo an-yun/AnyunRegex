@@ -53,6 +53,9 @@ namespace anyun_regex
 		void visit_one_node(size_t parent_node_id, size_t visit_node_id, State & state, queue<size_t> &node_ids,vector<bool> &visited,Matcher &matcher) const;
 
 		OneState &get_one_node_record(size_t node_id, State& state) const;
+
+		//the new disign for update
+		void get_next_state(SaveState & state, const string &text, Matcher &matcher) const;
 	};
 
 }

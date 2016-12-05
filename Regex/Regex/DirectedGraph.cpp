@@ -694,6 +694,7 @@ namespace anyun_regex
 			}
 
 			case '|':
+				//can here be more elegent
 				normal_priority_parse('|', operators, operands, parse_index);
 				break;
 				//the escape 

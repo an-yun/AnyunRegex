@@ -253,6 +253,11 @@ namespace anyun_regex
 		return state.front();
 	}
 
+	void NFA::get_next_state(SaveState & state, const string & text, Matcher & matcher) const
+	{
+		//need the new graph design
+	}
+
 	pair<size_t, TrackRecode>  * NFA::has_final_state(State& states) const
 	{
 		for (State::iterator b = states.begin(), e = states.end(); b != e; b++)
