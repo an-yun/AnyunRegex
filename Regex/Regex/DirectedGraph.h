@@ -133,7 +133,7 @@ namespace anyun_regex
 		static int get_priority(size_t op1,size_t op2);
 
 		RegexParseCode compile(const string &pattern);
-		void operate(size_t opt, stack<ConnectedFragment> &operands);
+		void operate(size_t opt, stack<ConnectedFragment> &operands, stack<size_t>&operators);
 		void connect_in_node(size_t in_node_id, const ConnectedFragment &fragment);
 		void connect_out_node(size_t out_node_id, const ConnectedFragment &fragment);
 		size_t add_in_sigma_edge(size_t node_id);

@@ -10,6 +10,7 @@
 #include <utility>
 #include <iterator>
 #include <stack>
+#include <tuple>
 
 namespace anyun_regex
 {
@@ -23,11 +24,14 @@ namespace anyun_regex
 	using std::vector;
 	using std::shared_ptr;
 	using std::stack;
+	using std::tuple;
 	typedef map<size_t, pair<size_t,size_t>> TrackRecode;
 	typedef pair<size_t, TrackRecode> OneState;
 	typedef list<OneState> State;
 	//we can use the stack to implement the lazy match
-	typedef stack<OneState> SaveState;
+	typedef tuple<size_t, size_t, TrackRecode> OneSaveState;
+	// node_id ,next_edge_index,trackrecode
+	typedef stack<OneSaveState> SaveState;
 
 	class Condition
 	{

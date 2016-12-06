@@ -112,7 +112,7 @@ namespace anyun_regex
 			{'|','\0',1},
 			{'|','(',-1},
 			{'|',')',1},
-			{'|','|',1},
+			{'|','|',-1},
 			{'|','.',-1},
 			{'|','?',-1},
 			{'|','*',-1},
@@ -167,7 +167,7 @@ namespace anyun_regex
 		return priority[op1][op2];
 	}
 
-	void DirectedGraph::operate(size_t opt, stack<ConnectedFragment>& operands)
+	void DirectedGraph::operate(size_t opt, stack<ConnectedFragment>& operands, stack<size_t>&operators)
 	{
 		switch (opt)
 		{
@@ -219,6 +219,18 @@ namespace anyun_regex
 			//reverse merge fra1 and fra2
 			operands.push(reverse_merge_fragments(fra1, fra2));
 			break;
+		}
+		case '-':
+		{
+			// for or lazy match
+		}
+		case '0':
+		{
+			// for zero more lazy match
+		}
+		case '1':
+		{
+			// for one more lazy match
 		}
 		default:
 			break;
@@ -807,16 +819,20 @@ namespace anyun_regex
 			case '*':
 				if(p[parse_index + 1 ] == '?') //lazy match
 				{
+					parse_index++;
+					normal_priority_parse('0', operators, operands, parse_index);
 					//do something
 				}
-				normal_priority_parse('*', operators, operands, parse_index);
+				else normal_priority_parse('*', operators, operands, parse_index);
 				break;
 			case '+':
 				if (p[parse_index + 1] == '?') //lazy match
 				{
+					parse_index++;
 					//do something
+					normal_priority_parse('1', operators, operands, parse_index);
 				}
-				normal_priority_parse('+', operators, operands, parse_index);
+				else normal_priority_parse('+', operators, operands, parse_index);
 				break;
 				//the single char
 			default:
@@ -1052,7 +1068,7 @@ namespace anyun_regex
 		}
 		else
 		{
-			operate(operators.top(), operands);
+			operate(operators.top(), operands, operators);
 			operators.pop();
 		}
 	}
