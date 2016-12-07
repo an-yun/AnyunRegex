@@ -112,6 +112,18 @@ namespace anyun_regex
 		nfa_test.add_testcase("acdadbadeadafgacdabded");
 		nfa_test.test_group();
 
+		nfa_test.set_pattern("(12|34|56)+(a|e|i|o|u)");
+		nfa_test.add_testcase("12abb");
+		nfa_test.add_testcase("34a");
+		nfa_test.add_testcase("13abbb");
+		nfa_test.add_testcase("24eaacdaa");
+		nfa_test.add_testcase("12a34e");
+		nfa_test.add_testcase("123456i");
+		nfa_test.add_testcase("4523a");
+		nfa_test.add_testcase("563412e");
+		nfa_test.add_testcase("1212121212343434aa1234565656ecdabded");
+		nfa_test.test_group();
+
 		nfa_test.set_pattern("([ab]+).\\1");
 		nfa_test.add_testcase("a.a");
 		nfa_test.add_testcase("b.b");

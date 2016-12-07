@@ -173,11 +173,15 @@ namespace anyun_regex
 		{
 		case '|':
 		{
-			ConnectedFragment fra2 = operands.top();
+			vector<ConnectedFragment> fragments{ operands.top() };
 			operands.pop();
-			ConnectedFragment fra1 = operands.top();
-			operands.pop();
-			operands.push(merge_fragments(fra1, fra2));
+			while(operators.top() == '|')
+			{
+				fragments.push_back(operands.top());
+				operands.pop();
+				operators.pop();
+			}
+			operands.push(merge_fragments(fragments));
 			break;
 		}
 		//the dot . means concatenation  operator
@@ -188,6 +192,7 @@ namespace anyun_regex
 			ConnectedFragment fra1 = operands.top();
 			operands.pop();
 			operands.push(connect_fragments(fra1, fra2));
+			operators.pop();
 			break;
 		}
 		case '?':
@@ -198,6 +203,7 @@ namespace anyun_regex
 			edges.push_back(sigma_edge);
 			ConnectedFragment fra2(sigma_edge->get_id(), sigma_edge->get_id());
 			operands.push(merge_fragments(fra1, fra2));
+			operators.pop();
 			break;
 		}
 		case '*':
@@ -206,6 +212,7 @@ namespace anyun_regex
 			operands.pop();
 			//add self connect and push
 			operands.push(self_connect_fragment(fra1));
+			operators.pop();
 			break;
 		}
 		case '+':
@@ -218,6 +225,7 @@ namespace anyun_regex
 			ConnectedFragment fra2(sigma_edge->get_id(), sigma_edge->get_id());
 			//reverse merge fra1 and fra2
 			operands.push(reverse_merge_fragments(fra1, fra2));
+			operators.pop();
 			break;
 		}
 		case '-':
@@ -1067,9 +1075,6 @@ namespace anyun_regex
 			parse_index++;
 		}
 		else
-		{
 			operate(operators.top(), operands, operators);
-			operators.pop();
-		}
 	}
 }

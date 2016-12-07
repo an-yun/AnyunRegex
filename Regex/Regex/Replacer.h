@@ -13,7 +13,7 @@ namespace  anyun_regex
 	class CommonReplacer:public Replacer
 	{
 	public:
-		CommonReplacer(const string &repalce_str);
+		explicit CommonReplacer(const string &repalce_str);
 		string replace_match(const Matcher &matcher) const override;
 	private:
 		string new_string;
