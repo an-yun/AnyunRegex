@@ -220,6 +220,15 @@ namespace anyun_regex
 	private:
 		size_t reference_id;
 	};
+
+	class ORLazyDirectedge :public DirectedEdge
+	{
+	public:
+		ORLazyDirectedge(size_t id);
+
+		DirectedEdgeType get_type() const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const override;
+	};
 }
 
 #endif
