@@ -73,6 +73,16 @@ namespace anyun_regex
 		size_t left;
 		size_t right;
 	};
+
+	class OrLazyDirectedNode:public DirectedNode
+	{
+	public:
+		OrLazyDirectedNode(size_t id = 0);
+
+		DirectedNodeType get_type() const override;
+	private:
+
+	};
 }
 
 #endif
