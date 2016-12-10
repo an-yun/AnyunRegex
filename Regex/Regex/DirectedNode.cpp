@@ -100,4 +100,8 @@ namespace anyun_regex
 	{
 	}
 
+	ZeroLazyDirectedNode::ZeroLazyDirectedNode(size_t id)
+	{
+	}
+
 }

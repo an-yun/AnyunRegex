@@ -13,7 +13,8 @@ namespace anyun_regex
 		DIRECTEDNODE,
 		START_DIRECTEDNODE,
 		END_DIRECTEDNODE,
-		REPEAT_COUNT_DIRECTEDNODE
+		REPEAT_COUNT_DIRECTEDNODE,
+		OR_LAZY_DIRECTEDNODE
 	};
 	class DirectedNode
 	{
@@ -78,6 +79,15 @@ namespace anyun_regex
 	{
 	public:
 		OrLazyDirectedNode(size_t id = 0);
+
+		DirectedNodeType get_type() const override;
+	private:
+
+	};
+	class ZeroLazyDirectedNode :public DirectedNode
+	{
+	public:
+		ZeroLazyDirectedNode(size_t id = 0);
 
 		DirectedNodeType get_type() const override;
 	private:

@@ -820,9 +820,10 @@ namespace anyun_regex
 			case '?':
 				if (p[parse_index + 1] == '?') //lazy match
 				{
-					//do something
+					parse_index++;
+					normal_priority_parse('-', operators, operands, parse_index);
 				}
-				normal_priority_parse('?', operators, operands, parse_index);
+				else normal_priority_parse('?', operators, operands, parse_index);
 				break;
 			case '*':
 				if(p[parse_index + 1 ] == '?') //lazy match
