@@ -96,12 +96,4 @@ namespace anyun_regex
 		else return 2;
 	}
 
-	OrLazyDirectedNode::OrLazyDirectedNode(size_t id)
-	{
-	}
-
-	ZeroLazyDirectedNode::ZeroLazyDirectedNode(size_t id)
-	{
-	}
-
 }

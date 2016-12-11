@@ -6,6 +6,7 @@
 #include <stack>
 #include <list>
 #include <string>
+#include <iterator>
 #include <memory>
 #include <assert.h>
 #include "DirectedNode.h"
@@ -20,6 +21,8 @@ namespace anyun_regex
 	using std::string;
 	using std::shared_ptr;
 	using std::tuple;
+	using std::iterator;
+	using std::reverse_iterator;
 
 	enum RegexParseCode {
 		REGEX_PARSE_OK = 0,
@@ -172,7 +175,7 @@ namespace anyun_regex
 		    \  .   /
 			 >fran>
 		*/
-		ConnectedFragment merge_fragments(const vector<ConnectedFragment> &fragments);
+		ConnectedFragment merge_fragments(const vector<ConnectedFragment> &fragments,bool reverse=false);
 		/*
 		reverse merge fragment1 and  fragment2 together
 

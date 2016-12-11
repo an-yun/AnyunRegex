@@ -90,6 +90,7 @@ namespace anyun_regex
 			{ '\0','?', -1 },
 			{ '\0','*', -1 },
 			{ '\0','+', -1},
+			{ '\0','-', -1 },
 
 			//{'(','\0'}  miss right bracket
 			{'(','(',-1},
@@ -99,6 +100,7 @@ namespace anyun_regex
 			{'(','?',-1},
 			{'(','*',-1},
 			{'(','+',-1},
+			{ '(','-',-1 },
 
 			{')','\0',1},
 			{')','(',1},
@@ -108,6 +110,7 @@ namespace anyun_regex
 			{')','?',1},
 			{')','*',1},
 			{')','+',1},
+			{ ')','-',1 },
 
 			{'|','\0',1},
 			{'|','(',-1},
@@ -117,6 +120,7 @@ namespace anyun_regex
 			{'|','?',-1},
 			{'|','*',-1},
 			{'|','+',-1},
+			{ '|','-',-1 },
 
 			{'.','\0',1},
 			{'.','(',-1},
@@ -126,6 +130,7 @@ namespace anyun_regex
 			{'.','?',-1},
 			{'.','*',-1},
 			{'.','+',-1},
+			{ '.','-',-1 },
 
 			{'?','\0',1},
 			//{'?','('} miss concatenation  operator
@@ -135,6 +140,7 @@ namespace anyun_regex
 			{'?','?',1},
 			{'?','*',1},
 			{'?','+',1},
+			{ '?','-',1 },
 
 			{'*','\0',1},
 			//{'*','('} miss concatenation  operator
@@ -143,6 +149,7 @@ namespace anyun_regex
 			{'*','.',1},
 			{'*','?',1},
 			{'*','*',1},
+			{ '*','-',1 },
 
 			{'+','\0',1},
 			//{'+','('} miss concatenation  operator
@@ -152,6 +159,18 @@ namespace anyun_regex
 			{'+','?',1},
 			{'+','*',1},
 			{'+','+',1},
+			{ '+','-',1 },
+
+			// - represent 
+			{ '-','\0',1 },
+			//{'-','('} miss concatenation  operator
+			{ '-',')',1 },
+			{ '-','|',1 },
+			{ '-','.',1 },
+			{ '-','?',1 },
+			{ '-','*',1 },
+			{ '-','+',1 },
+			{ '-','-',1 },
 		};
 		static map<size_t, map<size_t, int>> priority;
 		if (priority.empty())
@@ -175,13 +194,13 @@ namespace anyun_regex
 		{
 			vector<ConnectedFragment> fragments{ operands.top() };
 			operands.pop();
-			while(operators.top() == '|')
+			while (operators.top() == '|')
 			{
 				fragments.push_back(operands.top());
 				operands.pop();
 				operators.pop();
 			}
-			operands.push(merge_fragments(fragments));
+			operands.push(merge_fragments(fragments,true));
 			break;
 		}
 		//the dot . means concatenation  operator
@@ -230,7 +249,16 @@ namespace anyun_regex
 		}
 		case '-':
 		{
-			// for or lazy match
+			// for can be none lazy match
+			ConnectedFragment fra1 = operands.top();
+			operands.pop();
+			DirectedEdgePoint sigma_edge(new SigmaDirectedEdge(edges.size()));
+			edges.push_back(sigma_edge);
+			ConnectedFragment fra2(sigma_edge->get_id(), sigma_edge->get_id());
+			operands.push(merge_fragments(fra2, fra1));
+			operators.pop();
+			break;
+
 		}
 		case '0':
 		{
@@ -430,19 +458,33 @@ namespace anyun_regex
 		\  .   /
 		 >fran>
 	*/
-	ConnectedFragment DirectedGraph::merge_fragments(const vector<ConnectedFragment>& fragments)
+	ConnectedFragment DirectedGraph::merge_fragments(const vector<ConnectedFragment>& fragments,bool reverse)
 	{
-		//connect in node
+		//the in node
 		DirectedNodePoint in_node(new DirectedNode(nodes.size()));
 		nodes.push_back(in_node);
-		size_t fragments_size = fragments.size();
-		for (size_t i = 0; i < fragments_size; i++)
-			connect_in_node(in_node->get_id(), fragments[i]);
-		//connect out node
+		//the out node
 		DirectedNodePoint out_node(new DirectedNode(nodes.size()));
 		nodes.push_back(out_node);
-		for (size_t i = 0; i < fragments_size; i++)
-			connect_out_node(out_node->get_id(), fragments[i]);
+		//connect 
+		if(reverse)
+		{
+
+			for (vector<ConnectedFragment>::const_reverse_iterator b = fragments.crbegin(),e = fragments.crend();b!=e;b++)
+			{
+				connect_in_node(in_node->get_id(), *b);
+				connect_out_node(out_node->get_id(), *b);
+			}
+		}
+		else
+		{
+			for (vector<ConnectedFragment>::const_iterator b = fragments.cbegin(), e = fragments.cend(); b != e; b++)
+			{
+				connect_in_node(in_node->get_id(), *b);
+				connect_out_node(out_node->get_id(), *b);
+			}
+		}
+		
 		//connect in and out edges
 		size_t in_edge_id = add_in_sigma_edge(in_node->get_id());
 		size_t out_edge_id = add_out_sigma_edge(out_node->get_id());
@@ -643,7 +685,7 @@ namespace anyun_regex
 						//do something for name capture (?<group_name>##) or (?'group_name'##)
 						parse_index++;
 						char find_char = p[parse_index] == '\'' ? '\'' : '>';
-						size_t end_group_name_position = p.find_first_of(find_char, ++parse_index );
+						size_t end_group_name_position = p.find_first_of(find_char, ++parse_index);
 						string group_name = p.substr(parse_index, end_group_name_position - parse_index);
 						// the stack will store like "?<group_name" or "?'group_name" 
 						group_names.push(p.substr(parse_index - 2, 2) + group_name);
@@ -826,7 +868,7 @@ namespace anyun_regex
 				else normal_priority_parse('?', operators, operands, parse_index);
 				break;
 			case '*':
-				if(p[parse_index + 1 ] == '?') //lazy match
+				if (p[parse_index + 1] == '?') //lazy match
 				{
 					parse_index++;
 					normal_priority_parse('0', operators, operands, parse_index);
@@ -913,43 +955,43 @@ namespace anyun_regex
 		while ((*end_point) == ' ')end_point++;
 		switch (*end_point)
 		{
-			case ',':
-			{
-				end_point++;
-				while ((*end_point) == ' ')end_point++;
-				if ((*end_point) == '}')// from to infinity
-				{
-					//the end node
-					DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from));
-					nodes.push_back(repeat_node);
-					store_repeat_node(repeat_node,operands);
-					parse_index = end_point - p.c_str();
-					return true;
-				}
-				//from,to 
-				start = end_point;
-				size_t to = static_cast<size_t>(strtol(start, &end_point, 10));
-				if (end_point == start || from > to)
-					return false;
-				//the end node
-				DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from, to));
-				nodes.push_back(repeat_node);
-				store_repeat_node(repeat_node, operands);
-				while ((*end_point) == ' ')end_point++;
-				parse_index = end_point - p.c_str();
-				return true;
-			}
-			case '}':// spcific one repeat count
+		case ',':
+		{
+			end_point++;
+			while ((*end_point) == ' ')end_point++;
+			if ((*end_point) == '}')// from to infinity
 			{
 				//the end node
-				DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from,from));
+				DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from));
 				nodes.push_back(repeat_node);
 				store_repeat_node(repeat_node, operands);
 				parse_index = end_point - p.c_str();
 				return true;
 			}
-			default:
+			//from,to 
+			start = end_point;
+			size_t to = static_cast<size_t>(strtol(start, &end_point, 10));
+			if (end_point == start || from > to)
 				return false;
+			//the end node
+			DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from, to));
+			nodes.push_back(repeat_node);
+			store_repeat_node(repeat_node, operands);
+			while ((*end_point) == ' ')end_point++;
+			parse_index = end_point - p.c_str();
+			return true;
+		}
+		case '}':// spcific one repeat count
+		{
+			//the end node
+			DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from, from));
+			nodes.push_back(repeat_node);
+			store_repeat_node(repeat_node, operands);
+			parse_index = end_point - p.c_str();
+			return true;
+		}
+		default:
+			return false;
 		}
 
 	}
@@ -1010,7 +1052,7 @@ namespace anyun_regex
 		operands.push(ConnectedFragment(the_start_node_id, count_edge->get_id()));
 	}
 
-	inline void DirectedGraph::add_group_node(stack<ConnectedFragment>& operands,stack<string> &group_names)
+	inline void DirectedGraph::add_group_node(stack<ConnectedFragment>& operands, stack<string> &group_names)
 	{
 		ConnectedFragment fragment = operands.top();
 		operands.pop();
@@ -1030,7 +1072,7 @@ namespace anyun_regex
 			//add group
 			groups.push_back(Group(in_node->get_id(), out_node->get_id()));
 		}
-		else if(group_name.length() == 1)
+		else if (group_name.length() == 1)
 		{
 			if (group_name[0] == ':')
 				; // don't capture the group
@@ -1050,7 +1092,7 @@ namespace anyun_regex
 			}
 		}
 
-		
+
 
 		size_t in_edge_id = add_in_sigma_edge(in_node->get_id());
 		size_t out_edge_id = add_out_sigma_edge(out_node->get_id());

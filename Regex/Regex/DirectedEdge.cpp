@@ -187,7 +187,7 @@ namespace anyun_regex
 
 	size_t CountDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
 	{
-		return false;
+		return static_cast<unsigned>(-1);
 	}
 
 	pair<size_t, size_t> Matcher::get_group(size_t group_index)
@@ -223,7 +223,7 @@ namespace anyun_regex
 
 	size_t RepeatDirectedge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
 	{
-		return false;
+		return static_cast<unsigned>(-1);
 	}
 
 	GroupReferenceDirectedge::GroupReferenceDirectedge(size_t id, size_t group_id, size_t s_id, size_t e_id)
