@@ -8,7 +8,7 @@ namespace anyun_regex
 
 	bool DotCondition::match(size_t ch) const
 	{
-		return true;
+		return ch != '\n';
 	}
 
 

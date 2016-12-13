@@ -161,7 +161,7 @@ namespace anyun_regex
 			{'+','+',1},
 			{ '+','-',1 },
 
-			// - represent 
+			// - represent ??
 			{ '-','\0',1 },
 			//{'-','('} miss concatenation  operator
 			{ '-',')',1 },

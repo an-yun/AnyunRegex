@@ -68,7 +68,7 @@ namespace anyun_regex {
 	{
 		map<string,size_t>::const_iterator result = nfa.digraph->name_groups.find(group_name);
 		if (result == nfa.digraph->name_groups.cend()) return string("");
-		else return group((*result).second);
+		return group((*result).second);
 	}
 
 	size_t NFAMatcher::group_index(string group_name) const
