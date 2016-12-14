@@ -148,7 +148,7 @@ namespace anyun_regex
 		->  O  ->
 
 		*/
-		ConnectedFragment self_connect_fragment(const ConnectedFragment &fragment);
+		ConnectedFragment self_connect_fragment(const ConnectedFragment &fragment,bool reverse = false);
 		/*
 		connect fragment1 to fragment1 
 		->fra1->fra2->

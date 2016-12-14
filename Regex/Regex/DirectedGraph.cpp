@@ -263,6 +263,12 @@ namespace anyun_regex
 		case '0':
 		{
 			// for zero more lazy match
+			ConnectedFragment fra1 = operands.top();
+			operands.pop();
+			//add self connect and push
+			operands.push(self_connect_fragment(fra1));
+			operators.pop();
+			break;
 		}
 		case '1':
 		{
@@ -392,19 +398,34 @@ namespace anyun_regex
 	 \     /
 	->  O  ->
 	*/
-	ConnectedFragment DirectedGraph::self_connect_fragment(const ConnectedFragment & fragment)
+	ConnectedFragment DirectedGraph::self_connect_fragment(const ConnectedFragment & fragment, bool reverse)
 	{
 		//the selfnode
 		DirectedNodePoint node(new DirectedNode(nodes.size()));
 		nodes.push_back(node);
-		//connect to itself
-		connect_in_node(node->get_id(), fragment);
-		connect_out_node(node->get_id(), fragment);
-		//add in and out edge
-		size_t in_edge_id = add_in_sigma_edge(node->get_id());
-		size_t out_edge_id = add_out_sigma_edge(node->get_id());
+		if(reverse)
+		{
+			//add in and out edge
+			size_t in_edge_id = add_in_sigma_edge(node->get_id());
+			size_t out_edge_id = add_out_sigma_edge(node->get_id());
+			//connect to itself
+			connect_in_node(node->get_id(), fragment);
+			connect_out_node(node->get_id(), fragment);
+			return ConnectedFragment(in_edge_id, out_edge_id);
+		}
+		else
+		{
+			//connect to itself
+			connect_in_node(node->get_id(), fragment);
+			connect_out_node(node->get_id(), fragment);
+			//add in and out edge
+			size_t in_edge_id = add_in_sigma_edge(node->get_id());
+			size_t out_edge_id = add_out_sigma_edge(node->get_id());
+			return ConnectedFragment(in_edge_id, out_edge_id);
+		}
 
-		return ConnectedFragment(in_edge_id, out_edge_id);
+
+		
 	}
 	/*
 	connect fragment1 to fragment1
