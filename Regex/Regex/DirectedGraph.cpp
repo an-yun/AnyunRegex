@@ -266,13 +266,23 @@ namespace anyun_regex
 			ConnectedFragment fra1 = operands.top();
 			operands.pop();
 			//add self connect and push
-			operands.push(self_connect_fragment(fra1));
+			operands.push(self_connect_fragment(fra1, true));
 			operators.pop();
 			break;
 		}
 		case '1':
 		{
 			// for one more lazy match
+			ConnectedFragment fra1 = operands.top();
+			operands.pop();
+			DirectedEdgePoint sigma_edge(new SigmaDirectedEdge(edges.size()));
+			edges.push_back(sigma_edge);
+			//the fra2
+			ConnectedFragment fra2(sigma_edge->get_id(), sigma_edge->get_id());
+			//reverse merge fra1 and fra2
+			operands.push(reverse_merge_fragments(fra1, fra2,true));
+			operators.pop();
+			break;
 		}
 		default:
 			break;
@@ -521,21 +531,40 @@ namespace anyun_regex
 	   \      /
 		<fra2<
 	*/
-	inline ConnectedFragment DirectedGraph::reverse_merge_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2)
+	inline ConnectedFragment DirectedGraph::reverse_merge_fragments(const ConnectedFragment & fragment1, const ConnectedFragment & fragment2, bool reverse)
 	{
-		//connect in node
+		//the in node
 		DirectedNodePoint in_node(new DirectedNode(nodes.size()));
 		nodes.push_back(in_node);
-		connect_in_node(in_node->get_id(), fragment1);
-		connect_out_node(in_node->get_id(), fragment2);
-		//connect out node
+		//the out node
 		DirectedNodePoint out_node(new DirectedNode(nodes.size()));
 		nodes.push_back(out_node);
-		connect_out_node(out_node->get_id(), fragment1);
-		connect_in_node(out_node->get_id(), fragment2);
-		//connect in and out edges
-		size_t in_edge_id = add_in_sigma_edge(in_node->get_id());
-		size_t out_edge_id = add_out_sigma_edge(out_node->get_id());
+		size_t in_edge_id=0, out_edge_id=0;
+		if(reverse)
+		{
+			//connect in and out edges
+			in_edge_id = add_in_sigma_edge(in_node->get_id());
+			out_edge_id = add_out_sigma_edge(out_node->get_id());
+			//connect in node
+			connect_in_node(in_node->get_id(), fragment1);
+			connect_out_node(in_node->get_id(), fragment2);
+			//connect out node
+			connect_out_node(out_node->get_id(), fragment1);
+			connect_in_node(out_node->get_id(), fragment2);
+		}
+		else
+		{
+			//connect in node
+			connect_in_node(in_node->get_id(), fragment1);
+			connect_out_node(in_node->get_id(), fragment2);
+			//connect out node
+			connect_out_node(out_node->get_id(), fragment1);
+			connect_in_node(out_node->get_id(), fragment2);
+			//connect in and out edges
+			in_edge_id = add_in_sigma_edge(in_node->get_id());
+			out_edge_id = add_out_sigma_edge(out_node->get_id());
+		}
+
 
 		return ConnectedFragment(in_edge_id, out_edge_id);
 	}

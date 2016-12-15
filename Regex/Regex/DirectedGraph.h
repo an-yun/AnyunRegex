@@ -185,7 +185,7 @@ namespace anyun_regex
 		  \      /
 		   <fra2<
 		*/
-		ConnectedFragment reverse_merge_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2);
+		ConnectedFragment reverse_merge_fragments(const ConnectedFragment &fragment1, const ConnectedFragment &fragment2,bool reverse=false);
 
 		void connect_in_node_to_edge(size_t in_node_id, size_t edge_id);
 		void connect_out_node_to_edge(size_t out_node_id, size_t edge_id);

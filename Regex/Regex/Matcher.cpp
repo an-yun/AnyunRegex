@@ -7,6 +7,8 @@ namespace anyun_regex {
 		return NFAMatcher(text,nfa,offset);
 	}
 
+	//here nedd one new find method
+
 	bool NFAMatcher::find()
 	{
 		//if last search could not find,then return false
