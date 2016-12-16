@@ -56,6 +56,7 @@ namespace anyun_regex
 
 		//the new disign for update
 		void get_next_state(SaveState & state, const string &text, Matcher &matcher) const;
+		//update the group node
 	};
 
 }

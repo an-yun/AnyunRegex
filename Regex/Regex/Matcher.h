@@ -21,6 +21,8 @@ namespace anyun_regex {
 		bool find() override;
 		bool find(size_t offset) override;
 
+		bool new_find();
+
 		string group(size_t index = 0) const override;
 		string group(string group_name) const override;
 		size_t group_index(string group_name) const override;

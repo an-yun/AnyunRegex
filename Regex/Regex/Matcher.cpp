@@ -7,7 +7,6 @@ namespace anyun_regex {
 		return NFAMatcher(text,nfa,offset);
 	}
 
-	//here nedd one new find method
 
 	bool NFAMatcher::find()
 	{
@@ -58,6 +57,12 @@ namespace anyun_regex {
 		cursor = offset;
 		is_find = true;
 		return find();
+	}
+
+	bool NFAMatcher::new_find()
+	{
+		//this is the new find method
+		return false;
 	}
 
 	string NFAMatcher::group(size_t index) const
