@@ -109,6 +109,9 @@ namespace anyun_regex
 		TEST_PRE_PROCESS_PATTERN("a\\n", "a\\N\\n");
 		TEST_PRE_PROCESS_PATTERN("^ab$\\nc", "^\\Na\\Nb\\N$\\N\\n\\Nc");
 		TEST_PRE_PROCESS_PATTERN("ab\\nb\\rba", "a\\Nb\\N\\n\\Nb\\N\\r\\Nb\\Na");
+		//to do,add test to pre_process for name capture
+		TEST_PRE_PROCESS_PATTERN("a()", "a\\Nb\\N\\n\\Nb\\N\\r\\Nb\\Na");
+		TEST_PRE_PROCESS_PATTERN("ab\\nb\\rba", "a\\Nb\\N\\n\\Nb\\N\\r\\Nb\\Na");
 
 
 		cout << endl;
