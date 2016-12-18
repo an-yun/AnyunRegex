@@ -194,7 +194,7 @@ namespace anyun_regex
 		{
 			if ((*b).first == digraph->end_node_id)
 			{
-				TrackRecode &record = (*b).second;
+				TrackRecord &record = (*b).second;
 				vector<Group> &groups = digraph->groups;
 				size_t groups_size = groups.size();
 
@@ -216,7 +216,7 @@ namespace anyun_regex
 		{
 			if ((*p_b).first == parent_node_id)
 			{
-				TrackRecode &parent_record = (*p_b).second;
+				TrackRecord &parent_record = (*p_b).second;
 				if (visited[visit_node_id])
 				{
 					//find the child node
@@ -255,10 +255,49 @@ namespace anyun_regex
 
 	void NFA::get_next_state(SaveState & state, const string & text, Matcher & matcher) const
 	{
-		//need the new graph design
+		//get the neccessary information
+		OneSaveState &one_save_state = state.top();	 //the top state
+		size_t &top_node_id = std::get<0>(one_save_state);
+		size_t &next_edge_id = std::get<1>(one_save_state);
+		TrackRecord &track_recode = std::get<2>(one_save_state);
+
+		//all edges
+		vector<DirectedEdgePoint> &edges = digraph->edges;
+		// the out edges of top node
+		const vector<size_t> &out_edges = digraph->nodes[top_node_id]->get_out_edges();
+		if(next_edge_id >= out_edges.size())
+			state.pop();
+		else
+		{
+			/*
+			 *judge the edge can accept the str?
+			 *if accept:
+			 *	 next_edge_id++;
+			 *	 push a new OneSaveState;
+			 *	 the sate should update its information
+			 *else 
+			 *	 next_edge_id++;
+			 */
+			size_t step = static_cast<unsigned>(-1);	//the step of the str_point should go if the edge accept it
+			DirectedEdgePoint current_edge= edges[next_edge_id];
+			if((step = current_edge->accept(text, track_recode[top_node_id].first + 1, matcher, track_recode)) != static_cast<unsigned>(-1))
+			{
+				/*
+				 * 	 push a new OneSaveState;
+				 *	 the sate should update its information
+				 */
+				size_t end_node_id = current_edge->get_end_node_id();		//the end node id
+				//update new TrackRecord
+				TrackRecord new_state_record = track_recode;
+				new_state_record[end_node_id] = { new_state_record[top_node_id].first + step , new_state_record[end_node_id].second + 1 };
+				state.push({ end_node_id,0,new_state_record });
+			}
+			next_edge_id++;
+			
+		}
 	}
 
-	pair<size_t, TrackRecode>  * NFA::has_final_state(State& states) const
+	pair<size_t, TrackRecord>  * NFA::has_final_state(State& states) const
 	{
 		for (State::iterator b = states.begin(), e = states.end(); b != e; b++)
 			if ((*b).first == digraph->end_node_id) return &(*b);

@@ -20,7 +20,7 @@ namespace anyun_regex {
 		{
 			cursor = start-1;
 			State state;
-			TrackRecode temp_record;
+			TrackRecord temp_record;
 			temp_record[0] = { current_cursor(),1 };
 			state.push_back({ 0,temp_record });
 			nfa.read_nochar_edge(state, text,  *this);
@@ -36,11 +36,11 @@ namespace anyun_regex {
 				nfa.get_next_state(state, text,  *this);
 				nfa.read_nochar_edge(state, text,  *this);
 				//if match,set is_find to true,save the result range to match ,else set false;
-				pair<size_t, TrackRecode>  *node_record_ptr = nullptr;
+				pair<size_t, TrackRecord>  *node_record_ptr = nullptr;
 				if ((node_record_ptr = nfa.has_final_state(state)) != nullptr)
 				{
 					nfa.update_group_node_record(state, *this);
-					pair<size_t, TrackRecode>  &node_record = *node_record_ptr;
+					pair<size_t, TrackRecord>  &node_record = *node_record_ptr;
 					next_start = node_record.second[node_record.first].first + 1;
 					is_find = true;
 					//if greedy remove break
@@ -71,9 +71,13 @@ namespace anyun_regex {
 		{
 			cursor = start - 1;
 			State state;
-			TrackRecode temp_record;
+			SaveState save_state;
+
+			TrackRecord temp_record;
 			temp_record[0] = { current_cursor(),1 };
+
 			state.push_back({ 0,temp_record });
+			save_state.push({ 0,0,temp_record });
 			nfa.read_nochar_edge(state, text, *this);
 			if (nfa.has_final_state(state))
 			{
@@ -87,11 +91,11 @@ namespace anyun_regex {
 				nfa.get_next_state(state, text, *this);
 				nfa.read_nochar_edge(state, text, *this);
 				//if match,set is_find to true,save the result range to match ,else set false;
-				pair<size_t, TrackRecode>  *node_record_ptr = nullptr;
+				pair<size_t, TrackRecord>  *node_record_ptr = nullptr;
 				if ((node_record_ptr = nfa.has_final_state(state)) != nullptr)
 				{
 					nfa.update_group_node_record(state, *this);
-					pair<size_t, TrackRecode>  &node_record = *node_record_ptr;
+					pair<size_t, TrackRecord>  &node_record = *node_record_ptr;
 					next_start = node_record.second[node_record.first].first + 1;
 					is_find = true;
 					//if greedy remove break

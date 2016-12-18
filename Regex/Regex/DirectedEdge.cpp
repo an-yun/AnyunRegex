@@ -105,7 +105,7 @@ namespace anyun_regex
 		return SIGMA_DIRECTEDEDGE;
 	}
 
-	size_t SigmaDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
+	size_t SigmaDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
 		return 0;
 	}
@@ -114,7 +114,7 @@ namespace anyun_regex
 		return SINGLE_CHAR_DIRECTEDEDGE;
 	}
 
-	size_t SingleCharDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
+	size_t SingleCharDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
 		return index < matcher.text.length() && condition->match(text[index]) ? 1 : static_cast<unsigned>(-1);
 	}
@@ -151,7 +151,7 @@ namespace anyun_regex
 		return LINE_START_DIRECTEDEDGE;
 	}
 
-	size_t LineStartDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
+	size_t LineStartDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
 		return (index == string::npos || text[index] == '\n') ? 0 : static_cast<unsigned>(-1);
 	}
@@ -166,7 +166,7 @@ namespace anyun_regex
 		return LINE_END_DIRECTEDEDGE;
 	}
 
-	size_t LineEndDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
+	size_t LineEndDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
 		return (index == text.size() - 1 || text[index + 1] == '\n') ? 0 : static_cast<unsigned>(-1);
 	}
@@ -185,7 +185,7 @@ namespace anyun_regex
 		return COUNT_DIRECTEDEDGE;
 	}
 
-	size_t CountDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
+	size_t CountDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
 		return static_cast<unsigned>(-1);
 	}
@@ -221,7 +221,7 @@ namespace anyun_regex
 		return REPEAT_DIRECTEDEDGE;
 	}
 
-	size_t RepeatDirectedge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
+	size_t RepeatDirectedge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
 		return static_cast<unsigned>(-1);
 	}
@@ -236,13 +236,12 @@ namespace anyun_regex
 		return GROUP_REFERENCE_DIRECTEDGE;
 	}
 
-	size_t GroupReferenceDirectedge::accept(const string& text, size_t index, Matcher& matcher, OneState& one_state) const
+	size_t GroupReferenceDirectedge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
 		if (index >= matcher.text.length()) return static_cast<unsigned>(-1);
 		pair<size_t, size_t> reference_group = matcher.get_groups_node(reference_id);
-		TrackRecode &track_recode = one_state.second;
-		size_t length = track_recode[reference_group.second].first - track_recode[reference_group.first].first;
-		string group_str = text.substr(track_recode[reference_group.first].first + 1, length);
+		size_t length = track_record[reference_group.second].first - track_record[reference_group.first].first;
+		string group_str = text.substr(track_record[reference_group.first].first + 1, length);
 		for (size_t i = 0; i < length; i++)
 			if (group_str[i] != text[index + i])
 				return static_cast<unsigned>(-1);

@@ -46,7 +46,7 @@ namespace anyun_regex
 		DirectedGraphPoint digraph;
 
 		//the new design for NFAMatcher
-		pair<size_t, TrackRecode>  * has_final_state(State &states) const;
+		pair<size_t, TrackRecord>  * has_final_state(State &states) const;
 		void get_next_state(State & state, const string &text,  Matcher &matcher) const;
 		void read_nochar_edge(State & state, const string &text, Matcher &matcher) const;
 		void update_group_node_record(State & state, Matcher &matcher) const;
