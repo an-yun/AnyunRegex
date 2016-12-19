@@ -91,9 +91,9 @@ namespace anyun_regex
 	int RepeatCountDirectedNode::accept_count(size_t count)
 	{
 		if (count < left) return -1;
-		else if( count>= left && count < right) return 0;
-		else if (count == right) return 1;
-		else return 2;
+		if( count>= left && count < right) return 0;
+		if (count == right) return 1;
+		return 2;
 	}
 
 }

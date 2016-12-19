@@ -78,8 +78,7 @@ namespace anyun_regex {
 
 			state.push_back({ 0,temp_record });
 			save_state.push({ 0,0,temp_record });
-			nfa.read_nochar_edge(state, text, *this);
-			if (nfa.has_final_state(state))
+			if (nfa.digraph->end_node_id == 0)
 			{
 				nfa.update_group_node_record(state, *this);
 				next_start = start + 1;

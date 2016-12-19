@@ -80,10 +80,10 @@ namespace anyun_regex
 			const vector<size_t> &out_edges = digraph->nodes[node_id]->get_out_edges();
 			size_t step = static_cast<unsigned>(-1);
 			for (vector<size_t>::const_iterator edge_b = out_edges.begin(), edge_e = out_edges.cend(); edge_b != edge_e; edge_b++)
-				if (  (edges[*edge_b]->get_type() == SINGLE_CHAR_DIRECTEDEDGE || 
-						edges[*edge_b]->get_type() == GROUP_REFERENCE_DIRECTEDGE
-					   )
-					&& (step =edges[*edge_b]->accept(text, current_node_record.second[node_id].first+1, matcher, current_node_record)) != static_cast<unsigned>(-1))
+				if ((edges[*edge_b]->get_type() == SINGLE_CHAR_DIRECTEDEDGE ||
+					edges[*edge_b]->get_type() == GROUP_REFERENCE_DIRECTEDGE
+					)
+					&& (step = edges[*edge_b]->accept(text, current_node_record.second[node_id].first + 1, matcher, current_node_record)) != static_cast<unsigned>(-1))
 				{
 					size_t end_node_id = edges[*edge_b]->get_end_node_id();
 					if (!visited[end_node_id])
@@ -164,7 +164,7 @@ namespace anyun_regex
 						break;
 					}
 				}
-				
+
 			}
 			else
 			{
@@ -178,7 +178,7 @@ namespace anyun_regex
 					else if (digraph->edges[edge_id]->get_type() == LINE_START_DIRECTEDEDGE
 						|| digraph->edges[edge_id]->get_type() == LINE_END_DIRECTEDEDGE)
 					{
-						OneState &node_record = get_one_node_record(node_id ,state);
+						OneState &node_record = get_one_node_record(node_id, state);
 						if (digraph->edges[edge_id]->accept(text, node_record.second[node_id].first, matcher, node_record) != static_cast<unsigned>(-1))
 							visit_one_node(node_id, end_node_id, state, node_ids, visited, matcher);
 					}
@@ -202,8 +202,8 @@ namespace anyun_regex
 				{
 					size_t group_start_node_id = groups[i].group_start_node;
 					size_t group_end_node_id = groups[i].group_end_node;
-					matcher.groups[i].first = record[group_start_node_id].first+1;
-					matcher.groups[i].second = record[group_end_node_id].first+ 1;
+					matcher.groups[i].first = record[group_start_node_id].first + 1;
+					matcher.groups[i].second = record[group_end_node_id].first + 1;
 				}
 			}
 		}
@@ -265,8 +265,65 @@ namespace anyun_regex
 		vector<DirectedEdgePoint> &edges = digraph->edges;
 		// the out edges of top node
 		const vector<size_t> &out_edges = digraph->nodes[top_node_id]->get_out_edges();
-		if(next_edge_id >= out_edges.size())
+		if (next_edge_id >= out_edges.size())
 			state.pop();
+		else if (digraph->nodes[top_node_id]->get_type() == REPEAT_COUNT_DIRECTEDNODE)//especaillly case for repeatcount
+		{
+			RepeatCountDirectedNode &repeat_node = *dynamic_cast<RepeatCountDirectedNode *>(digraph->nodes[top_node_id].get());
+			// add one to the repeat times
+			size_t &repeat_times = ++track_recode[top_node_id].second;
+			int judge = repeat_node.accept_count(repeat_times);
+			/*
+			0 is the repeat edge
+			1 is the pass edge
+			*/
+			if (judge == -1)
+			{
+				//the continue repeat node
+				size_t out_edge_id = repeat_node.get_out_edges()[0];
+				top_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+				next_edge_id = 0;
+
+			}
+			else if (judge == 0)
+			{
+				//the pass node
+				size_t end_edge_id = repeat_node.get_out_edges()[1];
+				size_t end_node_id = digraph->edges[end_edge_id]->get_end_node_id();//the end node id
+
+				//the continue repeat node
+				size_t repeat_edge_id = repeat_node.get_out_edges()[0];
+				size_t end_reapeat_node_id = digraph->edges[repeat_edge_id]->get_end_node_id();
+				/*
+				* 	 push a new OneSaveState;
+				*	 the sate should update its information
+				*/
+				
+				//update new TrackRecord
+				TrackRecord new_state_record = track_recode;
+				new_state_record[end_reapeat_node_id] = { new_state_record[top_node_id].first , new_state_record[end_reapeat_node_id].second + 1 };
+				
+				//update the pass node
+				repeat_times = 0;
+				top_node_id = end_node_id;
+				next_edge_id = 0;
+				//update the repeat node
+				state.push({ end_reapeat_node_id,0,new_state_record });
+
+			}
+			else if (judge == 1)
+			{
+				//the pass node
+				size_t out_edge_id = repeat_node.get_out_edges()[1];
+				repeat_times = 0;
+				top_node_id = digraph->edges[out_edge_id]->get_end_node_id();
+				next_edge_id = 0;
+			}
+			else
+				state.pop();
+
+
+		}
 		else
 		{
 			/*
@@ -275,12 +332,12 @@ namespace anyun_regex
 			 *	 next_edge_id++;
 			 *	 push a new OneSaveState;
 			 *	 the sate should update its information
-			 *else 
+			 *else
 			 *	 next_edge_id++;
 			 */
 			size_t step = static_cast<unsigned>(-1);	//the step of the str_point should go if the edge accept it
-			DirectedEdgePoint current_edge= edges[next_edge_id];
-			if((step = current_edge->accept(text, track_recode[top_node_id].first + 1, matcher, track_recode)) != static_cast<unsigned>(-1))
+			DirectedEdgePoint current_edge = edges[next_edge_id];
+			if ((step = current_edge->accept(text, track_recode[top_node_id].first + 1, matcher, track_recode)) != static_cast<unsigned>(-1))
 			{
 				/*
 				 * 	 push a new OneSaveState;
@@ -293,7 +350,6 @@ namespace anyun_regex
 				state.push({ end_node_id,0,new_state_record });
 			}
 			next_edge_id++;
-			
 		}
 	}
 
