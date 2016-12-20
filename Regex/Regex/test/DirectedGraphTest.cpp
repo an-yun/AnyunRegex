@@ -109,10 +109,8 @@ namespace anyun_regex
 		TEST_PRE_PROCESS_PATTERN("a\\n", "a\\N\\n");
 		TEST_PRE_PROCESS_PATTERN("^ab$\\nc", "^\\Na\\Nb\\N$\\N\\n\\Nc");
 		TEST_PRE_PROCESS_PATTERN("ab\\nb\\rba", "a\\Nb\\N\\n\\Nb\\N\\r\\Nb\\Na");
-		//to do,add test to pre_process for name capture
-		TEST_PRE_PROCESS_PATTERN("a()", "a\\Nb\\N\\n\\Nb\\N\\r\\Nb\\Na");
-		TEST_PRE_PROCESS_PATTERN("ab\\nb\\rba", "a\\Nb\\N\\n\\Nb\\N\\r\\Nb\\Na");
-
+		TEST_PRE_PROCESS_PATTERN("a(?<my_name>a)", "a\\N(?<my_name>a)");
+		TEST_PRE_PROCESS_PATTERN("a(?'my_name'ab)", "a\\N(?'my_name'a\\Nb)");
 
 		cout << endl;
 
@@ -149,6 +147,9 @@ namespace anyun_regex
 		TEST_PRE_PROCESS_PATTERN_ERROR("}$", REGEX_PARSE_MISS_LEFT_BRACES);
 		TEST_PRE_PROCESS_PATTERN_ERROR("\\N", REGEX_PARSE_ILLEGAL_ESCAPE_CHAR);
 		TEST_PRE_PROCESS_PATTERN_ERROR("a\\N", REGEX_PARSE_ILLEGAL_ESCAPE_CHAR);
+		// here need more test to namep capture
+		TEST_PRE_PROCESS_PATTERN_ERROR("a{a,}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
+		TEST_PRE_PROCESS_PATTERN_ERROR("12{1,0}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
 		cout << endl;
 
 	}

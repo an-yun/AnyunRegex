@@ -109,6 +109,10 @@ namespace anyun_regex
 		friend class RepeatCountDirectedNode;
 		friend class GroupReferenceDirectedge;
 	public:
+		virtual ~Matcher()
+		{
+		}
+
 		virtual bool find() = 0;
 		virtual bool find(size_t offset) = 0;
 		virtual pair<size_t, size_t> get_group(size_t group_index = 0 );
