@@ -620,6 +620,9 @@ namespace anyun_regex
 						result.push_back(current);
 						char find_char = current == '\'' ? '\'' : '>';
 						size_t end_group_name_position = p.find_first_of(find_char, ++i);
+						//add expection handle to namecapture
+						if (end_group_name_position == string::npos)
+							PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_END_CHAR_FOR_NAMECAPTURE);
 						string group_name = p.substr(i, end_group_name_position - i);
 						for (size_t ch : group_name) { result.push_back(ch); }
 						result.push_back(p[end_group_name_position]);
