@@ -328,8 +328,8 @@ namespace anyun_regex
 			 *	 next_edge_id++;
 			 */
 			size_t step = static_cast<unsigned>(-1);	//the step of the str_point should go if the edge accept it
-			DirectedEdgePoint current_edge = edges[next_edge_id];
-			if ((step = current_edge->accept(text, track_recode[top_node_id].first + 1, matcher, track_recode)) != static_cast<unsigned>(-1))
+			DirectedEdgePoint current_edge = edges[out_edges[next_edge_id]];
+			if ((step = current_edge->accept(text, track_recode[top_node_id].first , matcher, track_recode)) != static_cast<unsigned>(-1))
 			{
 				/*
 				 * 	 push a new OneSaveState;
