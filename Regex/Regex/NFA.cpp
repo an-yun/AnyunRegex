@@ -188,7 +188,7 @@ namespace anyun_regex
 	//	}
 	//}
 
-	void NFA::update_group_node_record(TrackRecord& record, Matcher & matcher) const
+	size_t NFA::update_group_node_record(TrackRecord& record, Matcher & matcher) const
 	{
 
 		vector<Group> &groups = digraph->groups;
@@ -197,9 +197,12 @@ namespace anyun_regex
 		{
 			size_t group_start_node_id = groups[i].group_start_node;
 			size_t group_end_node_id = groups[i].group_end_node;
-			matcher.groups[i].first = record[group_start_node_id].first + 1;
-			matcher.groups[i].second = record[group_end_node_id].first + 1;
+			matcher.groups[i].first = record[group_start_node_id].first;
+			matcher.groups[i].second = record[group_end_node_id].first;
 		}
+		if(matcher.groups[0].first == matcher.groups[0].second)
+			return matcher.groups[0].second+1;
+		return matcher.groups[0].second;
 	}
 
 	//inline void NFA::visit_one_node(size_t parent_node_id, size_t visit_node_id, State & state, queue<size_t>& node_ids, vector<bool> &visited, Matcher & matcher) const

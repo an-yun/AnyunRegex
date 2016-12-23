@@ -58,7 +58,7 @@ namespace anyun_regex
 		void get_next_state(SaveState & state, const string &text, Matcher &matcher) const;
 
 		//update the group node
-		void update_group_node_record(TrackRecord& record, Matcher &matcher) const;
+		size_t update_group_node_record(TrackRecord& record, Matcher &matcher) const;
 	};
 
 }

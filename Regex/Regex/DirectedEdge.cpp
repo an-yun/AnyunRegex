@@ -116,7 +116,6 @@ namespace anyun_regex
 
 	size_t SingleCharDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
-		index++;
 		return index < matcher.text.length() && condition->match(text[index]) ? 1 : static_cast<unsigned>(-1);
 	}
 

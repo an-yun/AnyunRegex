@@ -65,11 +65,9 @@ namespace anyun_regex {
 		if (!is_find) return false;
 		if (cursor > text_length) return is_find = false;
 		//begin to match ,start from the offset
-		size_t next_start = cursor, start = cursor;
 		is_find = false;
-		while (!is_find && start <= text_length)
+		while (!is_find && cursor <= text_length)
 		{
-			cursor = start - 1;
 			SaveState save_state;
 
 			TrackRecord temp_record;
@@ -77,23 +75,19 @@ namespace anyun_regex {
 			save_state.push({ 0,0,temp_record });
 
 			//begin to find
-			cursor = start;
 			while (!save_state.empty())
 			{
 				OneSaveState &one_save_state = save_state.top();
 				if (nfa.digraph->end_node_id == std::get<0>(one_save_state))
 				{
-					nfa.update_group_node_record(std::get<2>(one_save_state), *this);
-					next_start = start + 1;
-					is_find = true;
-					break;
+					cursor = nfa.update_group_node_record(std::get<2>(one_save_state), *this);
+					return is_find = true;
 				}
 				nfa.get_next_state(save_state, text, *this);
 				
 			}
-			start++;
+			cursor++;
 		}
-		cursor = next_start;
 		return is_find;
 	}
 
