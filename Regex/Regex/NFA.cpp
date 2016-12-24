@@ -66,37 +66,6 @@ namespace anyun_regex
 	}
 
 
-	//void NFA::get_next_state(State& state, const string & text, Matcher & matcher) const
-	//{
-	//	//breath first search
-	//	vector<bool> visited(digraph->v(), false);
-	//	State next_state;
-	//	vector<DirectedEdgePoint> &edges = digraph->edges;
-	//	for (State::iterator b = state.begin(), e = state.end(); b != e; b++)
-	//	{
-	//		//check every edge that can accept ch
-	//		OneState &current_node_record = *b;
-	//		size_t node_id = current_node_record.first;
-	//		const vector<size_t> &out_edges = digraph->nodes[node_id]->get_out_edges();
-	//		size_t step = static_cast<unsigned>(-1);
-	//		for (vector<size_t>::const_iterator edge_b = out_edges.begin(), edge_e = out_edges.cend(); edge_b != edge_e; edge_b++)
-	//			if ((edges[*edge_b]->get_type() == SINGLE_CHAR_DIRECTEDEDGE ||
-	//				edges[*edge_b]->get_type() == GROUP_REFERENCE_DIRECTEDGE
-	//				)
-	//				&& (step = edges[*edge_b]->accept(text, current_node_record.second[node_id].first + 1, matcher, current_node_record)) != static_cast<unsigned>(-1))
-	//			{
-	//				size_t end_node_id = edges[*edge_b]->get_end_node_id();
-	//				if (!visited[end_node_id])
-	//				{
-	//					visited[end_node_id] = true;
-	//					current_node_record.second[end_node_id] = { current_node_record.second[node_id].first + step ,current_node_record.second[end_node_id].second + 1 };
-	//					next_state.push_back({ end_node_id,current_node_record.second });
-	//				}
-	//			}
-	//	}
-
-	//	state.swap(next_state);
-	//}
 
 	//void NFA::read_nochar_edge(State& state, const string & text, Matcher & matcher) const
 	//{
