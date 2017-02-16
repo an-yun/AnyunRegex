@@ -14,7 +14,6 @@
 
 namespace anyun_regex
 {
-	typedef unsigned size_t;
 	using std::string;
 	using std::list;
 	using std::map;
