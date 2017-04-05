@@ -169,8 +169,6 @@ namespace anyun_regex
 			matcher.groups[i].first = record[group_start_node_id].first;
 			matcher.groups[i].second = record[group_end_node_id].first;
 		}
-		if(matcher.groups[0].first == matcher.groups[0].second)
-			return matcher.groups[0].second+1;
 		return matcher.groups[0].second;
 	}
 

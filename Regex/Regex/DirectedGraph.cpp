@@ -339,7 +339,7 @@ namespace anyun_regex
 			edges.push_back(sigma_edge);
 			connect_in_node_to_edge(0, 0);
 			connect_out_node_to_edge(1, 0);
-			groups.push_back(Group(0, 0));
+			groups.push_back(Group(0, 1));
 			return (parse_result = REGEX_PARSE_OK);
 		}
 		this->pattern = pattern;

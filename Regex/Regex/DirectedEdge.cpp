@@ -153,7 +153,7 @@ namespace anyun_regex
 
 	size_t LineStartDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
-		return (index == string::npos || text[index] == '\n') ? 0 : static_cast<unsigned>(-1);
+		return (index == 0 || text[index-1] == '\n') ? 0 : static_cast<unsigned>(-1);
 	}
 
 	LineEndDirectedEdge::LineEndDirectedEdge(size_t id)
@@ -168,7 +168,7 @@ namespace anyun_regex
 
 	size_t LineEndDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
-		return (index == text.size() - 1 || text[index + 1] == '\n') ? 0 : static_cast<unsigned>(-1);
+		return (index == text.size() || (index < text.size() && text[index] == '\n')) ? 0 : static_cast<unsigned>(-1);
 	}
 
 	Matcher::Matcher(string text, size_t cursor, size_t group_size) :text(text), cursor(cursor), groups(group_size)
@@ -238,14 +238,15 @@ namespace anyun_regex
 
 	size_t GroupReferenceDirectedge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
-		if (index >= matcher.text.length()) return static_cast<unsigned>(-1);
+		//here should be move ?
+		//if (index >= matcher.text.length()) return static_cast<unsigned>(-1);
 		pair<size_t, size_t> reference_group = matcher.get_groups_node(reference_id);
 		size_t length = track_record[reference_group.second].first - track_record[reference_group.first].first;
-		string group_str = text.substr(track_record[reference_group.first].first + 1, length);
+		string group_str = text.substr(track_record[reference_group.first].first, length);
 		for (size_t i = 0; i < length; i++)
 			if (group_str[i] != text[index + i])
 				return static_cast<unsigned>(-1);
-		//ther shouldn't move the cursor
+		//then shouldn't move the cursor
 		return length;
 	}
 

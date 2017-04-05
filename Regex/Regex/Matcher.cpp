@@ -69,7 +69,6 @@ namespace anyun_regex {
 		while (!is_find && cursor <= text_length)
 		{
 			SaveState save_state;
-
 			TrackRecord temp_record;
 			temp_record[0] = { cursor,1 };
 			save_state.push({ 0,0,temp_record });
@@ -80,7 +79,10 @@ namespace anyun_regex {
 				OneSaveState &one_save_state = save_state.top();
 				if (nfa.digraph->end_node_id == std::get<0>(one_save_state))
 				{
-					cursor = nfa.update_group_node_record(std::get<2>(one_save_state), *this);
+					unsigned temp_cursor = nfa.update_group_node_record(std::get<2>(one_save_state), *this);
+					if (temp_cursor == cursor)
+						cursor++;
+					else cursor = temp_cursor;
 					return is_find = true;
 				}
 				nfa.get_next_state(save_state, text, *this);
@@ -93,7 +95,7 @@ namespace anyun_regex {
 
 	string NFAMatcher::group(size_t index) const
 	{
-		if(is_find)return text.substr(groups[index].first, groups[index].second - groups[index].first);
+		if(is_find && groups[index].first !=groups[index].second)return text.substr(groups[index].first, groups[index].second - groups[index].first);
 		else return string("");
 	}
 
