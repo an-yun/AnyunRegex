@@ -223,7 +223,7 @@ namespace anyun_regex
 		size_t &top_node_id = std::get<0>(one_save_state);
 		size_t &next_edge_id = std::get<1>(one_save_state);
 		TrackRecord &track_recode = std::get<2>(one_save_state);
-
+		size_t top_node_cursor_posotion = track_recode[top_node_id].first;
 		//all edges
 		vector<DirectedEdgePoint> &edges = digraph->edges;
 		// the out edges of top node
@@ -242,7 +242,7 @@ namespace anyun_regex
 			1 upper range
 			2 beyond
 			*/
-#define UPDATE_TOP_STATE(the_one_state,update_index) \
+#define UPDATE_STATE(the_one_state,update_index,current_cursor_position) \
 					do {\
 						size_t to_edge_id = repeat_node.get_out_edges()[update_index];\
 						size_t &the_top_node_id = std::get<0>(the_one_state);	\
@@ -250,11 +250,12 @@ namespace anyun_regex
 						TrackRecord &top_track_recode = std::get<2>(the_one_state); \
 						the_top_node_id = digraph->edges[to_edge_id]->get_end_node_id(); \
 						the_next_edge_id = 0;		\
+						top_track_recode[the_top_node_id].first = current_cursor_position;\
 						top_track_recode[the_top_node_id].second++;\
 					}while(0)
 
-#define SET_CONTINUE_REPEAT(the_one_state)	UPDATE_TOP_STATE(the_one_state,0);
-#define SET_PASS_STATE(the_one_state)		UPDATE_TOP_STATE(the_one_state,1);
+#define SET_CONTINUE_REPEAT(the_one_state,current_cursor_position)	UPDATE_STATE(the_one_state,0,current_cursor_position);
+#define SET_PASS_STATE(the_one_state,current_cursor_position)		UPDATE_STATE(the_one_state,1,current_cursor_position);
 #define ADD_NEW_STATE\
 					do {\
 						OneSaveState &the_top_state = state.top();	 \
@@ -268,21 +269,21 @@ namespace anyun_regex
 			case -1:
 				{
 					//the continue repeat node
-					SET_CONTINUE_REPEAT(one_save_state);
+					SET_CONTINUE_REPEAT(one_save_state, top_node_cursor_posotion);
 					break;
 				}
 			case 0:
 				{
 					
 					ADD_NEW_STATE;
-					SET_PASS_STATE(one_save_state);
+					SET_PASS_STATE(one_save_state, top_node_cursor_posotion);
 					OneSaveState &continue_repeat_state = state.top();
-					SET_CONTINUE_REPEAT(continue_repeat_state);
+					SET_CONTINUE_REPEAT(continue_repeat_state, top_node_cursor_posotion);
 					break;
 				}
 			case 1:
 				{
-					SET_PASS_STATE(one_save_state);
+					SET_PASS_STATE(one_save_state, top_node_cursor_posotion);
 					break;
 				}
 			default:
