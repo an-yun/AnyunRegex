@@ -234,56 +234,60 @@ namespace anyun_regex
 		{
 			RepeatCountDirectedNode &repeat_node = *dynamic_cast<RepeatCountDirectedNode *>(digraph->nodes[top_node_id].get());
 			// add one to the repeat times
-			size_t &repeat_times = ++track_recode[top_node_id].second;
+			size_t &repeat_times = track_recode[top_node_id].second;
 			int judge = repeat_node.accept_count(repeat_times);
 			/*
-			0 is the repeat edge
-			1 is the pass edge
+			-1 <
+			0 range
+			1 upper range
+			2 beyond
 			*/
-			if (judge == -1)
+#define UPDATE_TOP_STATE(the_one_state,update_index) \
+					do {\
+						size_t to_edge_id = repeat_node.get_out_edges()[update_index];\
+						size_t &the_top_node_id = std::get<0>(the_one_state);	\
+						size_t &the_next_edge_id = std::get<1>(the_one_state);	\
+						TrackRecord &top_track_recode = std::get<2>(the_one_state); \
+						the_top_node_id = digraph->edges[to_edge_id]->get_end_node_id(); \
+						the_next_edge_id = 0;		\
+						top_track_recode[the_top_node_id].second++;\
+					}while(0)
+
+#define SET_CONTINUE_REPEAT(the_one_state)	UPDATE_TOP_STATE(the_one_state,0);
+#define SET_PASS_STATE(the_one_state)		UPDATE_TOP_STATE(the_one_state,1);
+#define ADD_NEW_STATE\
+					do {\
+						OneSaveState &the_top_state = state.top();	 \
+						size_t &the_top_node_id = std::get<0>(the_top_state);	\
+						size_t &the_next_edge_id = std::get<1>(the_top_state);	\
+						TrackRecord &top_track_recode = std::get<2>(the_top_state); \
+						state.push({ the_top_node_id,the_next_edge_id,top_track_recode });\
+					}while(0)
+			switch (judge)
 			{
-				//the continue repeat node
-				size_t out_edge_id = repeat_node.get_out_edges()[0];
-				top_node_id = digraph->edges[out_edge_id]->get_end_node_id();
-				next_edge_id = 0;
-
-			}
-			else if (judge == 0)
-			{
-				//the pass node
-				size_t end_edge_id = repeat_node.get_out_edges()[1];
-				size_t end_node_id = digraph->edges[end_edge_id]->get_end_node_id();//the end node id
-
-				//the continue repeat node
-				size_t repeat_edge_id = repeat_node.get_out_edges()[0];
-				size_t end_reapeat_node_id = digraph->edges[repeat_edge_id]->get_end_node_id();
-				/*
-				* 	 push a new OneSaveState;
-				*	 the sate should update its information
-				*/
-
-				//update new TrackRecord
-				TrackRecord new_state_record = track_recode;
-				new_state_record[end_reapeat_node_id] = { new_state_record[top_node_id].first , new_state_record[end_reapeat_node_id].second + 1 };
-
-				//update the pass node
-				repeat_times = 0;
-				top_node_id = end_node_id;
-				next_edge_id = 0;
-				//update the repeat node
-				state.push({ end_reapeat_node_id,0,new_state_record });
-
-			}
-			else if (judge == 1)
-			{
-				//the pass node
-				size_t out_edge_id = repeat_node.get_out_edges()[1];
-				repeat_times = 0;
-				top_node_id = digraph->edges[out_edge_id]->get_end_node_id();
-				next_edge_id = 0;
-			}
-			else
+			case -1:
+				{
+					//the continue repeat node
+					SET_CONTINUE_REPEAT(one_save_state);
+					break;
+				}
+			case 0:
+				{
+					
+					ADD_NEW_STATE;
+					SET_PASS_STATE(one_save_state);
+					OneSaveState &continue_repeat_state = state.top();
+					SET_CONTINUE_REPEAT(continue_repeat_state);
+					break;
+				}
+			case 1:
+				{
+					SET_PASS_STATE(one_save_state);
+					break;
+				}
+			default:
 				state.pop();
+			}
 
 		}
 		else
