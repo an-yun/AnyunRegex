@@ -45,8 +45,8 @@ int main()
 	test_directedgraph();
 	test_nfa_match();
 	test_nfa_group(); 
-	test_nfa_replace();
-	test_nfa_capture();
+	//test_nfa_replace();
+	//test_nfa_capture();
 	//password_validate();
 	return 0;
 }

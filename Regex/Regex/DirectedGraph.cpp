@@ -171,6 +171,8 @@ namespace anyun_regex
 			{ '-','*',1 },
 			{ '-','+',1 },
 			{ '-','-',1 },
+
+			//here need for lazy match - 0 1
 		};
 		static map<size_t, map<size_t, int>> priority;
 		if (priority.empty())
@@ -883,10 +885,12 @@ namespace anyun_regex
 				}
 				case 'b':
 				{
+					//to do
 					break;
 				}
 				case 'B':
 				{
+					//to do
 					break;
 				}
 				case '0':

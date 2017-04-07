@@ -289,6 +289,10 @@ namespace anyun_regex
 		nfa_test.test_single_group_capture();
 	}
 
+	void test_lazy_match()
+	{
+		//to do
+	}
 
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle)
 	{
@@ -606,6 +610,21 @@ namespace anyun_regex
 			}
 		}
 		cout << endl;
+	}
+
+	void NFATest::test_lazy_match_can_none()
+	{
+		//to do
+	}
+
+	void NFATest::test_lazy_match_zero_more()
+	{
+		//to do
+	}
+
+	void NFATest::test_lazy_match_one_more()
+	{
+		//to do
 	}
 
 	void NFATest::print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count)
