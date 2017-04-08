@@ -690,7 +690,18 @@ namespace anyun_regex
 				next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
 				break;
 			default:
-				break;
+				{
+					//especail case for lazy match
+					if(next == '?' && (current == '?' || current == '*' || current == '+'))
+					{
+						result.push_back(next);
+						i++;
+						next = p[i + 1];
+						next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
+					}
+					break;
+				}
+				
 			}
 			//if next char is group end position or other operator ,not add concatenation operator,if not ,add it
 			if (bracket_states.empty() && (!current_is_special || current_is_right) && !next_is_other)

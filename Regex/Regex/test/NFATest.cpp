@@ -292,6 +292,11 @@ namespace anyun_regex
 	void test_lazy_match()
 	{
 		//to do
+		cout << endl;
+		print_string_format(80, "Test Lazy match in class NFA  ", '-', true);
+		cout << endl;
+		NFATest nfa_test;
+		nfa_test.test_lazy_match_can_none();
 	}
 
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle)
@@ -615,6 +620,9 @@ namespace anyun_regex
 	void NFATest::test_lazy_match_can_none()
 	{
 		//to do
+		set_pattern("a?(ab)??""(ab)*");
+		add_testcase("aab");
+		test_group();
 	}
 
 	void NFATest::test_lazy_match_zero_more()

@@ -37,7 +37,7 @@ namespace anyun_regex
 	void test_nfa_group();
 	void test_nfa_replace();
 	void test_nfa_capture();
-	 
+	void test_lazy_match();
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle= false);
 
 	template<typename NumType>

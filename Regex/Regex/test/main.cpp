@@ -48,5 +48,6 @@ int main()
 	//test_nfa_replace();
 	//test_nfa_capture();
 	//password_validate();
+	test_lazy_match();
 	return 0;
 }
