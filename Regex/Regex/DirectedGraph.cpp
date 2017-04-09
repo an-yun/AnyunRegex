@@ -173,6 +173,16 @@ namespace anyun_regex
 			{ '-','-',1 },
 
 			//here need for lazy match - 0 1
+			// 0 represent *?
+			{ '0','\0',1 },
+			//{'0','('} miss concatenation  operator
+			{ '0',')',1 },
+			{ '0','|',1 },
+			{ '0','.',1 },
+			{ '0','?',1 },
+			{ '0','*',1 },
+			{ '0','+',1 },
+			{ '0','-',1 },
 		};
 		static map<size_t, map<size_t, int>> priority;
 		if (priority.empty())

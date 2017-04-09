@@ -622,6 +622,21 @@ namespace anyun_regex
 		//to do
 		set_pattern("a?(ab)??""(ab)*");
 		add_testcase("aab");
+		add_testcase("aaab");
+		add_testcase("aabab");
+		add_testcase("aaaaab");
+		add_testcase("acab");
+		add_testcase("babaaaab");
+		add_testcase("bbbbbbbbbbbbbbbbbbbba");
+		add_testcase("abababababababababab");
+		test_group();
+
+		set_pattern("(\\d )??""( *)([yY]ou|I|[Ss]he|[Hh]e)");
+		add_testcase("1  You");
+		add_testcase("2He");
+		add_testcase("She");
+		add_testcase("1  I");
+		add_testcase("               1           She");
 		test_group();
 	}
 
