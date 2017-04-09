@@ -297,6 +297,8 @@ namespace anyun_regex
 		cout << endl;
 		NFATest nfa_test;
 		nfa_test.test_lazy_match_can_none();
+		nfa_test.test_lazy_match_zero_more();
+		nfa_test.test_lazy_match_one_more();
 	}
 
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle)
@@ -627,8 +629,10 @@ namespace anyun_regex
 		add_testcase("aaaaab");
 		add_testcase("acab");
 		add_testcase("babaaaab");
+		add_testcase("bbabaabab");
 		add_testcase("bbbbbbbbbbbbbbbbbbbba");
 		add_testcase("abababababababababab");
+		add_testcase("123ab132aab2ababd12f9kababab");
 		test_group();
 
 		set_pattern("(\\d )??""( *)([yY]ou|I|[Ss]he|[Hh]e)");
@@ -636,8 +640,13 @@ namespace anyun_regex
 		add_testcase("2He");
 		add_testcase("She");
 		add_testcase("1  I");
-		add_testcase("               1           She");
+		add_testcase("you2He3She 1");
+		add_testcase("    You yo   2  She He");
+		add_testcase("               1           She   He");
+		add_testcase("you He 12222    SHe He 12 ");
 		test_group();
+
+		//here should be more testcases
 	}
 
 	void NFATest::test_lazy_match_zero_more()

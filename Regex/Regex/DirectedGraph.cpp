@@ -826,7 +826,8 @@ namespace anyun_regex
 			{
 				if (!parse_repeat_count_node(p, parse_index, operands))
 					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
-				assert(p[parse_index] == '}');
+				//don't forget lazy match {m,n}?
+				assert(p[parse_index] == '}' ||(p[parse_index-1] == '}' && p[parse_index] == '?'));
 				parse_index++;
 				break;
 			}
@@ -1057,6 +1058,12 @@ namespace anyun_regex
 			store_repeat_node(repeat_node, operands);
 			while ((*end_point) == ' ')end_point++;
 			parse_index = end_point - p.c_str();
+			//some code here to handle lazy match
+			if (p[parse_index] == '?')
+			{
+				//to do something for lazy match
+
+			}
 			return true;
 		}
 		case '}':// spcific one repeat count
