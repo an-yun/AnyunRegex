@@ -11,7 +11,7 @@
 #include "../NFA.h"
 #include "../Matcher.h"
 #include "../Replacer.h"
-
+#include <boost/regex.hpp>
 
 namespace anyun_regex
 {
@@ -32,7 +32,8 @@ namespace anyun_regex
 
 	typedef shared_ptr<NFAMatcher> NFAMatcherPoint;
 #ifdef _DEBUG
-
+	void test_boost_regex();
+	void password_validate();
 	void test_nfa_match();
 	void test_nfa_group();
 	void test_nfa_replace();

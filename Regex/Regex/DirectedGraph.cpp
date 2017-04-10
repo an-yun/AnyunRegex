@@ -91,6 +91,7 @@ namespace anyun_regex
 			{ '\0','*', -1 },
 			{ '\0','+', -1},
 			{ '\0','-', -1 },
+			{ '\0','0', -1 },
 
 			//{'(','\0'}  miss right bracket
 			{'(','(',-1},
@@ -101,6 +102,7 @@ namespace anyun_regex
 			{'(','*',-1},
 			{'(','+',-1},
 			{ '(','-',-1 },
+			{ '(','0',-1 },
 
 			{')','\0',1},
 			{')','(',1},
@@ -111,6 +113,7 @@ namespace anyun_regex
 			{')','*',1},
 			{')','+',1},
 			{ ')','-',1 },
+			{ ')','0',1 },
 
 			{'|','\0',1},
 			{'|','(',-1},
@@ -121,6 +124,7 @@ namespace anyun_regex
 			{'|','*',-1},
 			{'|','+',-1},
 			{ '|','-',-1 },
+			{ '|','0',-1 },
 
 			{'.','\0',1},
 			{'.','(',-1},
@@ -131,6 +135,7 @@ namespace anyun_regex
 			{'.','*',-1},
 			{'.','+',-1},
 			{ '.','-',-1 },
+			{ '.','0',-1 },
 
 			{'?','\0',1},
 			//{'?','('} miss concatenation  operator
@@ -141,6 +146,7 @@ namespace anyun_regex
 			{'?','*',1},
 			{'?','+',1},
 			{ '?','-',1 },
+			{ '?','0',1 },
 
 			{'*','\0',1},
 			//{'*','('} miss concatenation  operator
@@ -150,6 +156,7 @@ namespace anyun_regex
 			{'*','?',1},
 			{'*','*',1},
 			{ '*','-',1 },
+			{ '*','0',1 },
 
 			{'+','\0',1},
 			//{'+','('} miss concatenation  operator
@@ -160,6 +167,7 @@ namespace anyun_regex
 			{'+','*',1},
 			{'+','+',1},
 			{ '+','-',1 },
+			{ '+','0',1 },
 
 			// - represent ??
 			{ '-','\0',1 },
@@ -171,6 +179,7 @@ namespace anyun_regex
 			{ '-','*',1 },
 			{ '-','+',1 },
 			{ '-','-',1 },
+			{ '-','0',1 },
 
 			//here need for lazy match - 0 1
 			// 0 represent *?
@@ -183,6 +192,7 @@ namespace anyun_regex
 			{ '0','*',1 },
 			{ '0','+',1 },
 			{ '0','-',1 },
+			{ '0','0',1 },
 		};
 		static map<size_t, map<size_t, int>> priority;
 		if (priority.empty())
@@ -802,23 +812,25 @@ namespace anyun_regex
 			}
 			case '[':
 			{
-				// to test
 
 				//p parse_index
 #define PARSE_OR_STRING(the_string,the_index)											\
-				bool complementary = the_string[++the_index] == '^';/*is complementary?*/	\
-				if (complementary)the_index++;												\
-				if (p[the_index + 1] == ']')												\
-					PARSE_ERROR(parse_result, REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY);			\
-				vector<ConditionPoint> conditions;											\
-				if (!parse_or_condition(conditions, the_string, the_index))					\
-					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET);	\
-				ConditionPoint condition(new OrCondtion(conditions));						\
-				if (complementary)condition.reset(new ComplmentCondtion(condition));		\
-				DirectedEdgePoint edge(new SingleCharDirectedEdge(condition, edges.size()));\
-				store_edge(edge, operands);													\
-				assert(the_string[the_index] == ']');										\
-				the_index++;
+				do{																				\
+					bool complementary = the_string[++the_index] == '^';/*is complementary?*/	\
+					if (complementary)the_index++;												\
+					if (p[the_index + 1] == ']')												\
+						PARSE_ERROR(parse_result, REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY);			\
+					vector<ConditionPoint> conditions;											\
+					if (!parse_or_condition(conditions, the_string, the_index))					\
+						PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET);	\
+					ConditionPoint condition(new OrCondtion(conditions));						\
+					if (complementary)condition.reset(new ComplmentCondtion(condition));		\
+					DirectedEdgePoint edge(new SingleCharDirectedEdge(condition, edges.size()));\
+					store_edge(edge, operands);													\
+					assert(the_string[the_index] == ']');										\
+					the_index++;																\
+				}while(0)
+
 				PARSE_OR_STRING(p, parse_index);
 				break;
 			}

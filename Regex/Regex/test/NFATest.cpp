@@ -3,6 +3,72 @@
 namespace anyun_regex
 {
 #ifdef _DEBUG
+	
+
+#define Println(content) \
+	cout<<content<<endl;
+
+	void test_boost_regex()
+	{
+		string passwords[] =
+		{
+			"1aaaa2",
+			"aaaa1111",
+			"aa123",
+			"123",
+			"1123445690aaa",
+			"abcd",
+			"aabbccc",
+			"11123" };
+		boost::regex regex_expression("(\\w)\\1{2,}");
+		boost::match_results<std::string::const_iterator> what;
+		Println("use boost regex lib validate password");
+		for (string &password : passwords)
+		{
+			Println("validate the password:" + password);
+			if (regex_search(password.cbegin(), password.cend(), what, regex_expression))
+			{
+				Println("contain repeated chars more than three times,the repeat string is");
+				Println(what[0]);
+			}
+			else
+				Println("OK");
+			Println("");
+		}
+		cout << endl;
+		Println("");
+	}
+
+	void password_validate()
+	{
+		string passwords[] =
+		{
+			"1aaaa2",
+			"aaaa1111",
+			"aa123",
+			"123",
+			"1123445690aaa",
+			"abcd",
+			"aabbccc",
+			"11123" };
+		NFA pattern("(\\w)\\1{2,}");
+		Println("use my regex lib validate password");
+		for (string &password : passwords)
+		{
+			NFAMatcher matcher = NFAMatcher::match(password, pattern);
+			Println("validate the password:" + password);
+			if (matcher.find())
+			{
+				Println("contain repeated chars more than three times,the repeat string is");
+				Println(matcher.group());
+			}
+			else
+				Println("OK");
+			Println("");
+		}
+		Println("");
+		cout << endl;
+	}
 
 	void test_nfa_match()
 	{
@@ -262,7 +328,7 @@ namespace anyun_regex
 		print_string_format(80, "Test class NFA and Repalacer ", '-', true);
 		cout << endl;
 		NFATest nfa_test;
-		nfa_test.set_pattern("(a|b)+(?<captrue_name>a.*d)");
+		nfa_test.set_pattern("(a|b)+(?<captrue_name>a.*d)", true);
 		// for convinient, I reuse the add_replace_testcase
 		nfa_test.add_replace_testcase("abb", "captrue_name");
 		nfa_test.add_replace_testcase("a", "captrue_name");
@@ -276,7 +342,7 @@ namespace anyun_regex
 		nfa_test.add_replace_testcase("aaabababacdabded", "captrue_name");
 		nfa_test.add_replace_testcase("aaaaaaaaaaaaacdabdbed", "captrue_name");
 		nfa_test.add_replace_testcase("acdadbadeadafgacdabded", "captrue_name");
-		nfa_test.test_group_capture();
+		nfa_test.test_single_group_capture();
 
 		nfa_test.set_pattern("(?'repeat'(\\w)\\1{2,})", true);
 		nfa_test.add_replace_testcase("aaaa1111", "repeat");
@@ -334,7 +400,7 @@ namespace anyun_regex
 	{
 		this->pattern = pattern;
 		if (!no_std_regex)
-			standard_regex = regex(replace("\\?[<'].*[>']", "", pattern));
+			standard_regex = regex(pattern);
 		nfa = NFA(pattern);
 		testcases.clear();
 		replaec_strs.clear();
@@ -621,7 +687,6 @@ namespace anyun_regex
 
 	void NFATest::test_lazy_match_can_none()
 	{
-		//to do
 		set_pattern("a?(ab)??""(ab)*");
 		add_testcase("aab");
 		add_testcase("aaab");
@@ -636,6 +701,7 @@ namespace anyun_regex
 		test_group();
 
 		set_pattern("(\\d )??""( *)([yY]ou|I|[Ss]he|[Hh]e)");
+		add_testcase("I");
 		add_testcase("1  You");
 		add_testcase("2He");
 		add_testcase("She");
@@ -644,6 +710,7 @@ namespace anyun_regex
 		add_testcase("    You yo   2  She He");
 		add_testcase("               1           She   He");
 		add_testcase("you He 12222    SHe He 12 ");
+		add_testcase("youYouSheheSheshe    1  You");
 		test_group();
 
 		//here should be more testcases
@@ -652,6 +719,18 @@ namespace anyun_regex
 	void NFATest::test_lazy_match_zero_more()
 	{
 		//to do
+		set_pattern(".*(<div>.*?</div>)");
+		add_testcase("<div>  </div");
+		add_testcase("<div></div>");
+		add_testcase("<div>123</div>");
+		add_testcase("<div><div>123</div></div>");
+		add_testcase("<div><div><p>mis /div</p></div>");
+		add_testcase("<div><p>mis div</p></div></div>");
+		add_testcase("</div></div>");
+		add_testcase("<p>mis div</p></div></div></div>");
+		add_testcase("<div><div><div><div><div><p>mis /div</p>");
+		add_testcase("<p>some content</p><div>infor mation for p</div>");
+		test_group();
 	}
 
 	void NFATest::test_lazy_match_one_more()

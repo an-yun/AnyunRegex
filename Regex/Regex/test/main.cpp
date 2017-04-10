@@ -9,45 +9,25 @@
 using namespace anyun_regex;
 using namespace std;
 
-#define Println(content) \
-	cout<<content<<endl;
-
-void password_validate()
-{
-	string passwords[] =
-	{ 
-		"1aaaa2",
-		"aaaa1111",
-		"aa123",
-		"123",
-		"1123445690aaa",
-		"abcd",
-		"aabbccc",
-		"11123" };
-	NFA pattern("(\\w)\\1{2,}");
-	for (string &password : passwords)
-	{
-		NFAMatcher matcher = NFAMatcher::match(password, pattern);
-		Println("validate the password:" + password);
-		if (matcher.find())
-		{
-			Println("contain repeated chars more than three times,the repeat string i");
-			Println(matcher.group());
-		}
-		else
-			Println("OK");
-		Println("");
-	}
-	cout << endl;
-}
-int main()
+void test_auto()
 {
 	test_directedgraph();
 	test_nfa_match();
-	test_nfa_group(); 
-	//test_nfa_replace();
-	//test_nfa_capture();
-	//password_validate();
+	test_nfa_group();
 	test_lazy_match();
+}
+
+void test_capture()
+{
+	test_nfa_replace();
+	test_nfa_capture();
+	password_validate();
+}
+
+int main()
+{
+	//test_auto();
+	test_capture();
+	test_boost_regex();
 	return 0;
 }

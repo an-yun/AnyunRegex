@@ -218,6 +218,16 @@ namespace anyun_regex
 
 	void NFA::get_next_state(SaveState & state, const string & text, Matcher & matcher) const
 	{
+		/*
+		 *
+		 *important here need some code for push one group in group-stack
+		 *	don't add group name to map like before
+		 *push group name and capture in stack when match
+		 *
+		 */
+
+
+
 		//get the neccessary information
 		OneSaveState &one_save_state = state.top();	 //the top state
 		size_t &top_node_id = std::get<0>(one_save_state);
