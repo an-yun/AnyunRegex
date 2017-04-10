@@ -13,6 +13,7 @@ void test_auto()
 {
 	test_directedgraph();
 	test_nfa_match();
+	test_nfa_escape();
 	test_nfa_group();
 	test_lazy_match();
 }
@@ -26,8 +27,8 @@ void test_capture()
 
 int main()
 {
-	//test_auto();
-	test_capture();
-	test_boost_regex();
+	test_auto();
+	//test_capture();
+	//test_boost_regex();
 	return 0;
 }

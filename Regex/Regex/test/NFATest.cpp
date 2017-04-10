@@ -143,6 +143,25 @@ namespace anyun_regex
 
 	}
 
+	void test_nfa_escape()
+	{
+		cout << endl;
+		print_string_format(80, "Test class NFA for escape chracters ", '-', true);
+		cout << endl;
+		NFATest nfa_test;
+		nfa_test.set_pattern("\\s+ab*\\s+");
+		nfa_test.add_testcase(" abb ");
+		nfa_test.add_testcase("a");
+		nfa_test.add_testcase(" abbc");
+		nfa_test.add_testcase("\ta\n");
+		nfa_test.add_testcase("aa");
+		nfa_test.add_testcase("ab\nabbb");
+		nfa_test.add_testcase(" ab\nabbb\n");
+		nfa_test.add_testcase("ab\nabbb\n12");
+
+		nfa_test.test_match();
+	}
+
 	void test_nfa_group()
 	{
 		cout << endl;
@@ -730,6 +749,19 @@ namespace anyun_regex
 		add_testcase("<p>mis div</p></div></div></div>");
 		add_testcase("<div><div><div><div><div><p>mis /div</p>");
 		add_testcase("<p>some content</p><div>infor mation for p</div>");
+		test_group();
+
+		set_pattern("(He|(\\s)he)(\\s+)(\\S*?)e?d");//search sentence like 'He looked' or 'he had'
+		add_testcase("Yet another unusual thing about Harry was how little he looked forward to his birthdays. ");
+		add_testcase("He had never received a birthday card in his life");
+		add_testcase("Harry walked across the dark room, past Hedwig¡¯s large, empty cage, to the open window. ");
+		add_testcase("Hedwig had been absent for two nights now.");
+		add_testcase("Harry recognized the unconscious owl at once");
+		add_testcase("Ron says he¡¯s going to be in London in the last week of the holidays. ");
+		add_testcase("He wanted me to debug the program");
+		add_testcase("It's surprising that he asked she to do this work");
+		add_testcase("\" No no no,it wasn't possible \" ,he said.");
+		add_testcase("He he       no       ");
 		test_group();
 	}
 

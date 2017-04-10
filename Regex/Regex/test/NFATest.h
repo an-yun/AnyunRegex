@@ -35,6 +35,7 @@ namespace anyun_regex
 	void test_boost_regex();
 	void password_validate();
 	void test_nfa_match();
+	void test_nfa_escape();
 	void test_nfa_group();
 	void test_nfa_replace();
 	void test_nfa_capture();
