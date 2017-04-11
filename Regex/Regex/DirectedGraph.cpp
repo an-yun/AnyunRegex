@@ -93,6 +93,7 @@ namespace anyun_regex
 			{ '\0','-', -1 },
 			{ '\0','0', -1 },
 			{ '\0','1', -1 },
+			{ '\0','2', -1 },
 
 			//{'(','\0'}  miss right bracket
 			{'(','(',-1},
@@ -105,6 +106,7 @@ namespace anyun_regex
 			{ '(','-',-1 },
 			{ '(','0',-1 },
 			{ '(','1',-1 },
+			{ '(','2',-1 },
 
 			{')','\0',1},
 			{')','(',1},
@@ -117,6 +119,7 @@ namespace anyun_regex
 			{ ')','-',1 },
 			{ ')','0',1 },
 			{ ')','1',1 },
+			{ ')','2',1 },
 
 			{'|','\0',1},
 			{'|','(',-1},
@@ -129,6 +132,7 @@ namespace anyun_regex
 			{ '|','-',-1 },
 			{ '|','0',-1 },
 			{ '|','1',-1 },
+			{ '|','2',-1 },
 
 			{'.','\0',1},
 			{'.','(',-1},
@@ -141,6 +145,7 @@ namespace anyun_regex
 			{ '.','-',-1 },
 			{ '.','0',-1 },
 			{ '.','1',-1 },
+			{ '.','2',-1 },
 
 			{'?','\0',1},
 			//{'?','('} miss concatenation  operator
@@ -153,6 +158,7 @@ namespace anyun_regex
 			{ '?','-',1 },
 			{ '?','0',1 },
 			{ '?','1',1 },
+			{ '?','2',1 },
 
 			{'*','\0',1},
 			//{'*','('} miss concatenation  operator
@@ -164,6 +170,7 @@ namespace anyun_regex
 			{ '*','-',1 },
 			{ '*','0',1 },
 			{ '*','1',1 },
+			{ '*','2',1 },
 
 			{'+','\0',1},
 			//{'+','('} miss concatenation  operator
@@ -176,6 +183,7 @@ namespace anyun_regex
 			{ '+','-',1 },
 			{ '+','0',1 },
 			{ '+','1',1 },
+			{ '+','2',1 },
 
 			// - represent ??
 			{ '-','\0',1 },
@@ -189,6 +197,7 @@ namespace anyun_regex
 			{ '-','-',1 },
 			{ '-','0',1 },
 			{ '-','1',1 },
+			{ '-','2',1 },
 
 			//here need for lazy match - 0 1
 			// 0 represent *?
@@ -203,6 +212,7 @@ namespace anyun_regex
 			{ '0','-',1 },
 			{ '0','0',1 },
 			{ '0','1',1 },
+			{ '0','2',1 },
 
 			// 1 represent +?
 			{ '1','\0',1 },
@@ -216,6 +226,21 @@ namespace anyun_regex
 			{ '1','-',1 },
 			{ '1','0',1 },
 			{ '1','1',1 },
+			{ '1','2',1 },
+
+			// 2 represent {m,n}?
+			{ '2','\0',1 },
+			//{'2','('} miss concatenation  operator
+			{ '2',')',1 },
+			{ '2','|',1 },
+			{ '2','.',1 },
+			{ '2','?',1 },
+			{ '2','*',1 },
+			{ '2','+',1 },
+			{ '2','-',1 },
+			{ '2','0',1 },
+			{ '2','1',1 },
+			{ '2','2',1 },
 		};
 		static map<size_t, map<size_t, int>> priority;
 		if (priority.empty())
@@ -328,6 +353,11 @@ namespace anyun_regex
 			operands.push(reverse_merge_fragments(fra1, fra2,true));
 			operators.pop();
 			break;
+		}
+		case '2':
+		{
+			//for {m,n}? lazy match		
+			//to do 
 		}
 		default:
 			break;
@@ -866,9 +896,10 @@ namespace anyun_regex
 			{
 				if (!parse_repeat_count_node(p, parse_index, operands))
 					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
-				//don't forget lazy match {m,n}?
-				assert(p[parse_index] == '}' ||(p[parse_index-1] == '}' && p[parse_index] == '?'));
+				assert(p[parse_index] == '}');
 				parse_index++;
+				//don't forget lazy match {m,n}? or {m,}?
+				if(p[parse_index] == '?') normal_priority_parse('2', operators, operands, parse_index);
 				break;
 			}
 
@@ -1098,12 +1129,6 @@ namespace anyun_regex
 			store_repeat_node(repeat_node, operands);
 			while ((*end_point) == ' ')end_point++;
 			parse_index = end_point - p.c_str();
-			//some code here to handle lazy match
-			if (p[parse_index] == '?')
-			{
-				//to do something for lazy match
-
-			}
 			return true;
 		}
 		case '}':// spcific one repeat count

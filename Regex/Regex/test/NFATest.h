@@ -66,6 +66,7 @@ namespace anyun_regex
 		void test_lazy_match_can_none();
 		void test_lazy_match_zero_more();
 		void test_lazy_match_one_more();
+		void test_lazy_match_repeat_count();
 	private:
 		string pattern;
 		regex standard_regex;

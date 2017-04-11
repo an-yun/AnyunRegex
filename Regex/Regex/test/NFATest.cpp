@@ -384,6 +384,7 @@ namespace anyun_regex
 		nfa_test.test_lazy_match_can_none();
 		nfa_test.test_lazy_match_zero_more();
 		nfa_test.test_lazy_match_one_more();
+		nfa_test.test_lazy_match_repeat_count();
 	}
 
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle)
@@ -766,6 +767,11 @@ namespace anyun_regex
 	}
 
 	void NFATest::test_lazy_match_one_more()
+	{
+		//to do
+	}
+
+	void NFATest::test_lazy_match_repeat_count()
 	{
 		//to do
 	}
