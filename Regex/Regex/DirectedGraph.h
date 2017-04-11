@@ -91,7 +91,7 @@ namespace anyun_regex
 	{
 		size_t group_start_node;
 		size_t group_end_node;
-		Group(size_t group_start, size_t group_end) :group_start_node(group_start), group_end_node(group_end) {}
+		Group(size_t group_start = 0, size_t group_end = 0) :group_start_node(group_start), group_end_node(group_end) {}
 	};
 
 	class DirectedGraph
@@ -216,7 +216,7 @@ namespace anyun_regex
 
 		void store_repeat_node(DirectedNodePoint repeat_node, stack<ConnectedFragment> &operands);
 		//add groups node
-		void add_group_node(stack<ConnectedFragment>& operands, stack<string> &group_names);
+		void add_group_node(stack<ConnectedFragment>& operands, stack<size_t>& group_stack);
 		//compare op's priority with operators.top()'s
 		//accroding the result of  comparation to decide it should push or operate
 		void normal_priority_parse(size_t op, stack<size_t> &operators, stack<ConnectedFragment>& operands, size_t &parse_index);

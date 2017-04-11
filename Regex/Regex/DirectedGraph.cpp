@@ -769,7 +769,7 @@ namespace anyun_regex
 	{
 		stack<ConnectedFragment> operands;
 		stack<size_t> operators;
-		stack<string> group_names;
+		stack<size_t> group_stack;
 		operators.push('\0');//the start operator
 		parse_result = REGEX_PARSE_NOT_FOUND;
 		size_t parse_index = 0;
@@ -796,18 +796,23 @@ namespace anyun_regex
 						char find_char = p[parse_index] == '\'' ? '\'' : '>';
 						size_t end_group_name_position = p.find_first_of(find_char, ++parse_index);
 						string group_name = p.substr(parse_index, end_group_name_position - parse_index);
-						// the stack will store like "?<group_name" or "?'group_name" 
-						group_names.push(p.substr(parse_index - 2, 2) + group_name);
-						parse_index = end_group_name_position;
+						size_t group_id = groups.size();
+						group_stack.push(group_id);
+						name_groups[group_name] = group_id;
+						groups.push_back(Group());//add group in stack
 					}
 					else if (p[parse_index + 1] == ':')
 					{
-						//don't capture this group (?:###)
-						group_names.push(":");
+						//don't capture this group (?:###) 
 						parse_index++;
 					}
 				}
-				else group_names.push("");
+				else
+				{
+					size_t group_id = groups.size();
+					group_stack.push(group_id);
+					groups.push_back(Group());//add group in stack
+				}
 				normal_priority_parse('(', operators, operands, parse_index);
 				break;
 			case ')':
@@ -816,7 +821,7 @@ namespace anyun_regex
 				normal_priority_parse(')', operators, operands, parse_index);
 				//add group node
 				if (temp != parse_index)
-					add_group_node(operands, group_names);
+					add_group_node(operands, group_stack);
 				break;
 			}
 			case '^':
@@ -1172,7 +1177,7 @@ namespace anyun_regex
 		operands.push(ConnectedFragment(the_start_node_id, count_edge->get_id()));
 	}
 
-	inline void DirectedGraph::add_group_node(stack<ConnectedFragment>& operands, stack<string> &group_names)
+	inline void DirectedGraph::add_group_node(stack<ConnectedFragment>& operands, stack<size_t>& group_stack)
 	{
 		ConnectedFragment fragment = operands.top();
 		operands.pop();
@@ -1185,34 +1190,11 @@ namespace anyun_regex
 		nodes.push_back(out_node);
 		connect_out_node(out_node->get_id(), fragment);
 
-		string group_name = group_names.top();
-		group_names.pop();
-		if (group_name.length() == 0) //add one group and don't give it one name
-		{
-			//add group
-			groups.push_back(Group(in_node->get_id(), out_node->get_id()));
-		}
-		else if (group_name.length() == 1)
-		{
-			if (group_name[0] == ':')
-				; // don't capture the group
-		}
-		else
-		{
-			if (group_name[0] == '?')
-			{
-				if (group_name[1] == '<' || group_name[1] == '\'')
-				{
-					//add group
-					groups.push_back(Group(in_node->get_id(), out_node->get_id()));
-					// give the group name
-					name_groups[group_name.substr(2)] = groups.size() - 1;
-				}
-
-			}
-		}
-
-
+		size_t top_group_id = group_stack.top();
+		group_stack.pop();
+		Group &stack_top_group = groups[top_group_id];
+		stack_top_group.group_start_node = in_node->get_id();
+		stack_top_group.group_end_node = out_node->get_id();
 
 		size_t in_edge_id = add_in_sigma_edge(in_node->get_id());
 		size_t out_edge_id = add_out_sigma_edge(out_node->get_id());
