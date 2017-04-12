@@ -79,7 +79,7 @@ namespace anyun_regex
 	}
 
 	RepeatCountDirectedNode::RepeatCountDirectedNode(size_t id, size_t left, size_t right)
-		:DirectedNode(id),left(left),right(right)
+		:DirectedNode(id),left(left),right(right),lazy_match(false)
 	{
 	}
 
@@ -94,6 +94,16 @@ namespace anyun_regex
 		if( count>= left && count < right) return 0;
 		if (count == right) return 1;
 		return 2;
+	}
+
+	bool RepeatCountDirectedNode::is_lazy()
+	{
+		return lazy_match;
+	}
+
+	void RepeatCountDirectedNode::set_lazy(bool is_lazy)
+	{
+		lazy_match = is_lazy;
 	}
 
 }

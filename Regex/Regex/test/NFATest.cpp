@@ -141,6 +141,17 @@ namespace anyun_regex
 
 		nfa_test.test_match();
 
+		nfa_test.set_pattern("a+\\d{2,6}");
+		nfa_test.add_testcase("a");
+		nfa_test.add_testcase("a1");
+		nfa_test.add_testcase("ba12");
+		nfa_test.add_testcase("aba123456");
+		nfa_test.add_testcase("a1234567");
+		nfa_test.add_testcase("aaaaaaa36");
+		nfa_test.add_testcase("11111112a3");
+		nfa_test.add_testcase("a&1@b#a1908");
+
+		nfa_test.test_match();
 	}
 
 	void test_nfa_escape()

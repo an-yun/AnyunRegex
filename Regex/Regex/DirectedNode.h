@@ -69,7 +69,10 @@ namespace anyun_regex
 
 		DirectedNodeType get_type() const override;
 		int accept_count(size_t count);
+		bool is_lazy();
+		void set_lazy(bool is_lazy);
 	private:
+		bool lazy_match;
 		size_t left;
 		size_t right;
 	};

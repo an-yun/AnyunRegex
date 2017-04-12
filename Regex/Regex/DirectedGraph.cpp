@@ -89,101 +89,93 @@ namespace anyun_regex
 			{ '\0','.', -1 },
 			{ '\0','?', -1 },
 			{ '\0','*', -1 },
-			{ '\0','+', -1},
+			{ '\0','+', -1 },
 			{ '\0','-', -1 },
 			{ '\0','0', -1 },
 			{ '\0','1', -1 },
-			{ '\0','2', -1 },
 
 			//{'(','\0'}  miss right bracket
-			{'(','(',-1},
-			{'(',')',0},
-			{'(','|',-1},
-			{'(','.',-1},
-			{'(','?',-1},
-			{'(','*',-1},
-			{'(','+',-1},
+			{ '(','(',-1 },
+			{ '(',')',0 },
+			{ '(','|',-1 },
+			{ '(','.',-1 },
+			{ '(','?',-1 },
+			{ '(','*',-1 },
+			{ '(','+',-1 },
 			{ '(','-',-1 },
 			{ '(','0',-1 },
 			{ '(','1',-1 },
-			{ '(','2',-1 },
 
-			{')','\0',1},
-			{')','(',1},
-			{')',')',1},
-			{')','|',1},
-			{')','.',1},
-			{')','?',1},
-			{')','*',1},
-			{')','+',1},
+			{ ')','\0',1 },
+			{ ')','(',1 },
+			{ ')',')',1 },
+			{ ')','|',1 },
+			{ ')','.',1 },
+			{ ')','?',1 },
+			{ ')','*',1 },
+			{ ')','+',1 },
 			{ ')','-',1 },
 			{ ')','0',1 },
 			{ ')','1',1 },
-			{ ')','2',1 },
 
-			{'|','\0',1},
-			{'|','(',-1},
-			{'|',')',1},
-			{'|','|',-1},
-			{'|','.',-1},
-			{'|','?',-1},
-			{'|','*',-1},
-			{'|','+',-1},
+			{ '|','\0',1 },
+			{ '|','(',-1 },
+			{ '|',')',1 },
+			{ '|','|',-1 },
+			{ '|','.',-1 },
+			{ '|','?',-1 },
+			{ '|','*',-1 },
+			{ '|','+',-1 },
 			{ '|','-',-1 },
 			{ '|','0',-1 },
 			{ '|','1',-1 },
-			{ '|','2',-1 },
 
-			{'.','\0',1},
-			{'.','(',-1},
-			{'.',')',1},
-			{'.','|',1},
-			{'.','.',1},
-			{'.','?',-1},
-			{'.','*',-1},
-			{'.','+',-1},
+			{ '.','\0',1 },
+			{ '.','(',-1 },
+			{ '.',')',1 },
+			{ '.','|',1 },
+			{ '.','.',1 },
+			{ '.','?',-1 },
+			{ '.','*',-1 },
+			{ '.','+',-1 },
 			{ '.','-',-1 },
 			{ '.','0',-1 },
 			{ '.','1',-1 },
-			{ '.','2',-1 },
 
-			{'?','\0',1},
+			{ '?','\0',1 },
 			//{'?','('} miss concatenation  operator
-			{'?',')',1},
-			{'?','|',1},
-			{'?','.',1},
-			{'?','?',1},
-			{'?','*',1},
-			{'?','+',1},
+			{ '?',')',1 },
+			{ '?','|',1 },
+			{ '?','.',1 },
+			{ '?','?',1 },
+			{ '?','*',1 },
+			{ '?','+',1 },
 			{ '?','-',1 },
 			{ '?','0',1 },
 			{ '?','1',1 },
-			{ '?','2',1 },
 
-			{'*','\0',1},
+			{ '*','\0',1 },
 			//{'*','('} miss concatenation  operator
-			{'*',')',1},
-			{'*','|',1},
-			{'*','.',1},
-			{'*','?',1},
-			{'*','*',1},
+			{ '*',')',1 },
+			{ '*','|',1 },
+			{ '*','.',1 },
+			{ '*','?',1 },
+			{ '*','*',1 },
 			{ '*','-',1 },
 			{ '*','0',1 },
 			{ '*','1',1 },
-			{ '*','2',1 },
 
-			{'+','\0',1},
+			{ '+','\0',1 },
 			//{'+','('} miss concatenation  operator
-			{'+',')',1},
-			{'+','|',1},
-			{'+','.',1},
-			{'+','?',1},
-			{'+','*',1},
-			{'+','+',1},
+			{ '+',')',1 },
+			{ '+','|',1 },
+			{ '+','.',1 },
+			{ '+','?',1 },
+			{ '+','*',1 },
+			{ '+','+',1 },
 			{ '+','-',1 },
 			{ '+','0',1 },
 			{ '+','1',1 },
-			{ '+','2',1 },
 
 			// - represent ??
 			{ '-','\0',1 },
@@ -197,7 +189,6 @@ namespace anyun_regex
 			{ '-','-',1 },
 			{ '-','0',1 },
 			{ '-','1',1 },
-			{ '-','2',1 },
 
 			//here need for lazy match - 0 1
 			// 0 represent *?
@@ -212,7 +203,6 @@ namespace anyun_regex
 			{ '0','-',1 },
 			{ '0','0',1 },
 			{ '0','1',1 },
-			{ '0','2',1 },
 
 			// 1 represent +?
 			{ '1','\0',1 },
@@ -226,21 +216,7 @@ namespace anyun_regex
 			{ '1','-',1 },
 			{ '1','0',1 },
 			{ '1','1',1 },
-			{ '1','2',1 },
 
-			// 2 represent {m,n}?
-			{ '2','\0',1 },
-			//{'2','('} miss concatenation  operator
-			{ '2',')',1 },
-			{ '2','|',1 },
-			{ '2','.',1 },
-			{ '2','?',1 },
-			{ '2','*',1 },
-			{ '2','+',1 },
-			{ '2','-',1 },
-			{ '2','0',1 },
-			{ '2','1',1 },
-			{ '2','2',1 },
 		};
 		static map<size_t, map<size_t, int>> priority;
 		if (priority.empty())
@@ -353,11 +329,6 @@ namespace anyun_regex
 			operands.push(reverse_merge_fragments(fra1, fra2,true));
 			operators.pop();
 			break;
-		}
-		case '2':
-		{
-			//for {m,n}? lazy match		
-			//to do 
 		}
 		default:
 			break;
@@ -896,10 +867,9 @@ namespace anyun_regex
 			{
 				if (!parse_repeat_count_node(p, parse_index, operands))
 					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
-				assert(p[parse_index] == '}');
+				//don't forget lazy match {m,n}?
+				assert(p[parse_index] == '}' || (p[parse_index - 1] == '}' && p[parse_index] == '?'));
 				parse_index++;
-				//don't forget lazy match {m,n}? or {m,}?
-				if(p[parse_index] == '?') normal_priority_parse('2', operators, operands, parse_index);
 				break;
 			}
 
@@ -1112,9 +1082,16 @@ namespace anyun_regex
 			if ((*end_point) == '}')// from to infinity
 			{
 				//the end node
-				DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from));
-				nodes.push_back(repeat_node);
-				store_repeat_node(repeat_node, operands);
+				RepeatCountDirectedNode *repeat_node = new RepeatCountDirectedNode(nodes.size(), from);
+				//judge lazy match
+				if((*(end_point+1)) == '?')
+				{
+					end_point++;
+					repeat_node->set_lazy(true);
+				}
+				DirectedNodePoint repeat_node_point(repeat_node);
+				nodes.push_back(repeat_node_point);
+				store_repeat_node(repeat_node_point, operands);
 				parse_index = end_point - p.c_str();
 				return true;
 			}
@@ -1123,11 +1100,18 @@ namespace anyun_regex
 			size_t to = static_cast<size_t>(strtol(start, &end_point, 10));
 			if (end_point == start || from > to)
 				return false;
-			//the end node
-			DirectedNodePoint repeat_node(new RepeatCountDirectedNode(nodes.size(), from, to));
-			nodes.push_back(repeat_node);
-			store_repeat_node(repeat_node, operands);
 			while ((*end_point) == ' ')end_point++;
+			//the end node
+			RepeatCountDirectedNode *repeat_node = new RepeatCountDirectedNode(nodes.size(), from, to);
+			//judge lazy match
+			if ((*(end_point + 1)) == '?')
+			{
+				end_point++;
+				repeat_node->set_lazy(true);
+			}
+			DirectedNodePoint repeat_node_point(repeat_node);
+			nodes.push_back(repeat_node_point);
+			store_repeat_node(repeat_node_point, operands);
 			parse_index = end_point - p.c_str();
 			return true;
 		}
@@ -1181,17 +1165,18 @@ namespace anyun_regex
 		//the start node
 		DirectedNodePoint repeat_start_node(new DirectedNode(nodes.size()));
 		nodes.push_back(repeat_start_node);
-		size_t the_start_node_id = add_in_sigma_edge(repeat_start_node->get_id());
+		size_t repeat_start_edge_id = add_in_sigma_edge(repeat_start_node->get_id());
+		size_t repeat_start_node_id = repeat_start_node->get_id();
 		//the end_node id
 		size_t repeat_node_id = repeat_node->get_id();
 		//connect it
-		connect_in_node(repeat_start_node->get_id(), repeat_fragment);
+		connect_in_node(repeat_start_node_id, repeat_fragment);
 		connect_out_node(repeat_node_id, repeat_fragment);
 		//repeat edge
 		DirectedEdgePoint repeat_edge(new RepeatDirectedge(edges.size()));
 		edges.push_back(repeat_edge);
 		//connect the repeat position
-		connect_out_node_to_edge(the_start_node_id, repeat_edge->get_id());
+		connect_out_node_to_edge(repeat_start_node_id, repeat_edge->get_id());
 		//pass edge
 		DirectedEdgePoint count_edge(new CountDirectedEdge(edges.size()));
 		edges.push_back(count_edge);
@@ -1199,7 +1184,7 @@ namespace anyun_regex
 		connect_in_node_to_edge(repeat_node_id, repeat_edge->get_id());
 		connect_in_node_to_edge(repeat_node_id, count_edge->get_id());
 		//save to stack
-		operands.push(ConnectedFragment(the_start_node_id, count_edge->get_id()));
+		operands.push(ConnectedFragment(repeat_start_edge_id, count_edge->get_id()));
 	}
 
 	inline void DirectedGraph::add_group_node(stack<ConnectedFragment>& operands, stack<size_t>& group_stack)
