@@ -898,6 +898,22 @@ namespace anyun_regex
 				case 'f':
 					DEFAULT_SINGLE_CHAR_PROCESS('\f');
 					break;
+				case 'a':
+				{
+					string d_string = "[a-zA-Z]";
+					size_t d_index = 0;
+					PARSE_OR_STRING(d_string, d_index);
+					parse_index++;
+					break;
+				}
+				case 'A':
+				{
+					string d_string = "[^a-zA-Z]";
+					size_t d_index = 0;
+					PARSE_OR_STRING(d_string, d_index);
+					parse_index++;
+					break;
+				}
 				case 'w':
 				{
 					string d_string = "[a-zA-Z0-9_]";

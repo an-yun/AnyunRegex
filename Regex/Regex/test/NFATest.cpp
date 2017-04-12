@@ -149,7 +149,9 @@ namespace anyun_regex
 		nfa_test.add_testcase("a1234567");
 		nfa_test.add_testcase("aaaaaaa36");
 		nfa_test.add_testcase("11111112a3");
+		nfa_test.add_testcase("1aa1aa112a3");
 		nfa_test.add_testcase("a&1@b#a1908");
+		nfa_test.add_testcase("123aaaji8eaa");
 
 		nfa_test.test_match();
 	}
@@ -170,6 +172,20 @@ namespace anyun_regex
 		nfa_test.add_testcase(" ab\nabbb\n");
 		nfa_test.add_testcase("ab\nabbb\n12");
 
+		nfa_test.test_match();
+
+		nfa_test.set_pattern("\\a\\w*");
+		nfa_test.add_testcase("cout");
+		nfa_test.add_testcase("set_pattern");
+		nfa_test.add_testcase("nfa_test");
+		nfa_test.add_testcase("test1");
+		nfa_test.add_testcase("1a");
+		nfa_test.add_testcase("a1");
+		nfa_test.add_testcase("d_string");
+		nfa_test.add_testcase("parse_index");
+		nfa_test.add_testcase("++i");
+		nfa_test.add_testcase("NFA_test");
+		nfa_test.add_testcase("main");
 		nfa_test.test_match();
 	}
 
@@ -429,9 +445,10 @@ namespace anyun_regex
 
 	void NFATest::set_pattern(const string & pattern, bool no_std_regex)
 	{
+		
 		this->pattern = pattern;
-		if (!no_std_regex)
-			standard_regex = regex(pattern);
+		if (!no_std_regex)//especial case for alphabetic chracters
+			standard_regex = regex(std::regex_replace(pattern, regex("\\\\a"), "[a-zA-Z]"));
 		nfa = NFA(pattern);
 		testcases.clear();
 		replaec_strs.clear();
@@ -818,9 +835,9 @@ namespace anyun_regex
 			auto &result = *begin;
 			std::cout << i++ << ":" << result.str() << std::endl;
 			size_t group_size = result.size();
-			for (size_t i = 0; i < group_size; i++)
+			for (size_t j = 0; j < group_size; j++)
 			{
-				cout << result[i] << endl;
+				cout << result[j] << endl;
 			}
 		}
 		return 0;
