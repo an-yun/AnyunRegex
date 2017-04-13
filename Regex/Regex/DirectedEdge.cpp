@@ -328,17 +328,17 @@ namespace anyun_regex
 		return new GroupReferenceDirectedge(*this);
 	}
 
-	WordBounderDirectedEdge::WordBounderDirectedEdge(size_t id):DirectedEdge(id)
+	WordBoundaryDirectedEdge::WordBoundaryDirectedEdge(size_t id):DirectedEdge(id)
 	{
 
 	}
 
-	DirectedEdgeType WordBounderDirectedEdge::get_type() const
+	DirectedEdgeType WordBoundaryDirectedEdge::get_type() const
 	{
-		return WORD_BOUNDER_DIRECTEDEDGE;
+		return WORD_BOUNDARY_DIRECTEDEDGE;
 	}
 
-	size_t WordBounderDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record) const
+	size_t WordBoundaryDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record) const
 	{
 		//word start
 		if ((index == 0 || is_blank(text[index - 1])) && !is_blank(text[index])) return 0;
@@ -347,9 +347,9 @@ namespace anyun_regex
 		return static_cast<unsigned>(-1);
 	}
 
-	DirectedEdge * WordBounderDirectedEdge::copy() const
+	DirectedEdge * WordBoundaryDirectedEdge::copy() const
 	{
-		return new WordBounderDirectedEdge(*this);
+		return new WordBoundaryDirectedEdge(*this);
 	}
 
 	ElementDirectedge::ElementDirectedge(size_t id, DirectedEdgePoint original_edge)
