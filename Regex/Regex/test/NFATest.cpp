@@ -154,6 +154,17 @@ namespace anyun_regex
 		nfa_test.add_testcase("123aaaji8eaa");
 
 		nfa_test.test_match();
+
+		nfa_test.set_pattern("a*a{2,}b{1,}");
+		nfa_test.add_testcase("ab");
+		nfa_test.add_testcase("aaab");
+		nfa_test.add_testcase("aaaabbb");
+		nfa_test.add_testcase("aaaabbabaa");
+		nfa_test.add_testcase("aaaabbbbaaab");
+		nfa_test.add_testcase("aaaab12abaabaa");
+		nfa_test.add_testcase("12aaaabbbbbbbbbbbb");
+		nfa_test.add_testcase("aca12\\^%12asdaaaabb");
+		nfa_test.test_match();
 	}
 
 	void test_nfa_escape()
@@ -796,7 +807,20 @@ namespace anyun_regex
 
 	void NFATest::test_lazy_match_one_more()
 	{
-		//to do
+		set_pattern("a?(ab)+?""(ab)*");
+		add_testcase("aab");
+		add_testcase("aaab");
+		add_testcase("aabab");
+		add_testcase("aaaaab");
+		add_testcase("acab");
+		add_testcase("babaaaab");
+		add_testcase("bbabaabab");
+		add_testcase("bbbbbbbbbbbbbbbbbbbba");
+		add_testcase("abababababababababab");
+		add_testcase("123ab132aab2ababd12f9kababab");
+		test_group();
+
+		//here need more testcases
 	}
 
 	void NFATest::test_lazy_match_repeat_count()
