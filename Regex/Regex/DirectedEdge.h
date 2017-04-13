@@ -34,6 +34,25 @@ namespace anyun_regex
 	// node_id ,next_edge_index,trackrecode
 	typedef stack<OneSaveState> SaveState;
 
+	const size_t ZERO = '0';
+	const size_t NINE = '9';
+	const size_t LOWER_A = 'a';
+	const size_t LOWER_Z = 'z';
+	const size_t UPPER_A = 'A';
+	const size_t UPPER_Z = 'Z';
+	const char BLANK_CHARS[] = " \n\t\r\f";
+	const char SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' ,'\\','^','$' };
+	const size_t SINGLE_SPECAIL_CAHR_SIZE = sizeof(SINGLE_SPECAIL_CAHRS) / sizeof(char);
+
+	static bool is_special_char(size_t ch);
+	static bool is_upper_case(size_t ch);
+	static bool is_lower_case(size_t ch);
+	static bool is_letter(size_t ch);
+	static bool is_num(size_t ch);
+	static bool is_alpnum(size_t ch);
+	static bool is_blank(size_t ch);
+	static bool is_char_in(size_t ch, const char *str, size_t length);
+
 	class Condition
 	{
 	public:
@@ -96,7 +115,9 @@ namespace anyun_regex
 		LINE_END_DIRECTEDEDGE,
 		REPEAT_DIRECTEDEDGE,
 		COUNT_DIRECTEDEDGE,
-		GROUP_REFERENCE_DIRECTEDGE
+		GROUP_REFERENCE_DIRECTEDGE,
+		WORD_BOUNDARY_DIRECTEDEDGE,
+		ELEMENT_DIRECTEDGE
 	};
 
 	class DirectedGraph;
@@ -135,9 +156,11 @@ namespace anyun_regex
 	private:
 
 	};
+
 	class DirectedEdge
 	{
 	public:
+		
 		DirectedEdge(size_t id, size_t s_id = 0, size_t e_id = 0);
 		size_t get_id() const;
 		virtual DirectedEdgeType get_type() const = 0;
@@ -148,7 +171,7 @@ namespace anyun_regex
 		virtual size_t get_end_node_id() const;
 
 		virtual size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const = 0;
-
+		virtual DirectedEdge* copy() const = 0;
 		virtual ~DirectedEdge();	//the virtual destructor
 	private:
 		size_t id;
@@ -165,6 +188,7 @@ namespace anyun_regex
 
 		DirectedEdgeType get_type() const override;
 		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
 	};
 
 	class SingleCharDirectedEdge :public DirectedEdge
@@ -176,6 +200,7 @@ namespace anyun_regex
 
 		DirectedEdgeType get_type() const override;
 		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
 	private:
 		ConditionPoint condition;
 	};
@@ -186,6 +211,7 @@ namespace anyun_regex
 		LineStartDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
 		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
 	};
 
 	class LineEndDirectedEdge :public DirectedEdge
@@ -194,6 +220,16 @@ namespace anyun_regex
 		LineEndDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
 		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
+	};
+
+	class WordBoundaryDirectedEdge :public DirectedEdge
+	{
+	public:
+		WordBoundaryDirectedEdge(size_t id);
+		DirectedEdgeType get_type() const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
 	};
 
 	class CountDirectedEdge :public DirectedEdge
@@ -202,6 +238,7 @@ namespace anyun_regex
 		CountDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
 		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
 	private:
 
 	};
@@ -213,6 +250,7 @@ namespace anyun_regex
 
 		DirectedEdgeType get_type() const override;
 		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
 	};
 
 	class GroupReferenceDirectedge :public DirectedEdge
@@ -222,10 +260,22 @@ namespace anyun_regex
 
 		DirectedEdgeType get_type() const override;
 		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
 	private:
 		size_t reference_id;
 	};
 
+	class ElementDirectedge :public DirectedEdge
+	{
+	public:
+		ElementDirectedge(size_t id, DirectedEdgePoint original_edge);
+
+		DirectedEdgeType get_type() const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
+	private:
+		DirectedEdgePoint original_edge;
+	};
 }
 
 #endif

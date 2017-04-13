@@ -73,12 +73,7 @@ namespace anyun_regex
 		nullptr
 	};
 
-	const size_t ZERO = '0';
-	const size_t NINE = '9';
-	const size_t LOWER_A = 'a';
-	const size_t LOWER_Z = 'z';
-	const size_t UPPER_A = 'A';
-	const size_t UPPER_Z = 'Z';
+	
 
 	struct ConnectedFragment
 	{
@@ -104,17 +99,7 @@ namespace anyun_regex
 #endif // DEBUG
 	public:
 
-		static const char SINGLE_SPECAIL_CAHRS[];
-		static const size_t SINGLE_SPECAIL_CAHR_SIZE;
-		static bool is_special_char(size_t ch);
-		static bool is_upper_case(size_t ch);
-		static bool is_lower_case(size_t ch);
-		static bool is_letter(size_t ch);
-		static bool is_num(size_t ch);
-		static bool is_alpnum(size_t ch);
-		static bool is_char_in(size_t ch, const char *str, size_t length);
 
-	public:
 		DirectedGraph();
 		DirectedGraph(const char *pattern);
 		DirectedGraph(const string &pattern);

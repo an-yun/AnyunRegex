@@ -2,6 +2,52 @@
 
 namespace anyun_regex
 {
+
+
+	inline bool is_special_char(size_t ch)
+	{
+		return is_char_in(ch, SINGLE_SPECAIL_CAHRS, SINGLE_SPECAIL_CAHR_SIZE);
+	}
+
+	inline bool is_upper_case(size_t ch)
+	{
+		return ch >= UPPER_A && ch <= UPPER_Z;
+	}
+
+	inline bool is_lower_case(size_t ch)
+	{
+		return ch >= LOWER_A && ch <= LOWER_Z;
+	}
+
+	inline bool is_letter(size_t ch)
+	{
+		return is_lower_case(ch) || is_upper_case(ch);
+	}
+
+	inline bool is_num(size_t ch)
+	{
+		return ch >= ZERO && ch <= NINE;
+	}
+
+	inline bool is_alpnum(size_t ch)
+	{
+		return is_letter(ch) || is_num(ch);
+	}
+
+	inline bool is_blank(size_t ch)
+	{
+		return is_char_in(ch,BLANK_CHARS,sizeof(BLANK_CHARS)/sizeof(char));
+	}
+
+
+
+	inline bool is_char_in(size_t ch, const char * str, size_t length)
+	{
+		for (size_t i = 0; i < length; i++)
+			if (ch == str[i])return true;
+		return false;
+	}
+
 	Condition::~Condition()
 	{
 	}
@@ -57,7 +103,8 @@ namespace anyun_regex
 	}
 
 
-	DirectedEdge::DirectedEdge(size_t id, size_t s_id, size_t e_id) :id(id), start_id(s_id), end_id(e_id)
+	DirectedEdge::DirectedEdge(size_t id, size_t s_id, size_t e_id) 
+	:id(id), start_id(s_id), end_id(e_id)
 	{
 	}
 
@@ -88,7 +135,6 @@ namespace anyun_regex
 	}
 
 
-
 	DirectedEdge::~DirectedEdge()
 	{
 	}
@@ -109,6 +155,10 @@ namespace anyun_regex
 	{
 		return 0;
 	}
+	DirectedEdge * SigmaDirectedEdge::copy() const
+	{
+		return new SigmaDirectedEdge(*this);
+	}
 	DirectedEdgeType SingleCharDirectedEdge::get_type() const
 	{
 		return SINGLE_CHAR_DIRECTEDEDGE;
@@ -119,7 +169,10 @@ namespace anyun_regex
 		return index < matcher.text.length() && condition->match(text[index]) ? 1 : static_cast<unsigned>(-1);
 	}
 
-
+	DirectedEdge * SingleCharDirectedEdge::copy() const
+	{
+		return new SingleCharDirectedEdge(*this);
+	}
 
 
 	SingleCharDirectedEdge::SingleCharDirectedEdge(size_t ch, size_t id, size_t s_id, size_t e_id)
@@ -156,6 +209,11 @@ namespace anyun_regex
 		return (index == 0 || text[index-1] == '\n') ? 0 : static_cast<unsigned>(-1);
 	}
 
+	DirectedEdge * LineStartDirectedEdge::copy() const
+	{
+		return new LineStartDirectedEdge(*this);
+	}
+
 	LineEndDirectedEdge::LineEndDirectedEdge(size_t id)
 		:DirectedEdge(id)
 	{
@@ -169,6 +227,11 @@ namespace anyun_regex
 	size_t LineEndDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
 		return (index == text.size() || (index < text.size() && text[index] == '\n')) ? 0 : static_cast<unsigned>(-1);
+	}
+
+	DirectedEdge * LineEndDirectedEdge::copy() const
+	{
+		return new LineEndDirectedEdge(*this);
 	}
 
 	Matcher::Matcher(string text, size_t cursor, size_t group_size) :text(text), cursor(cursor), groups(group_size)
@@ -188,6 +251,11 @@ namespace anyun_regex
 	size_t CountDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
 	{
 		return static_cast<unsigned>(-1);
+	}
+
+	DirectedEdge * CountDirectedEdge::copy() const
+	{
+		return new CountDirectedEdge(*this);
 	}
 
 	pair<size_t, size_t> Matcher::get_group(size_t group_index)
@@ -226,6 +294,11 @@ namespace anyun_regex
 		return static_cast<unsigned>(-1);
 	}
 
+	DirectedEdge * RepeatDirectedge::copy() const
+	{
+		return new RepeatDirectedge(*this);
+	}
+
 	GroupReferenceDirectedge::GroupReferenceDirectedge(size_t id, size_t group_id, size_t s_id, size_t e_id)
 		:DirectedEdge(id, s_id, e_id), reference_id(group_id)
 	{
@@ -248,6 +321,55 @@ namespace anyun_regex
 				return static_cast<unsigned>(-1);
 		//then shouldn't move the cursor
 		return length;
+	}
+
+	DirectedEdge * GroupReferenceDirectedge::copy() const
+	{
+		return new GroupReferenceDirectedge(*this);
+	}
+
+	WordBounderDirectedEdge::WordBounderDirectedEdge(size_t id):DirectedEdge(id)
+	{
+
+	}
+
+	DirectedEdgeType WordBounderDirectedEdge::get_type() const
+	{
+		return WORD_BOUNDER_DIRECTEDEDGE;
+	}
+
+	size_t WordBounderDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record) const
+	{
+		//word start
+		if ((index == 0 || is_blank(text[index - 1])) && !is_blank(text[index])) return 0;
+		//word end
+		if ((index == text.size() || is_blank(text[index])) && !is_blank(text[index-1])) return 0;
+		return static_cast<unsigned>(-1);
+	}
+
+	DirectedEdge * WordBounderDirectedEdge::copy() const
+	{
+		return new WordBounderDirectedEdge(*this);
+	}
+
+	ElementDirectedge::ElementDirectedge(size_t id, DirectedEdgePoint original_edge)
+		:DirectedEdge(id),original_edge(original_edge)
+	{
+	}
+
+	DirectedEdgeType ElementDirectedge::get_type() const
+	{
+		return ELEMENT_DIRECTEDGE;
+	}
+
+	size_t ElementDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record) const
+	{
+		return original_edge->accept(text,index,matcher,track_record)==static_cast<size_t>(-1)?0: static_cast<size_t>(-1);
+	}
+
+	DirectedEdge * ElementDirectedge::copy() const
+	{
+		return new ElementDirectedge(*this);
 	}
 
 }

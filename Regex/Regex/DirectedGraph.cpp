@@ -24,46 +24,6 @@ namespace anyun_regex
 	-----------------------these code can be used again------------------------------------
 	2016-10-18 10:23
 	*/
-	const char DirectedGraph::SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' ,'\\','^','$' };
-	const size_t DirectedGraph::SINGLE_SPECAIL_CAHR_SIZE = sizeof(DirectedGraph::SINGLE_SPECAIL_CAHRS) / sizeof(char);
-	inline bool DirectedGraph::is_special_char(size_t ch)
-	{
-		return is_char_in(ch, SINGLE_SPECAIL_CAHRS, SINGLE_SPECAIL_CAHR_SIZE);
-	}
-
-	bool DirectedGraph::is_upper_case(size_t ch)
-	{
-		return ch >= UPPER_A && ch <= UPPER_Z;
-	}
-
-	bool DirectedGraph::is_lower_case(size_t ch)
-	{
-		return ch >= LOWER_A && ch <= LOWER_Z;
-	}
-
-	bool DirectedGraph::is_letter(size_t ch)
-	{
-		return is_lower_case(ch) || is_upper_case(ch);
-	}
-
-	bool DirectedGraph::is_num(size_t ch)
-	{
-		return ch >= ZERO && ch <= NINE;
-	}
-
-	bool DirectedGraph::is_alpnum(size_t ch)
-	{
-		return is_letter(ch) || is_num(ch);
-	}
-
-
-
-	inline bool DirectedGraph::is_char_in(size_t ch, const char * str, size_t length)
-	{
-		for (size_t i = 0; i < length; i++)
-			if (ch == str[i])return true;
-		return false;
-	}
 
 
 	int DirectedGraph::get_priority(size_t op1, size_t op2)
@@ -906,14 +866,6 @@ namespace anyun_regex
 					parse_index++;
 					break;
 				}
-				case 'A':
-				{
-					string d_string = "[^a-zA-Z]";
-					size_t d_index = 0;
-					PARSE_OR_STRING(d_string, d_index);
-					parse_index++;
-					break;
-				}
 				case 'w':
 				{
 					string d_string = "[a-zA-Z0-9_]";
@@ -964,12 +916,17 @@ namespace anyun_regex
 				}
 				case 'b':
 				{
-					//to do
+					DirectedEdgePoint word_bounder_edge(new WordBoundaryDirectedEdge(edges.size()));
+					store_edge(word_bounder_edge, operands);
+					parse_index++;
 					break;
 				}
 				case 'B':
 				{
-					//to do
+					DirectedEdgePoint word_bounder_edge(new WordBoundaryDirectedEdge(edges.size()));
+					DirectedEdgePoint un_word_bounder_edge(new ElementDirectedge(edges.size(), word_bounder_edge));
+					store_edge(un_word_bounder_edge, operands);
+					parse_index++;
 					break;
 				}
 				case '0':
