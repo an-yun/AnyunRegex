@@ -99,7 +99,6 @@ namespace anyun_regex
 #endif // DEBUG
 	public:
 
-
 		DirectedGraph();
 		DirectedGraph(const char *pattern);
 		DirectedGraph(const string &pattern);

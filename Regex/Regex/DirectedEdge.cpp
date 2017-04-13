@@ -4,49 +4,7 @@ namespace anyun_regex
 {
 
 
-	inline bool is_special_char(size_t ch)
-	{
-		return is_char_in(ch, SINGLE_SPECAIL_CAHRS, SINGLE_SPECAIL_CAHR_SIZE);
-	}
-
-	inline bool is_upper_case(size_t ch)
-	{
-		return ch >= UPPER_A && ch <= UPPER_Z;
-	}
-
-	inline bool is_lower_case(size_t ch)
-	{
-		return ch >= LOWER_A && ch <= LOWER_Z;
-	}
-
-	inline bool is_letter(size_t ch)
-	{
-		return is_lower_case(ch) || is_upper_case(ch);
-	}
-
-	inline bool is_num(size_t ch)
-	{
-		return ch >= ZERO && ch <= NINE;
-	}
-
-	inline bool is_alpnum(size_t ch)
-	{
-		return is_letter(ch) || is_num(ch);
-	}
-
-	inline bool is_blank(size_t ch)
-	{
-		return is_char_in(ch,BLANK_CHARS,sizeof(BLANK_CHARS)/sizeof(char));
-	}
-
-
-
-	inline bool is_char_in(size_t ch, const char * str, size_t length)
-	{
-		for (size_t i = 0; i < length; i++)
-			if (ch == str[i])return true;
-		return false;
-	}
+	
 
 	Condition::~Condition()
 	{
