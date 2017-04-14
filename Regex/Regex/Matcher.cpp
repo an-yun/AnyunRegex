@@ -34,7 +34,7 @@ namespace anyun_regex {
 				OneSaveState &one_save_state = save_state.top();
 				if (nfa.digraph->end_node_id == std::get<0>(one_save_state))
 				{
-					unsigned temp_cursor = nfa.update_group_node_record(std::get<2>(one_save_state), *this);
+					size_t temp_cursor = nfa.update_group_node_record(std::get<2>(one_save_state), *this);
 					if (temp_cursor == cursor)
 						cursor++;
 					else cursor = temp_cursor;

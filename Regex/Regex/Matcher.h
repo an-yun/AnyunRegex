@@ -12,6 +12,7 @@ namespace anyun_regex {
 	using std::string;
 	using std::pair;
 
+
 	class NFAMatcher :public Matcher
 	{
 		friend class NFA;

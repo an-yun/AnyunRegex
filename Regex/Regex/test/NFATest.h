@@ -31,9 +31,10 @@ namespace anyun_regex
 	using anyun_regex::NFA;
 
 	typedef shared_ptr<NFAMatcher> NFAMatcherPoint;
+
+#define Println(content) \
+	cout<<content<<endl;
 #ifdef _DEBUG
-	void test_boost_regex();
-	void password_validate();
 	void test_nfa_match();
 	void test_nfa_escape();
 	void test_nfa_group();
