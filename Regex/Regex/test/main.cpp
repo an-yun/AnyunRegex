@@ -5,6 +5,7 @@
 #include "NFATest.h"
 #include "RegexTest.h"
 #include "../Matcher.h"
+#include <boost/python.hpp>
 #include <boost/regex.hpp>
 
 using namespace anyun_regex;
@@ -23,6 +24,7 @@ void test_capture();
 int main()
 {
 #ifdef _DEBUG
+
 	test_auto();
 	//test_capture();
 	//boost_regex_password_validate();
