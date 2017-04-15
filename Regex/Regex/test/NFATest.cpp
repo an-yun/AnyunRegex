@@ -758,6 +758,19 @@ namespace anyun_regex
 		test_group();
 
 		//here need more testcases
+
+		set_pattern("a?(ab)+?""(ab)+");
+		add_testcase("aab");
+		add_testcase("aaab");
+		add_testcase("aabab");
+		add_testcase("aaaaab");
+		add_testcase("acab");
+		add_testcase("babaaaab");
+		add_testcase("bbabaabab");
+		add_testcase("bbbbbbbbbbbbbbbbbbbba");
+		add_testcase("abababababababababab");
+		add_testcase("123ab132aab2ababd12f9kababab");
+		test_group();
 	}
 
 	void NFATest::test_lazy_match_repeat_count()
