@@ -11,7 +11,7 @@
 #include <assert.h>
 #include "DirectedNode.h"
 #include "DirectedEdge.h"
-#include<cstdlib>
+#include <cstdlib>
 
 namespace anyun_regex
 {
@@ -108,6 +108,10 @@ namespace anyun_regex
 		size_t get_start_node_id();
 		size_t get_end_node_id();
 
+		RegexParseCode get_parse_result_code();
+		//pre_process_pattern add the dot \N (means concatenation  operator) to pattern
+		string pre_process_pattern(const string &p);
+		RegexParseCode compile(const string &pattern);
 
 	private:
 		string pattern;
@@ -121,7 +125,6 @@ namespace anyun_regex
 		
 		static int get_priority(size_t op1,size_t op2);
 
-		RegexParseCode compile(const string &pattern);
 		void operate(size_t opt, stack<ConnectedFragment> &operands, stack<size_t>&operators);
 		void connect_in_node(size_t in_node_id, const ConnectedFragment &fragment);
 		void connect_out_node(size_t out_node_id, const ConnectedFragment &fragment);
@@ -176,8 +179,7 @@ namespace anyun_regex
 		void connect_in_node_to_edge(size_t in_node_id, size_t edge_id);
 		void connect_out_node_to_edge(size_t out_node_id, size_t edge_id);
 
-		//pre_process_pattern add the dot \N (means concatenation  operator) to pattern
-		string pre_process_pattern(const string &p);
+
 
 		ConnectedFragment parse(string p);
 

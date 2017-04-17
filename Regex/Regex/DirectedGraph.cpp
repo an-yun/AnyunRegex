@@ -328,6 +328,11 @@ namespace anyun_regex
 		return end_node_id;
 	}
 
+	RegexParseCode DirectedGraph::get_parse_result_code()
+	{
+		return parse_result;
+	}
+
 	//rewite the follow bad code
 	RegexParseCode DirectedGraph::compile(const string &pattern)
 	{

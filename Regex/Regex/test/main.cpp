@@ -1,25 +1,26 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "DirectedGraphTest.h"
-#include "NFATest.h"
-#include "RegexTest.h"
 #include "../Matcher.h"
-#include <boost/regex.hpp>
-#include <boost/timer/timer.hpp>
+
+
 
 using namespace anyun_regex;
 using namespace std;
+#define TEST
 
+
+#ifndef TEST
+
+#include "DirectedGraphTest.h"
+#include "NFATest.h"
 void password_validate();
 void boost_regex_password_validate();
-
 
 #ifdef _DEBUG
 void test_auto();
 void test_capture();
 #endif
-
 
 int main()
 {
@@ -93,10 +94,10 @@ void boost_regex_password_validate()
 		else
 			Println("OK");
 		Println("");
-		}
+	}
 	cout << endl;
 	Println("");
-	}
+}
 #ifdef _DEBUG
 void test_auto()
 {
@@ -113,4 +114,6 @@ void test_capture()
 	test_nfa_capture();
 	password_validate();
 }
+#endif
+
 #endif

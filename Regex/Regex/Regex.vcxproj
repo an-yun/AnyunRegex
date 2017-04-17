@@ -97,7 +97,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Python27\libs;D:\boost_1_62_0\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libboost_chrono-vc140-mt-sgd-1_62.lib;libboost_system-vc140-mt-sgd-1_62.lib</AdditionalDependencies>
+      <AdditionalDependencies>libboost_chrono-vc140-mt-sgd-1_62.lib;libboost_system-vc140-mt-sgd-1_62.lib;libboost_unit_test_framework-vc140-mt-sgd-1_62.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -116,7 +116,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Python27\libs;D:\boost_1_62_0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libboost_chrono-vc140-mt-sgd-1_62.lib;libboost_system-vc140-mt-sgd-1_62.lib</AdditionalDependencies>
+      <AdditionalDependencies>libboost_chrono-vc140-mt-sgd-1_62.lib;libboost_system-vc140-mt-sgd-1_62.lib;libboost_unit_test_framework-vc140-mt-sgd-1_62.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -138,7 +138,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Python27\libs;D:\boost_1_62_0\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libboost_chrono-vc140-mt-s-1_62.lib;libboost_system-vc140-mt-s-1_62.lib</AdditionalDependencies>
+      <AdditionalDependencies>libboost_chrono-vc140-mt-s-1_62.lib;libboost_system-vc140-mt-s-1_62.lib;libboost_unit_test_framework-vc140-mt-s-1_62.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,7 +160,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Python27\libs;D:\boost_1_62_0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libboost_chrono-vc140-mt-s-1_62.lib;libboost_system-vc140-mt-s-1_62.lib</AdditionalDependencies>
+      <AdditionalDependencies>libboost_chrono-vc140-mt-s-1_62.lib;libboost_system-vc140-mt-s-1_62.lib;libboost_unit_test_framework-vc140-mt-s-1_62.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -169,10 +169,10 @@
     <ClInclude Include="DirectedNode.h" />
     <ClInclude Include="Matcher.h" />
     <ClInclude Include="NFA.h" />
+    <ClInclude Include="RegexTest.cpp" />
     <ClInclude Include="Replacer.h" />
     <ClInclude Include="test\DirectedGraphTest.h" />
     <ClInclude Include="test\NFATest.h" />
-    <ClInclude Include="test\RegexTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedNode.cpp" />
@@ -184,7 +184,6 @@
     <ClCompile Include="test\DirectedGraphTest.cpp" />
     <ClCompile Include="test\main.cpp" />
     <ClCompile Include="test\NFATest.cpp" />
-    <ClCompile Include="test\RegexTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="testfiles\and_test_case.txt" />
