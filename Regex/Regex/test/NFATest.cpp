@@ -775,7 +775,7 @@ namespace anyun_regex
 
 	void NFATest::test_lazy_match_repeat_count()
 	{
-		set_pattern("a?(ab){1,3}?""(ab)*");
+		set_pattern("a?(ab){2,3}?""(ab)*");
 		add_testcase("aab");
 		add_testcase("aaab");
 		add_testcase("aabab");
@@ -788,6 +788,18 @@ namespace anyun_regex
 		add_testcase("123ab132aab2ababd12f9kababab");
 		test_group();
 		//to do
+
+		set_pattern("a\\d{1,}?345");
+		add_testcase("a345");
+		add_testcase("a1345");
+		add_testcase("a12345");
+		add_testcase("ab3345");
+		add_testcase("a333345");
+		add_testcase("aaaaaaaaa345");
+		add_testcase("a12a1212121345");
+		add_testcase("abcdefg123aaaa12121345");
+		test_group();
+
 	}
 
 	void NFATest::print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count)

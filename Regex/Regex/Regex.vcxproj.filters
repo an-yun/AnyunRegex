@@ -19,6 +19,9 @@
     <Filter Include="源文件\test">
       <UniqueIdentifier>{d7a38b0d-4ae4-4ac9-a88e-49b222c09f06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\regex_test_frame">
+      <UniqueIdentifier>{1054c17b-08e6-4fc6-8ef3-a009e832cb7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectedGraph.h">

@@ -5,8 +5,8 @@
 #include "NFATest.h"
 #include "RegexTest.h"
 #include "../Matcher.h"
-#include <boost/python.hpp>
 #include <boost/regex.hpp>
+#include <boost/timer/timer.hpp>
 
 using namespace anyun_regex;
 using namespace std;
@@ -23,6 +23,8 @@ void test_capture();
 
 int main()
 {
+	using boost::timer::auto_cpu_timer;
+	auto_cpu_timer t;
 #ifdef _DEBUG
 
 	test_auto();

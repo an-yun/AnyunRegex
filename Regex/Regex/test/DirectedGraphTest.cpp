@@ -49,6 +49,7 @@ namespace anyun_regex
 
 
 	DirectedGraphTest::DirectedGraphTest()
+		:test_count(0),pass_count(0)
 	{
 
 	}
