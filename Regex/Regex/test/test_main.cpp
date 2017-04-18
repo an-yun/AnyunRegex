@@ -3,17 +3,26 @@
 #include <fstream>
 #include "../Matcher.h"
 
-
-
-using namespace anyun_regex;
-using namespace std;
 #define TEST
 
 
-#ifndef TEST
+#ifdef TEST
+//add all unit test files
 
+
+#define REGEX_TEST_MOUDLE test example
+#include "../RegexTest.h"
+
+ADD_ONE_TEST_CASE_FOR_PRE_PROCESS_PATTERN(example,"", "");
+ADD_ONE_TEST_CASE_FOR_PRE_PROCESS_PATTERN(example1, "ab", "a\\Nb");
+
+#else
 #include "DirectedGraphTest.h"
 #include "NFATest.h"
+
+using namespace anyun_regex;
+using namespace std;
+
 void password_validate();
 void boost_regex_password_validate();
 

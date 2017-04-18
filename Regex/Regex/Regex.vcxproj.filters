@@ -48,7 +48,7 @@
     <ClInclude Include="Replacer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="RegexTest.cpp">
+    <ClInclude Include="RegexTest.h">
       <Filter>头文件\regex_test_framework</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,9 +65,6 @@
     <ClCompile Include="NFA.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="test\main.cpp">
-      <Filter>源文件\test</Filter>
-    </ClCompile>
     <ClCompile Include="test\DirectedGraphTest.cpp">
       <Filter>源文件\test</Filter>
     </ClCompile>
@@ -78,6 +75,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="test\NFATest.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_main.cpp">
       <Filter>源文件\test</Filter>
     </ClCompile>
   </ItemGroup>
