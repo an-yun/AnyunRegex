@@ -1,7 +1,5 @@
 #pragma once
 
-
-#define REGEX_TEST_MOUDLE pre process pattern normal test
 #include "../RegexTestFramework.h"
 
 std::vector<pre_process_test_case_t> pre_process_normal_test_cases
@@ -43,6 +41,8 @@ std::vector<pre_process_test_case_t> pre_process_normal_test_cases
 	{ "a(?'my_name'ab)", "a\\N(?'my_name'a\\Nb)" },
 };
 
-
+BEGING_TEST_SUIT(pre_process_normal_test)
 
 ADD_NORMAL_TESTCASE_FOR_PRE_PROCESS(data_test, regex_test_data::make(pre_process_normal_test_cases))
+
+END_TEST_SUIT()

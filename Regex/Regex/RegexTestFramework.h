@@ -4,8 +4,8 @@
  *
  */
 
-
 //add one regex test moudule
+#pragma once
 #define BOOST_TEST_MODULE REGEX_TEST_MOUDLE
 
 #include <boost/test/unit_test.hpp>
@@ -14,25 +14,21 @@
 #include <vector>
 #include <utility>
 #include <string>
+#include "DirectedGraph.h"
+
+namespace regex_test_data = boost::unit_test::data;
 
 //add one test case macro
-#ifndef ADD_ONE_TEST_CASE
 #define ADD_ONE_TEST_CASE BOOST_AUTO_TEST_CASE
-#endif
 
 //add several test case macro
-#ifndef ADD_DATA_TEST_CASE
 #define ADD_DATA_TEST_CASE BOOST_DATA_TEST_CASE
-#endif
 
-#ifndef PRE_PROCESS_TEST_CASE_T
 #define PRE_PROCESS_TEST_CASE_T
 typedef std::pair<const char*, const char*> pre_process_test_case_t;
 BOOST_TEST_DONT_PRINT_LOG_VALUE(pre_process_test_case_t)
-#endif
 
 //perform one test for pre process pattern
-#ifndef TEST_PRE_PROCESS_PATTERN
 #define TEST_PRE_PROCESS_PATTERN(pattern,after_pre_process_pattern)													\
 	do{																												\
 		::anyun_regex::DirectedGraph test_diagraph;																	\
@@ -47,17 +43,15 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE(pre_process_test_case_t)
 				  <<::anyun_regex::PARSE_RESULT_MESSAGE[parse_result_code]											\
 				   <<"' (expected:'REGEX_PARSE_OK')");																\
 	}while(false)
-#endif
 
 //add one test case for pre process pattern
-#ifndef ADD_ONE_TEST_CASE_FOR_PRE_PROCESS_PATTERN
 #define ADD_ONE_TEST_CASE_FOR_PRE_PROCESS_PATTERN(test_case_name,pattern,after_pre_process_pattern)					\
 	ADD_ONE_TEST_CASE(test_case_name) {TEST_PRE_PROCESS_PATTERN(pattern,after_pre_process_pattern);}
-#endif
 
-#ifndef ADD_NORMAL_TESTCASE_FOR_PRE_PROCESS
-namespace regex_test_data = boost::unit_test::data;
-#include "DirectedGraph.h"
+
 #define ADD_NORMAL_TESTCASE_FOR_PRE_PROCESS(test_case_name,testcases)												\
 	ADD_DATA_TEST_CASE(test_case_name,testcases,one_testcase)	{TEST_PRE_PROCESS_PATTERN(one_testcase.first,one_testcase.second);}													
-#endif
+
+//test suit macro
+#define BEGING_TEST_SUIT(test_suit_name) BOOST_AUTO_TEST_SUITE(test_suit_name)
+#define END_TEST_SUIT() BOOST_AUTO_TEST_SUITE_END();

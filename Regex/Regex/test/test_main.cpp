@@ -10,7 +10,7 @@
 /*
  *add all test moudules that shoul test 
  */
-
+#define REGEX_TEST_MOUDLE regex test
 #include "PreProcessTest.h"
 #include "PreProcessTest1.h"
 
