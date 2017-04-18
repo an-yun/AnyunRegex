@@ -169,10 +169,12 @@
     <ClInclude Include="DirectedNode.h" />
     <ClInclude Include="Matcher.h" />
     <ClInclude Include="NFA.h" />
-    <ClInclude Include="RegexTest.h" />
+    <ClInclude Include="RegexTestFramework.h" />
     <ClInclude Include="Replacer.h" />
     <ClInclude Include="test\DirectedGraphTest.h" />
     <ClInclude Include="test\NFATest.h" />
+    <ClInclude Include="test\PreProcessTest.h" />
+    <ClInclude Include="test\PreProcessTest1.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedNode.cpp" />
