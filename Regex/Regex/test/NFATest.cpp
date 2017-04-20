@@ -257,6 +257,21 @@ namespace anyun_regex
 		nfa_test.add_testcase("aabbccc");
 		nfa_test.add_testcase("11123");
 		nfa_test.test_group();
+
+
+		//ip address test
+		nfa_test.set_pattern("((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)");
+		nfa_test.add_testcase("0.0.0.00");
+		nfa_test.add_testcase("11.1.1.");
+		nfa_test.add_testcase("0.0.0.0");
+		nfa_test.add_testcase("01.0.0.1");
+		nfa_test.add_testcase("192.168.0.1");
+		nfa_test.add_testcase("321.168.0.1");
+		nfa_test.add_testcase("192.168.00.1");
+		nfa_test.add_testcase("288.168.0.1");
+		nfa_test.add_testcase("0.168.0.1");
+		nfa_test.add_testcase("0.0.0.0");
+		nfa_test.test_group();
 	}
 
 	void test_nfa_replace()
@@ -812,6 +827,7 @@ namespace anyun_regex
 		add_testcase("a12a1212121345");
 		add_testcase("abcdefg123aaaa12121345");
 		test_group();
+
 
 	}
 
