@@ -134,11 +134,10 @@ namespace anyun_regex
 
 
 	SingleCharDirectedEdge::SingleCharDirectedEdge(size_t ch, size_t id, size_t s_id, size_t e_id)
-		:DirectedEdge(id, s_id, e_id)
+		:DirectedEdge(id, s_id, e_id),condition(new CharCondition(ch))
 	{
-		if (ch == '.')condition.reset(new DotCondition());
-		else condition.reset(new CharCondition(ch));
 	}
+
 	SingleCharDirectedEdge::SingleCharDirectedEdge(size_t start, size_t end, size_t id, bool complementary, size_t s_id, size_t e_id)
 		: DirectedEdge(id, s_id, e_id)
 	{
@@ -151,6 +150,8 @@ namespace anyun_regex
 		: DirectedEdge(id, s_id, e_id), condition(condition)
 	{
 	}
+
+
 
 
 	LineStartDirectedEdge::LineStartDirectedEdge(size_t id) : DirectedEdge(id)

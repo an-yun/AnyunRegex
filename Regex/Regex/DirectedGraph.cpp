@@ -751,6 +751,16 @@ namespace anyun_regex
 				normal_priority_parse('\0', operators, operands, parse_index);
 				if (operators.empty()) parse_result = REGEX_PARSE_OK;
 				break;
+			case '.':
+				{
+					//dot character means matchs any character
+					ConditionPoint condition(new DotCondition());
+					DirectedEdgePoint dot_edge(new SingleCharDirectedEdge(condition, edges.size()));
+					store_edge(dot_edge, operands);
+					parse_index++;
+					break;
+				}
+
 			case '(':
 				if (p[parse_index + 1] == '?')
 				{
