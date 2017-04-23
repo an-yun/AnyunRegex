@@ -272,6 +272,14 @@ namespace anyun_regex
 		nfa_test.add_testcase("0.168.0.1");
 		nfa_test.add_testcase("0.0.0.0");
 		nfa_test.test_group();
+
+		//url test
+		nfa_test.set_pattern("[a-zA-z]+://[^\\s]*");
+		nfa_test.add_testcase("http://www.baidu.com");
+		nfa_test.add_testcase("http://deerchao.net/tutorials/regex/regex.htm");
+		nfa_test.add_testcase("https://www.google.com.hk/");
+		nfa_test.add_testcase("http://msdn.itellyou.cn/");
+		nfa_test.add_testcase("a://b.c.com");
 	}
 
 	void test_nfa_replace()

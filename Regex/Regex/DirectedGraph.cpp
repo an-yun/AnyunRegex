@@ -206,7 +206,7 @@ namespace anyun_regex
 				operands.pop();
 				operators.pop();
 			}
-			operands.push(merge_fragments(fragments,true));
+			operands.push(merge_fragments(fragments, true));
 			break;
 		}
 		//the dot . means concatenation  operator
@@ -286,7 +286,7 @@ namespace anyun_regex
 			//the fra2
 			ConnectedFragment fra2(sigma_edge->get_id(), sigma_edge->get_id());
 			//reverse merge fra1 and fra2
-			operands.push(reverse_merge_fragments(fra1, fra2,true));
+			operands.push(reverse_merge_fragments(fra1, fra2, true));
 			operators.pop();
 			break;
 		}
@@ -424,7 +424,7 @@ namespace anyun_regex
 		//the selfnode
 		DirectedNodePoint node(new DirectedNode(nodes.size()));
 		nodes.push_back(node);
-		if(reverse)
+		if (reverse)
 		{
 			//add in and out edge
 			size_t in_edge_id = add_in_sigma_edge(node->get_id());
@@ -446,7 +446,7 @@ namespace anyun_regex
 		}
 
 
-		
+
 	}
 	/*
 	connect fragment1 to fragment1
@@ -500,7 +500,7 @@ namespace anyun_regex
 		\  .   /
 		 >fran>
 	*/
-	ConnectedFragment DirectedGraph::merge_fragments(const vector<ConnectedFragment>& fragments,bool reverse)
+	ConnectedFragment DirectedGraph::merge_fragments(const vector<ConnectedFragment>& fragments, bool reverse)
 	{
 		//the in node
 		DirectedNodePoint in_node(new DirectedNode(nodes.size()));
@@ -509,10 +509,10 @@ namespace anyun_regex
 		DirectedNodePoint out_node(new DirectedNode(nodes.size()));
 		nodes.push_back(out_node);
 		//connect 
-		if(reverse)
+		if (reverse)
 		{
 
-			for (vector<ConnectedFragment>::const_reverse_iterator b = fragments.crbegin(),e = fragments.crend();b!=e;b++)
+			for (vector<ConnectedFragment>::const_reverse_iterator b = fragments.crbegin(), e = fragments.crend(); b != e; b++)
 			{
 				connect_in_node(in_node->get_id(), *b);
 				connect_out_node(out_node->get_id(), *b);
@@ -526,7 +526,7 @@ namespace anyun_regex
 				connect_out_node(out_node->get_id(), *b);
 			}
 		}
-		
+
 		//connect in and out edges
 		size_t in_edge_id = add_in_sigma_edge(in_node->get_id());
 		size_t out_edge_id = add_out_sigma_edge(out_node->get_id());
@@ -550,8 +550,8 @@ namespace anyun_regex
 		//the out node
 		DirectedNodePoint out_node(new DirectedNode(nodes.size()));
 		nodes.push_back(out_node);
-		size_t in_edge_id=0, out_edge_id=0;
-		if(reverse)
+		size_t in_edge_id = 0, out_edge_id = 0;
+		if (reverse)
 		{
 			//connect in and out edges
 			in_edge_id = add_in_sigma_edge(in_node->get_id());
@@ -699,18 +699,18 @@ namespace anyun_regex
 				next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
 				break;
 			default:
+			{
+				//especail case for lazy match
+				if (next == '?' && (current == '?' || current == '*' || current == '+'))
 				{
-					//especail case for lazy match
-					if(next == '?' && (current == '?' || current == '*' || current == '+'))
-					{
-						result.push_back(next);
-						i++;
-						next = p[i + 1];
-						next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
-					}
-					break;
+					result.push_back(next);
+					i++;
+					next = p[i + 1];
+					next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
 				}
-				
+				break;
+			}
+
 			}
 			//if next char is group end position or other operator ,not add concatenation operator,if not ,add it
 			if (bracket_states.empty() && (!current_is_special || current_is_right) && !next_is_other)
@@ -752,14 +752,14 @@ namespace anyun_regex
 				if (operators.empty()) parse_result = REGEX_PARSE_OK;
 				break;
 			case '.':
-				{
-					//dot character means matchs any character
-					ConditionPoint condition(new DotCondition());
-					DirectedEdgePoint dot_edge(new SingleCharDirectedEdge(condition, edges.size()));
-					store_edge(dot_edge, operands);
-					parse_index++;
-					break;
-				}
+			{
+				//dot character means matchs any character
+				ConditionPoint condition(new DotCondition());
+				DirectedEdgePoint dot_edge(new SingleCharDirectedEdge(condition, edges.size()));
+				store_edge(dot_edge, operands);
+				parse_index++;
+				break;
+			}
 
 			case '(':
 				if (p[parse_index + 1] == '?')
@@ -873,7 +873,7 @@ namespace anyun_regex
 				case 'f':
 					DEFAULT_SINGLE_CHAR_PROCESS('\f');
 					break;
-				case 'a':
+				/*case 'a':
 				{
 					string d_string = "[a-zA-Z]";
 					size_t d_index = 0;
@@ -928,19 +928,16 @@ namespace anyun_regex
 					PARSE_OR_STRING(d_string, d_index);
 					parse_index++;
 					break;
-				}
+				}*/
 				case 'b':
 				{
-					DirectedEdgePoint word_bounder_edge(new WordBoundaryDirectedEdge(edges.size()));
-					store_edge(word_bounder_edge, operands);
+					parse_meta_b(operands);
 					parse_index++;
 					break;
 				}
 				case 'B':
 				{
-					DirectedEdgePoint word_bounder_edge(new WordBoundaryDirectedEdge(edges.size()));
-					DirectedEdgePoint un_word_bounder_edge(new ElementDirectedge(edges.size(), word_bounder_edge));
-					store_edge(un_word_bounder_edge, operands);
+					parse_meta_b(operands, true);
 					parse_index++;
 					break;
 				}
@@ -963,7 +960,15 @@ namespace anyun_regex
 					break;
 				}
 				default:
-					DEFAULT_SINGLE_CHAR_PROCESS(p[parse_index]);
+					size_t ch = p[parse_index];
+					if (is_meta_char(ch))
+					{
+						//handle meta char like \a \w \d and so on
+						size_t index = 0;
+						parse_or_string(operands, meta_string_map[ch], index);
+						parse_index++;
+					}
+					else DEFAULT_SINGLE_CHAR_PROCESS(ch);
 					break;
 				}
 				break;
@@ -1004,6 +1009,24 @@ namespace anyun_regex
 		return operands.top();
 	}
 
+	RegexParseCode DirectedGraph::parse_or_string(stack<ConnectedFragment>& operands, const string & p_string, size_t &p_index)
+	{
+		bool complementary = p_string[++p_index] == '^';/*is complementary?*/
+		if (complementary)p_index++;
+		if (p_string[p_index + 1] == ']')
+			return REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY;
+		vector<ConditionPoint> conditions;
+		if (!parse_or_condition(conditions, p_string, p_index))
+			return REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET;
+		ConditionPoint condition(new OrCondtion(conditions));
+		if (complementary)condition.reset(new ComplmentCondtion(condition));
+		DirectedEdgePoint edge(new SingleCharDirectedEdge(condition, edges.size()));
+		store_edge(edge, operands);
+		assert(p_string[p_index] == ']');
+		p_index++;
+		return REGEX_PARSE_OK;
+	}
+
 	//parse or condition in []
 	inline bool DirectedGraph::parse_or_condition(vector<ConditionPoint>& conditions, const string & p, size_t & parse_index)
 	{
@@ -1027,6 +1050,18 @@ namespace anyun_regex
 					conditions.push_back(ConditionPoint(new CharCondition(next)));
 					parse_index += 2;
 				}
+				else if(is_meta_char(next))
+				{
+					//to do
+				}
+				else if(next == 'b')
+				{
+					//to do
+				}
+				else if(next == 'B')
+				{
+					//to do
+				}
 				else return false;
 			}
 			else if (is_special_char(current))
@@ -1039,6 +1074,14 @@ namespace anyun_regex
 			current = p[parse_index], next = p[parse_index + 1];
 		}
 		return true;
+	}
+
+	void DirectedGraph::parse_meta_b(stack<ConnectedFragment>& operands, bool is_upper_case)
+	{
+		DirectedEdgePoint word_bounder_edge(new WordBoundaryDirectedEdge(edges.size()));
+		if (is_upper_case)
+			word_bounder_edge.reset(new ElementDirectedge(edges.size(), word_bounder_edge));
+		store_edge(word_bounder_edge, operands);
 	}
 
 	DirectedEdgePoint DirectedGraph::parse_group_reference(const string & p, size_t & parse_index)
@@ -1072,7 +1115,7 @@ namespace anyun_regex
 				//the end node
 				RepeatCountDirectedNode *repeat_node = new RepeatCountDirectedNode(nodes.size(), from);
 				//judge lazy match
-				if((*(end_point+1)) == '?')
+				if ((*(end_point + 1)) == '?')
 				{
 					end_point++;
 					repeat_node->set_lazy(true);

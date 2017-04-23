@@ -25,7 +25,7 @@ namespace anyun_regex
 	using std::stack;
 	using std::tuple;
 	// reach_node->(str_point,repeat_times)
-	typedef map<size_t, pair<size_t,size_t>> TrackRecord;
+	typedef map<size_t, pair<size_t, size_t>> TrackRecord;
 	// current_node,track_record
 	typedef pair<size_t, TrackRecord> OneState;
 	typedef list<OneState> State;
@@ -42,6 +42,17 @@ namespace anyun_regex
 	const size_t UPPER_Z = 'Z';
 	const char BLANK_CHARS[] = " \n\t\r\f";
 	const char SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' ,'\\','^','$' };
+	const char META_CHARS[] = { 'a','w','W','d','D','s','S'};
+	static map<size_t, const char *> meta_string_map
+	{
+		{'a',"[a-zA-Z]"},
+		{'w',"[a-zA-Z0-9_]" },
+		{'W',"[^a-zA-Z0-9_]" },
+		{'d',"[0-9]"},
+		{'D',"[^0-9]" },
+		{'s',"[\n\t\r\f ]" },
+		{'S',"[^\n\t\r\f ]" },
+	};
 	const size_t SINGLE_SPECAIL_CAHR_SIZE = sizeof(SINGLE_SPECAIL_CAHRS) / sizeof(char);
 
 	static bool is_char_in(size_t ch, const char * str, size_t length)
@@ -54,6 +65,11 @@ namespace anyun_regex
 	static bool is_special_char(size_t ch)
 	{
 		return is_char_in(ch, SINGLE_SPECAIL_CAHRS, SINGLE_SPECAIL_CAHR_SIZE);
+	}
+
+	static bool is_meta_char(size_t ch)
+	{
+		return is_char_in(ch, META_CHARS, sizeof(META_CHARS) / sizeof(char));
 	}
 
 	static bool is_upper_case(size_t ch)
@@ -171,7 +187,7 @@ namespace anyun_regex
 
 		virtual bool find() = 0;
 		virtual bool find(size_t offset) = 0;
-		virtual pair<size_t, size_t> get_group(size_t group_index = 0 );
+		virtual pair<size_t, size_t> get_group(size_t group_index = 0);
 
 		virtual string group(size_t index = 0) const = 0;
 		virtual string group(string group_name) const = 0;
@@ -184,11 +200,11 @@ namespace anyun_regex
 		size_t cursor;
 		vector<pair<size_t, size_t>> groups;
 		virtual size_t current_cursor() const;
-		virtual void next() ;
+		virtual void next();
 		virtual void back();
 		virtual pair<size_t, size_t> get_groups_node(size_t group_id) = 0;
 
-		Matcher(string text, size_t cursor = 0,size_t group_size = 1 );
+		Matcher(string text, size_t cursor = 0, size_t group_size = 1);
 	private:
 
 	};
@@ -196,7 +212,7 @@ namespace anyun_regex
 	class DirectedEdge
 	{
 	public:
-		
+
 		DirectedEdge(size_t id, size_t s_id = 0, size_t e_id = 0);
 		size_t get_id() const;
 		virtual DirectedEdgeType get_type() const = 0;
