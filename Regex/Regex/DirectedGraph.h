@@ -184,7 +184,7 @@ namespace anyun_regex
 		ConnectedFragment parse(string p);
 		
 		//parse or string
-		RegexParseCode parse_or_string(stack<ConnectedFragment>& operands, const string& p_string, size_t &p_index);
+		ConditionPoint parse_or_string(const string& p_string, size_t &p_index);
 
 
 		//parse or condition in []

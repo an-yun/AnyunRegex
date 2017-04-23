@@ -816,26 +816,11 @@ namespace anyun_regex
 			}
 			case '[':
 			{
-
-				//p parse_index
-#define PARSE_OR_STRING(the_string,the_index)											\
-				do{																				\
-					bool complementary = the_string[++the_index] == '^';/*is complementary?*/	\
-					if (complementary)the_index++;												\
-					if (p[the_index + 1] == ']')												\
-						PARSE_ERROR(parse_result, REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY);			\
-					vector<ConditionPoint> conditions;											\
-					if (!parse_or_condition(conditions, the_string, the_index))					\
-						PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET);	\
-					ConditionPoint condition(new OrCondtion(conditions));						\
-					if (complementary)condition.reset(new ComplmentCondtion(condition));		\
-					DirectedEdgePoint edge(new SingleCharDirectedEdge(condition, edges.size()));\
-					store_edge(edge, operands);													\
-					assert(the_string[the_index] == ']');										\
-					the_index++;																\
-				}while(0)
-
-				PARSE_OR_STRING(p, parse_index);
+				ConditionPoint condition = parse_or_string(p, parse_index);
+				if(condition == nullptr)
+					return ConnectedFragment(0, 0);
+				DirectedEdgePoint edge(new SingleCharDirectedEdge(condition, edges.size()));
+				store_edge(edge, operands);
 				break;
 			}
 			case '{':
@@ -873,62 +858,6 @@ namespace anyun_regex
 				case 'f':
 					DEFAULT_SINGLE_CHAR_PROCESS('\f');
 					break;
-				/*case 'a':
-				{
-					string d_string = "[a-zA-Z]";
-					size_t d_index = 0;
-					PARSE_OR_STRING(d_string, d_index);
-					parse_index++;
-					break;
-				}
-				case 'w':
-				{
-					string d_string = "[a-zA-Z0-9_]";
-					size_t d_index = 0;
-					PARSE_OR_STRING(d_string, d_index);
-					parse_index++;
-					break;
-				}
-				case 'W':
-				{
-					string d_string = "[^a-zA-Z0-9_]";
-					size_t d_index = 0;
-					PARSE_OR_STRING(d_string, d_index);
-					parse_index++;
-					break;
-				}
-				case 'd':
-				{
-					string d_string = "[0-9]";
-					size_t d_index = 0;
-					PARSE_OR_STRING(d_string, d_index);
-					parse_index++;
-					break;
-				}
-				case 'D':
-				{
-					string d_string = "[^0-9]";
-					size_t d_index = 0;
-					PARSE_OR_STRING(d_string, d_index);
-					parse_index++;
-					break;
-				}
-				case 's':
-				{
-					string d_string = "[\n\t\r\f ]";
-					size_t d_index = 0;
-					PARSE_OR_STRING(d_string, d_index);
-					parse_index++;
-					break;
-				}
-				case 'S':
-				{
-					string d_string = "[^\n\t\r\f ]";
-					size_t d_index = 0;
-					PARSE_OR_STRING(d_string, d_index);
-					parse_index++;
-					break;
-				}*/
 				case 'b':
 				{
 					parse_meta_b(operands);
@@ -964,11 +893,13 @@ namespace anyun_regex
 					if (is_meta_char(ch))
 					{
 						//handle meta char like \a \w \d and so on
-						size_t index = 0;
-						parse_or_string(operands, meta_string_map[ch], index);
+						size_t index = 0;		
+						DirectedEdgePoint edge(new SingleCharDirectedEdge(parse_or_string(meta_string_map[ch], index), edges.size()));
+						store_edge(edge, operands);
 						parse_index++;
 					}
-					else DEFAULT_SINGLE_CHAR_PROCESS(ch);
+					else
+						DEFAULT_SINGLE_CHAR_PROCESS(ch);
 					break;
 				}
 				break;
@@ -1009,34 +940,40 @@ namespace anyun_regex
 		return operands.top();
 	}
 
-	RegexParseCode DirectedGraph::parse_or_string(stack<ConnectedFragment>& operands, const string & p_string, size_t &p_index)
+	ConditionPoint DirectedGraph::parse_or_string(const string & p_string, size_t &p_index)
 	{
+		assert(p_string[p_index] == '[');
 		bool complementary = p_string[++p_index] == '^';/*is complementary?*/
 		if (complementary)p_index++;
-		if (p_string[p_index + 1] == ']')
-			return REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY;
+		if (p_string[p_index] == ']')
+		{
+			parse_result = REGEX_PARSE_SQUARE_BRAKET_IS_EMPTY;
+			return nullptr;
+		}
 		vector<ConditionPoint> conditions;
-		if (!parse_or_condition(conditions, p_string, p_index))
-			return REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET;
-		ConditionPoint condition(new OrCondtion(conditions));
+		ConditionPoint condition;
+		//do some optimization
+		if (!parse_or_condition(conditions, p_string, p_index) || conditions.empty())
+			return nullptr;
+		else if (conditions.size() == 1)
+			condition= conditions[0];
+		else condition.reset(new OrCondtion(conditions));
 		if (complementary)condition.reset(new ComplmentCondtion(condition));
-		DirectedEdgePoint edge(new SingleCharDirectedEdge(condition, edges.size()));
-		store_edge(edge, operands);
 		assert(p_string[p_index] == ']');
 		p_index++;
-		return REGEX_PARSE_OK;
+		return condition;
 	}
 
 	//parse or condition in []
 	inline bool DirectedGraph::parse_or_condition(vector<ConditionPoint>& conditions, const string & p, size_t & parse_index)
 	{
-
+		if (p.size() == 0)return false;
 		size_t current = p[parse_index], next = p[parse_index + 1];
 		while (current != ']')
 		{
 			if (next == '-')
 			{
-				if (check_range(current, p[parse_index + 2]))
+				if (parse_index + 2 < p.size() && check_range(current, p[parse_index + 2]))
 				{
 					conditions.push_back(ConditionPoint(new RangeCondition(current, p[parse_index + 2])));
 					parse_index += 3;
@@ -1052,20 +989,21 @@ namespace anyun_regex
 				}
 				else if(is_meta_char(next))
 				{
-					//to do
+					size_t index = 0;
+					conditions.push_back(parse_or_string(meta_string_map[next], index));
+					parse_index += 2;
 				}
-				else if(next == 'b')
+				else
 				{
-					//to do
+					parse_result = REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET;
+					return false;
 				}
-				else if(next == 'B')
-				{
-					//to do
-				}
-				else return false;
 			}
 			else if (is_special_char(current))
+			{
+				parse_result = REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET;
 				return false;
+			}
 			else
 			{
 				conditions.push_back(ConditionPoint(new CharCondition(current)));
@@ -1164,14 +1102,15 @@ namespace anyun_regex
 	//check the range is right?
 	bool DirectedGraph::check_range(size_t from, size_t to)
 	{
-		if (from < to)
+		return from < to;
+		/*if (from < to)
 		{
 			if (is_num(from) && is_num(to)) return true;
 			if (is_upper_case(from) && is_upper_case(to))return true;
 			if (is_lower_case(from) && is_lower_case(to))return true;
 			return false;
 		}
-		return false;
+		return false;*/
 	}
 
 	//add a single char edge

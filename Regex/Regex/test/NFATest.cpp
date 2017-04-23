@@ -280,6 +280,13 @@ namespace anyun_regex
 		nfa_test.add_testcase("https://www.google.com.hk/");
 		nfa_test.add_testcase("http://msdn.itellyou.cn/");
 		nfa_test.add_testcase("a://b.c.com");
+		nfa_test.add_testcase("foo@demo.net");
+		nfa_test.add_testcase("bar.ba@test.co.uk");
+		nfa_test.add_testcase("www.demo.com");
+		nfa_test.add_testcase("http://foo.co.uk/");
+		nfa_test.add_testcase("http://regexr.com/foo.html?q=bar");
+		nfa_test.add_testcase("https://mediatemple.net");
+		nfa_test.test_group();
 	}
 
 	void test_nfa_replace()
