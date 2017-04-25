@@ -41,8 +41,5 @@ std::vector<pre_process_test_case_t> pre_process_normal_test_cases1
 	{ "a(?'my_name'ab)", "a\\N(?'my_name'a\\Nb)" },
 };
 
-BEGING_TEST_SUIT(normal_test)
 
 ADD_NORMAL_TESTCASE_FOR_PRE_PROCESS(data_test_2, regex_test_data::make(pre_process_normal_test_cases1))
-
-END_TEST_SUIT()
