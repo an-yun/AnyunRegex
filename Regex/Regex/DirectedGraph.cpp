@@ -999,11 +999,11 @@ namespace anyun_regex
 					return false;
 				}
 			}
-			else if (is_special_char(current))
-			{
-				parse_result = REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET;
-				return false;
-			}
+			//else if (is_special_char(current))
+			//{
+			//	parse_result = REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET;
+			//	return false;
+			//}
 			else
 			{
 				conditions.push_back(ConditionPoint(new CharCondition(current)));
