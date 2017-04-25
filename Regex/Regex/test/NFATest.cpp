@@ -287,6 +287,17 @@ namespace anyun_regex
 		nfa_test.add_testcase("http://regexr.com/foo.html?q=bar");
 		nfa_test.add_testcase("https://mediatemple.net");
 		nfa_test.test_group();
+
+		//email test
+		nfa_test.set_pattern("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+		nfa_test.add_testcase("foo@demo.net");
+		nfa_test.add_testcase("bar.ba@test.co.uk");
+		nfa_test.add_testcase("zsy296@gmail.com");
+		nfa_test.add_testcase("1007252397@qq.com");
+		nfa_test.add_testcase("b-+  ar.ba@test.co.uk");
+		nfa_test.add_testcase("http://deerchao.net/tutorials/regex/common.htm");
+		nfa_test.test_group();
+
 	}
 
 	void test_nfa_replace()
