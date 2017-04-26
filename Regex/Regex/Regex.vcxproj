@@ -174,7 +174,7 @@
     <ClInclude Include="test\DirectedGraphTest.h" />
     <ClInclude Include="test\NFATest.h" />
     <ClInclude Include="test\PreProcessNormalTest.h" />
-    <ClInclude Include="test\PreProcessTest1.h" />
+    <ClInclude Include="test\PreProcessErrorTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedNode.cpp" />

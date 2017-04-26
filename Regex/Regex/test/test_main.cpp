@@ -12,7 +12,7 @@
  */
 #define REGEX_TEST_MOUDLE regex test
 #include "PreProcessNormalTest.h"
-#include "PreProcessTest1.h"
+#include "PreProcessErrorTest.h"
 
 #else
 #include "DirectedGraphTest.h"

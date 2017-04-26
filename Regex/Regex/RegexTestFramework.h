@@ -24,9 +24,11 @@ namespace regex_test_data = boost::unit_test::data;
 //add several test case macro
 #define ADD_DATA_TEST_CASE BOOST_DATA_TEST_CASE
 
-#define PRE_PROCESS_TEST_CASE_T
-typedef std::pair<const char*, const char*> pre_process_test_case_t;
-BOOST_TEST_DONT_PRINT_LOG_VALUE(pre_process_test_case_t)
+typedef std::pair<const char*, const char*> pre_process_normal_test_case_t;
+BOOST_TEST_DONT_PRINT_LOG_VALUE(pre_process_normal_test_case_t)
+
+typedef std::pair<const char*, anyun_regex::RegexParseCode> pre_process_error_test_case_t;
+BOOST_TEST_DONT_PRINT_LOG_VALUE(pre_process_error_test_case_t)
 
 //perform one normal test for pre process pattern
 #define TEST_NORMAL_PRE_PROCESS_PATTERN(pattern,after_pre_process_pattern)											\

@@ -2,7 +2,7 @@
 
 #include "../RegexTestFramework.h"
 
-std::vector<pre_process_test_case_t> pre_process_normal_test_cases
+std::vector<pre_process_normal_test_case_t> pre_process_normal_test_cases
 {
 	{ "", "" },
 	{ "ab", "a\\Nb" },

@@ -48,10 +48,10 @@
     <ClInclude Include="RegexTestFramework.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="test\PreProcessTest1.h">
+    <ClInclude Include="test\PreProcessNormalTest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
-    <ClInclude Include="test\PreProcessNormalTest.h">
+    <ClInclude Include="test\PreProcessErrorTest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
   </ItemGroup>
