@@ -978,7 +978,11 @@ namespace anyun_regex
 					conditions.push_back(ConditionPoint(new RangeCondition(current, p[parse_index + 2])));
 					parse_index += 3;
 				}
-				else return false;
+				else
+				{
+					parse_result = REGEX_PARSE_WRONG_RANGE_IN_SQUARE_BRAKET;
+					return false;
+				}
 			}
 			else if (current == '\\')
 			{
