@@ -776,6 +776,7 @@ namespace anyun_regex
 						group_stack.push(group_id);
 						name_groups[group_name] = group_id;
 						groups.push_back(Group());//add group in stack
+						parse_index = end_group_name_position;
 					}
 					else if (p[parse_index + 1] == ':')
 					{

@@ -173,6 +173,8 @@
     <ClInclude Include="Replacer.h" />
     <ClInclude Include="test\DirectedGraphTest.h" />
     <ClInclude Include="test\NFATest.h" />
+    <ClInclude Include="test\CompileErrorTest.h" />
+    <ClInclude Include="test\CompileNormalTest.h" />
     <ClInclude Include="test\PreProcessNormalTest.h" />
     <ClInclude Include="test\PreProcessErrorTest.h" />
   </ItemGroup>

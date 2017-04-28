@@ -39,6 +39,25 @@ namespace anyun_regex
 		}																								\
 	}while(0)
 
+#define TEST_COMPILE_PATTERN_NORMAL(test_string)														\
+	do {																								\
+		test_count++;																					\
+		diagraph.compile(test_string);																		\
+		if(diagraph.parse_result == REGEX_PARSE_OK )													\
+		{																								\
+			cout<<"Test case :"<<test_count<<" passed! "<<endl;											\
+			pass_count++;																				\
+		}																								\
+		else																							\
+		{																								\
+			cout<<"Test "<<test_count<<" failed, in file "<<__FILE__<<":"<<__LINE__<<endl;				\
+			cout<<"\ttest string:\""<<(test_string)<<"\""<<endl;										\
+			cout<<"\tactual:"<<PARSE_RESULT_MESSAGE[diagraph.parse_result]<<endl;						\
+			cout<<"\texcept:"<<PARSE_RESULT_MESSAGE[REGEX_PARSE_OK]<<endl;								\
+		}																								\
+	}while(0)
+
+
 	int test_directedgraph()
 	{
 		DirectedGraphTest directedgraph_test;
@@ -68,7 +87,48 @@ namespace anyun_regex
 	}
 	void DirectedGraphTest::test_compile_normal()
 	{
+		print_string_format(80, "Test function test_compile_normal", ' ');
+		cout << endl;
+		TEST_COMPILE_PATTERN_NORMAL("");
+		TEST_COMPILE_PATTERN_NORMAL("ab");
+		TEST_COMPILE_PATTERN_NORMAL("abbba");
+		TEST_COMPILE_PATTERN_NORMAL("a|b");
+		TEST_COMPILE_PATTERN_NORMAL("a|bc");
+		TEST_COMPILE_PATTERN_NORMAL("a|b|123");
+		TEST_COMPILE_PATTERN_NORMAL("(a|b)c");
+		TEST_COMPILE_PATTERN_NORMAL("(a|bb)c");
+		TEST_COMPILE_PATTERN_NORMAL("(a|b)|123");
+		TEST_COMPILE_PATTERN_NORMAL("(A|a)(B|b)(C|c)(E|e)");
+		TEST_COMPILE_PATTERN_NORMAL("[0-9]c");
+		TEST_COMPILE_PATTERN_NORMAL("[0-9a-z]c");
+		TEST_COMPILE_PATTERN_NORMAL("[0-9A-Z!]c");
+		TEST_COMPILE_PATTERN_NORMAL("[\\w\\s]ab1");
+		TEST_COMPILE_PATTERN_NORMAL("[\\daeiou]ab1");
+		TEST_COMPILE_PATTERN_NORMAL("[0-9A-Z!](are|you)c");
+		TEST_COMPILE_PATTERN_NORMAL("(a|b){2}");
+		TEST_COMPILE_PATTERN_NORMAL("(a|b){2,5}");
+		TEST_COMPILE_PATTERN_NORMAL("(a|b){2,}");
+		TEST_COMPILE_PATTERN_NORMAL("(a|b){2,}c");
+		TEST_COMPILE_PATTERN_NORMAL("(a|b){2,}c");
+		TEST_COMPILE_PATTERN_NORMAL("(A|a)(B|b)c{2,5}D");
+		TEST_COMPILE_PATTERN_NORMAL("(a|b|c|d){2,5}D");
+		TEST_COMPILE_PATTERN_NORMAL("(a|b|c|d){2,5}D");
+		TEST_COMPILE_PATTERN_NORMAL("[0-9](a|b|c|d){2,5}D");
+		TEST_COMPILE_PATTERN_NORMAL("^");
+		TEST_COMPILE_PATTERN_NORMAL("$");
+		TEST_COMPILE_PATTERN_NORMAL("^$");
+		TEST_COMPILE_PATTERN_NORMAL("^a$");
+		TEST_COMPILE_PATTERN_NORMAL("^(ab|bc[123])$");
+		TEST_COMPILE_PATTERN_NORMAL("^[0-9](a|b|c|d){2,5}D$");
+		TEST_COMPILE_PATTERN_NORMAL("\\n");
+		TEST_COMPILE_PATTERN_NORMAL("a\\n");
+		TEST_COMPILE_PATTERN_NORMAL("^ab$\\nc");
+		TEST_COMPILE_PATTERN_NORMAL("ab\\nb\\rba");
+		TEST_COMPILE_PATTERN_NORMAL("a(?<my_name>a)");
+		TEST_COMPILE_PATTERN_NORMAL("a(?'my_name'ab)");
 
+		cout << endl;
+		TEST_COMPILE_PATTERN_NORMAL("");
 	}
 	void DirectedGraphTest::test_compile_error()
 	{
