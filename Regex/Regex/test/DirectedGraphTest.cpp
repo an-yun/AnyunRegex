@@ -42,7 +42,7 @@ namespace anyun_regex
 #define TEST_COMPILE_PATTERN_NORMAL(test_string)														\
 	do {																								\
 		test_count++;																					\
-		diagraph.compile(test_string);																		\
+		diagraph.compile(test_string);																	\
 		if(diagraph.parse_result == REGEX_PARSE_OK )													\
 		{																								\
 			cout<<"Test case :"<<test_count<<" passed! "<<endl;											\
@@ -54,6 +54,25 @@ namespace anyun_regex
 			cout<<"\ttest string:\""<<(test_string)<<"\""<<endl;										\
 			cout<<"\tactual:"<<PARSE_RESULT_MESSAGE[diagraph.parse_result]<<endl;						\
 			cout<<"\texcept:"<<PARSE_RESULT_MESSAGE[REGEX_PARSE_OK]<<endl;								\
+		}																								\
+	}while(0)
+
+
+#define TEST_COMPILE_PATTERN_ERROR(test_string,except_parse_code)										\
+	do {																								\
+		test_count++;																					\
+		diagraph.compile(test_string);																	\
+		if(diagraph.parse_result == except_parse_code)													\
+		{																								\
+			cout<<"Test case :"<<test_count<<" passed! "<<endl;											\
+			pass_count++;																				\
+		}																								\
+		else																							\
+		{																								\
+			cout<<"Test "<<test_count<<" failed, in file "<<__FILE__<<":"<<__LINE__<<endl;				\
+			cout<<"\ttest string:\""<<(test_string)<<"\""<<endl;										\
+			cout<<"\tactual:"<<PARSE_RESULT_MESSAGE[diagraph.parse_result]<<endl;						\
+			cout<<"\texcept:"<<PARSE_RESULT_MESSAGE[except_parse_code]<<endl;							\
 		}																								\
 	}while(0)
 
@@ -132,8 +151,8 @@ namespace anyun_regex
 	}
 	void DirectedGraphTest::test_compile_error()
 	{
-		//TEST_PROCESS_PATTERN_ERROR("a{a,}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
-		//TEST_PROCESS_PATTERN_ERROR("12{1,0}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
+		//TEST_COMPILE_PATTERN_ERROR("a{a,}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
+		//TEST_COMPILE_PATTERN_ERROR("12{1,0}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
 	}
 	void DirectedGraphTest::test_pre_process_normal()
 	{
