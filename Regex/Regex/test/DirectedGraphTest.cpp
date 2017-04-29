@@ -87,7 +87,7 @@ namespace anyun_regex
 
 
 	DirectedGraphTest::DirectedGraphTest()
-		:test_count(0),pass_count(0)
+		:test_count(0), pass_count(0)
 	{
 
 	}
@@ -130,6 +130,8 @@ namespace anyun_regex
 		TEST_COMPILE_PATTERN_NORMAL("(a|b){2,}c");
 		TEST_COMPILE_PATTERN_NORMAL("(a|b){2,}c");
 		TEST_COMPILE_PATTERN_NORMAL("(A|a)(B|b)c{2,5}D");
+		TEST_COMPILE_PATTERN_NORMAL("(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z+)\\26");
+		TEST_COMPILE_PATTERN_NORMAL("(a)(b)?(c)?(d)?(e)?(f)?(g)?(h)?(i)?(j)?(k)?(l)?(m)?(n)?(o)?(p)?(q)?(r)?(s)?(t)?(u)?(v)?(w)?(x)?(y)?(z+)\\26");
 		TEST_COMPILE_PATTERN_NORMAL("(a|b|c|d){2,5}D");
 		TEST_COMPILE_PATTERN_NORMAL("(a|b|c|d){2,5}D");
 		TEST_COMPILE_PATTERN_NORMAL("[0-9](a|b|c|d){2,5}D");
@@ -147,12 +149,22 @@ namespace anyun_regex
 		TEST_COMPILE_PATTERN_NORMAL("a(?'my_name'ab)");
 
 		cout << endl;
-		TEST_COMPILE_PATTERN_NORMAL("");
 	}
 	void DirectedGraphTest::test_compile_error()
 	{
-		//TEST_COMPILE_PATTERN_ERROR("a{a,}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
-		//TEST_COMPILE_PATTERN_ERROR("12{1,0}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
+		print_string_format(80, "Test function test_compile_error", ' ');
+		cout << endl;
+		TEST_COMPILE_PATTERN_ERROR("a{a,}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
+		TEST_COMPILE_PATTERN_ERROR("12{1,0}", REGEX_PARSE_ILLEGAL_REPEAT_COUNT);
+		TEST_COMPILE_PATTERN_ERROR("[9-1]", REGEX_PARSE_WRONG_RANGE_IN_SQUARE_BRAKET);
+		TEST_COMPILE_PATTERN_ERROR("[8-6]", REGEX_PARSE_WRONG_RANGE_IN_SQUARE_BRAKET);
+		TEST_COMPILE_PATTERN_ERROR("[c-1]", REGEX_PARSE_WRONG_RANGE_IN_SQUARE_BRAKET);
+		TEST_COMPILE_PATTERN_ERROR("[\\c]", REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET);
+		TEST_COMPILE_PATTERN_ERROR("[\\q]", REGEX_PARSE_ILLEGAL_CHAR_IN_SQUARE_BRAKET);
+		TEST_COMPILE_PATTERN_ERROR("([abc]+)\\0", REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+		TEST_COMPILE_PATTERN_ERROR("([abc]+)\\2", REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+
+		cout << endl;
 	}
 	void DirectedGraphTest::test_pre_process_normal()
 	{

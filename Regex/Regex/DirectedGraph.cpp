@@ -339,6 +339,8 @@ namespace anyun_regex
 		//the empty pattern
 		edges.clear();
 		nodes.clear();
+		groups.clear();
+		name_groups.clear();
 		if (pattern.size() == 0)
 		{
 			this->pattern = "";

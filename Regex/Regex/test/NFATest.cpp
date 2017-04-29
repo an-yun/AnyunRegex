@@ -298,6 +298,32 @@ namespace anyun_regex
 		nfa_test.add_testcase("http://deerchao.net/tutorials/regex/common.htm");
 		nfa_test.test_group();
 
+		/*
+		hrer are very long group name and reference test
+		*/
+		nfa_test.set_pattern("(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z*)\\26");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyz");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzzzz");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxy");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzz");
+		nfa_test.add_testcase("abdefghijklmnopqrstuvwxyzz");
+		nfa_test.add_testcase("bdefghijklmnopqrstuvwxyzz");
+		nfa_test.test_group();
+
+		nfa_test.set_pattern("(a)(b)?(c)?(d)?(e)?(f)?(g)?(h)?(i)?(j)?(k)?(l)?(m)?(n)?(o)?(p)?(q)?(r)?(s)?(t)?(u)?(v)?(w)?(x)?(y)?(z+)\\26");
+		nfa_test.add_testcase("azz");
+		nfa_test.add_testcase("aceizz");
+		nfa_test.add_testcase("aczeizz");
+		nfa_test.add_testcase("aczeizz");
+		nfa_test.add_testcase("acbzz");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyz");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzzzz");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxy");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzz");
+		nfa_test.add_testcase("abdefghijklmnopqrstuvwxyzz");
+		nfa_test.add_testcase("bdefghijklmnopqrstuvwxyzz");
+		nfa_test.test_group();
+
 	}
 
 	void test_nfa_replace()
