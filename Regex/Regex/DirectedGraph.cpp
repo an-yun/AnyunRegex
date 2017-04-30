@@ -695,9 +695,13 @@ namespace anyun_regex
 			case '\\':
 				if (next == 'N')
 					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_ILLEGAL_ESCAPE_CHAR);
-				result.push_back(next);
-				i++;
-				next = p[i + 1];
+				//fix bug for reference num
+				do{
+					result.push_back(next);
+					i++;
+					next = p[i + 1];
+					current = p[i];
+				} while (is_num(current) && is_num(next));
 				next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
 				break;
 			default:
@@ -888,7 +892,6 @@ namespace anyun_regex
 					DirectedEdgePoint directed_edge = parse_group_reference(p, parse_index);
 					if (directed_edge == nullptr)PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
 					else store_edge(directed_edge, operands);
-					parse_index++;
 					break;
 				}
 				default:
@@ -1036,6 +1039,7 @@ namespace anyun_regex
 		size_t capture_num = (size_t)strtol(start, &end_point, 10);
 		if (capture_num == 0 || end_point == start || capture_num >= groups.size())
 			return DirectedEdgePoint();
+		parse_index += end_point - start;
 		return DirectedEdgePoint(new GroupReferenceDirectedge(edges.size(), capture_num));
 	}
 

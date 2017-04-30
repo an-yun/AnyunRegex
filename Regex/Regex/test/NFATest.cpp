@@ -302,7 +302,9 @@ namespace anyun_regex
 		hrer are very long group name and reference test
 		*/
 		nfa_test.set_pattern("(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z*)\\26");
+		nfa_test.add_testcase("abdefpqrstuvwxyzz");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyz");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzzz");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzzzz");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxy");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzz");
@@ -318,6 +320,7 @@ namespace anyun_regex
 		nfa_test.add_testcase("acbzz");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyz");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzzzz");
+		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzzz");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxy");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzz");
 		nfa_test.add_testcase("abdefghijklmnopqrstuvwxyzz");
