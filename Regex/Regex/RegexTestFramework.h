@@ -30,6 +30,8 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE(pre_process_normal_test_case_t)
 typedef std::pair<const char*, anyun_regex::RegexParseCode> pre_process_error_test_case_t;
 BOOST_TEST_DONT_PRINT_LOG_VALUE(pre_process_error_test_case_t)
 
+typedef pre_process_error_test_case_t compile_error_test_case_t;
+
 //perform one normal test for pre process pattern
 #define TEST_NORMAL_PRE_PROCESS_PATTERN(pattern,after_pre_process_pattern)											\
 	do{																												\
@@ -59,7 +61,19 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE(pre_process_error_test_case_t)
 		BOOST_TEST(parse_result_code == excepted_parase_error_code,													\
 				  "the pre process test result code for '" << pattern <<	"' is'"									\
 				  <<::anyun_regex::PARSE_RESULT_MESSAGE[parse_result_code]											\
-				   <<"' (expected:'"<<::anyun_regex::PARSE_RESULT_MESSAGE[excepted_parase_error_code]<<"')");																\
+				   <<"' (expected:'"<<::anyun_regex::PARSE_RESULT_MESSAGE[excepted_parase_error_code]<<"')");		\
+	}while(false)
+
+//perform one error test for COMPILE pattern
+#define TEST_ERROR_COMPILE_PATTERN(pattern,excepted_parase_error_code)												\
+	do{																												\
+		::anyun_regex::DirectedGraph test_diagraph(pattern);														\
+		::std::cout<<"test error DirectedGraph.compile for '"<<pattern<<"'"<<std::endl;								\
+		::anyun_regex::RegexParseCode parse_result_code = test_diagraph.get_parse_result_code();					\
+		BOOST_TEST(parse_result_code == excepted_parase_error_code,													\
+				  "the compile test result code for '" << pattern <<	"' is'"										\
+				  <<::anyun_regex::PARSE_RESULT_MESSAGE[parse_result_code]											\
+				   <<"' (expected:'"<<::anyun_regex::PARSE_RESULT_MESSAGE[excepted_parase_error_code]<<"')");		\
 	}while(false)
 
 //add one test case for pre process pattern
@@ -73,6 +87,10 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE(pre_process_error_test_case_t)
 //add error test case for pre process pattern
 #define ADD_ERROR_TESTCASE_FOR_PRE_PROCESS(test_case_name,testcases)												\
 	ADD_DATA_TEST_CASE(test_case_name,testcases,one_testcase)	{TEST_ERROR_PRE_PROCESS_PATTERN(one_testcase.first,one_testcase.second);}	
+
+//add error test case for compile pattern
+#define ADD_ERROR_TESTCASE_FOR_COMPILE(test_case_name,testcases)													\
+	ADD_DATA_TEST_CASE(test_case_name,testcases,one_testcase)	{TEST_ERROR_COMPILE_PATTERN(one_testcase.first,one_testcase.second);}	
 
 //test suit macro
 #define BEGING_TEST_SUIT(test_suit_name) BOOST_AUTO_TEST_SUITE(test_suit_name)

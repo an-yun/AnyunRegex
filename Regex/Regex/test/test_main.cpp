@@ -3,16 +3,17 @@
 #include <fstream>
 #include "../Matcher.h"
 
-//#define TEST
+#define TEST
 
 
 #ifdef TEST
-/*
- *add all test moudules that shoul test 
- */
 #define REGEX_TEST_MOUDLE regex test
+/*
+*add all test moudules that shoul test
+*/
 #include "PreProcessNormalTest.h"
 #include "PreProcessErrorTest.h"
+#include "CompileErrorTest.h"
 
 #else
 #include "DirectedGraphTest.h"
