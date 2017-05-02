@@ -789,6 +789,54 @@ namespace anyun_regex
 						//don't capture this group (?:###) 
 						parse_index++;
 					}
+					else if(p[parse_index+1] == '?')
+					{
+						parse_index+=2;
+						switch (p[parse_index])
+						{
+						case '=':
+							{
+								/*
+								 *Positive Lookahead Zero-Length Assertions 零宽度正预测先行断言
+								 *(?=exp)
+								 */
+								
+								
+								break;
+							}
+
+						case '<':
+							{
+								parse_index++;
+								if(p[parse_index] == '=')
+								{
+									/*
+									*Positive Lookbehind Zero-Length Assertions 零宽度正回顾后发断言
+									*(?<=exp)
+									*/
+								}
+								else
+								{
+									/*
+									*Negative Lookbehind Zero-Length Assertions 零宽度负回顾后发断言
+									*(?<!exp)
+									*/
+								}
+								break;
+							}
+						case '!':
+							{
+								/*
+								*Negative Lookbehind Zero-Length Assertions 零宽度负预测先行断言
+								*(?!exp)
+								*/
+								break;
+							}
+						default:
+							//error
+							break;
+						}
+					}
 				}
 				else
 				{
