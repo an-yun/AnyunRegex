@@ -62,9 +62,10 @@ void password_validate() {
 	Println("use my regex lib validate password");
 	for (string &password : passwords)
 	{
-		NFAMatcher matcher = NFAMatcher::match(password, pattern);
+		NFAMatcher matcher;
+		NFAMatcher::search(password, matcher, pattern);
 		Println("validate the password:" + password);
-		if (matcher.find())
+		if (matcher.search())
 		{
 			Println("contain repeated chars more than three times,the repeat string is");
 			Println(matcher.group());
@@ -110,7 +111,7 @@ void boost_regex_password_validate()
 void test_auto()
 {
 	test_directedgraph();
-	test_nfa_match();
+	test_nfa_search();
 	test_nfa_escape();
 	test_nfa_group();
 	test_lazy_match();
