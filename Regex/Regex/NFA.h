@@ -45,15 +45,6 @@ namespace anyun_regex
 	private:
 		DirectedGraphPoint digraph;
 
-		//the new design for NFAMatcher
-		//pair<size_t, TrackRecord>  * has_final_state(State &states) const;
-		//void get_next_state(State & state, const string &text,  Matcher &matcher) const;
-		//void read_nochar_edge(State & state, const string &text, Matcher &matcher) const;
-		//void update_group_node_record(TrackRecord& record, Matcher &matcher) const;
-		//void visit_one_node(size_t parent_node_id, size_t visit_node_id, State & state, queue<size_t> &node_ids,vector<bool> &visited,Matcher &matcher) const;
-
-		//OneState &get_one_node_record(size_t node_id, State& state) const;
-
 		//the new disign for update
 		void get_next_state(SaveState & state, const string &text, Matcher &matcher) const;
 

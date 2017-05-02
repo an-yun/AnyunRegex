@@ -32,10 +32,11 @@ namespace  anyun_regex
 	}
 	string replace(const NFA & pattern, const Replacer & repalcer, const string & text, size_t offset)
 	{
-		NFAMatcher matcher = NFAMatcher::match(text, pattern, offset);
+		NFAMatcher matcher;
+		NFAMatcher::search(text, matcher,pattern, offset);
 		string result_str;
 		size_t position = 0;
-		while (matcher.find())
+		while (matcher.search())
 		{
 			pair<size_t, size_t> total_group = matcher.get_group();
 			result_str += text.substr(position, total_group.first - position);

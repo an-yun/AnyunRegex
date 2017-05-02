@@ -18,11 +18,24 @@ namespace anyun_regex {
 		friend class NFA;
 		friend class GroupReferenceDirectedge;
 	public:
-		static NFAMatcher match(const string &text, const NFA &nfa, size_t offset = 0);
-		bool find() override;
-		bool find(size_t offset) override;
+		static bool search(const string &text, NFAMatcher& search_result,const string &pattern, size_t offset = 0);
+		static bool search(const string &text, NFAMatcher& search_result, const NFA &nfa, size_t offset = 0);
+		static bool match(const string&text, NFAMatcher& match_result, const string&pattern,size_t offset=0);
+		static bool match(const string&text, NFAMatcher& match_result, const NFA &nfa, size_t offset = 0);
+		static bool match(const string&text, NFAMatcher& match_result, const string&pattern, size_t start,size_t end);
+		static bool match(const string&text, NFAMatcher& match_result, const NFA &nfa, size_t start, size_t end);
 
-		//bool new_find();
+		NFAMatcher();
+		void set_content(const string&text, const string &pattern) override;
+		void set_content(const string&text, const NFA &nfa);
+		void set_text(const string &text) override;
+		void set_pattern(const string &pattern) override;
+
+		bool search() override;
+		bool search(size_t offset) override;
+		bool match() override;
+		bool match(size_t start, size_t end) override;
+
 
 		string group(size_t index = 0) const override;
 		string group(string group_name) const override;
@@ -37,8 +50,10 @@ namespace anyun_regex {
 
 		bool is_find;
 		size_t text_length;
+		bool has_set;
 
-		NFAMatcher(const string &text, const NFA &nfa, size_t offset);
+		void set_nfa(NFA nfa);
+		//NFAMatcher(const string &text, const NFA &nfa, size_t offset=0);
 	};
 }
 #endif // !MATCHER_H

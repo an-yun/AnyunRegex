@@ -193,9 +193,6 @@ namespace anyun_regex
 		return new LineEndDirectedEdge(*this);
 	}
 
-	Matcher::Matcher(string text, size_t cursor, size_t group_size) :text(text), cursor(cursor), groups(group_size)
-	{
-	}
 
 	CountDirectedEdge::CountDirectedEdge(size_t id)
 		: DirectedEdge(id)
@@ -221,6 +218,23 @@ namespace anyun_regex
 	{
 		return groups[group_index];
 	}
+
+	void Matcher::set_groups(size_t groups_size)
+	{
+		groups.resize(groups_size);
+	}
+
+	void Matcher::set_content(const string & text, const string & pattern)
+	{
+		set_text(text);
+		set_pattern(pattern);
+	}
+
+	void Matcher::set_text(const string & text)
+	{
+		this->text = text;
+	}
+
 
 	size_t Matcher::current_cursor() const
 	{

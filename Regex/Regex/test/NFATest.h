@@ -36,7 +36,7 @@ namespace anyun_regex
 #define Println(content) \
 	cout<<content<<endl;
 #ifdef _DEBUG
-	void test_nfa_match();
+	void test_nfa_search();
 	void test_nfa_escape();
 	void test_nfa_group();
 	void test_nfa_replace();
@@ -61,6 +61,7 @@ namespace anyun_regex
 		void add_testcases(const vector<string> &testcases);
 		void add_testcases(const string &test_file_path);
 		void test_match();
+		void test_search();
 		void test_group();
 		void test_replace();
 		void test_group_capture();
@@ -79,6 +80,7 @@ namespace anyun_regex
 		void read_testcases_from_file(const string &test_file_path);
 		void print_test_information();
 		bool test_one_match_testcase(const string &testcase);
+		bool test_one_search_testcase(const string &testcase);
 		bool test_one_group_testcase(const string &testcase);
 		bool test_one_replace_testcase(const string &testcase, const string &new_string);
 		bool test_one_capture_testcase(const string &testcase, const string &group_name);
