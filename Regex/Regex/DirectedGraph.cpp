@@ -32,9 +32,9 @@ namespace anyun_regex
 		the priority table
 
 		\metachar  (the escape char)
-		( )¡¢(?: )¡¢(?= )¡¢[ ]
-		*¡¢+¡¢?¡¢{n}¡¢{n,}¡¢{m,n}
-		^¡¢$
+		( )ã€(?: )ã€(?= )ã€[ ]
+		*ã€+ã€?ã€{n}ã€{n,}ã€{m,n}
+		^ã€$
 		concatenation  operator (I represent it here using .)
 		|
 		\0  (start or end)
@@ -797,7 +797,7 @@ namespace anyun_regex
 						case '=':
 							{
 								/*
-								 *Positive Lookahead Zero-Length Assertions Áã¿í¶ÈÕıÔ¤²âÏÈĞĞ¶ÏÑÔ
+								 *Positive Lookahead Zero-Length Assertions é›¶å®½åº¦æ­£é¢„æµ‹å…ˆè¡Œæ–­è¨€
 								 *(?=exp)
 								 */
 								
@@ -811,14 +811,14 @@ namespace anyun_regex
 								if(p[parse_index] == '=')
 								{
 									/*
-									*Positive Lookbehind Zero-Length Assertions Áã¿í¶ÈÕı»Ø¹Ëºó·¢¶ÏÑÔ
+									*Positive Lookbehind Zero-Length Assertions é›¶å®½åº¦æ­£å›é¡¾åå‘æ–­è¨€
 									*(?<=exp)
 									*/
 								}
 								else
 								{
 									/*
-									*Negative Lookbehind Zero-Length Assertions Áã¿í¶È¸º»Ø¹Ëºó·¢¶ÏÑÔ
+									*Negative Lookbehind Zero-Length Assertions é›¶å®½åº¦è´Ÿå›é¡¾åå‘æ–­è¨€
 									*(?<!exp)
 									*/
 								}
@@ -827,7 +827,7 @@ namespace anyun_regex
 						case '!':
 							{
 								/*
-								*Negative Lookbehind Zero-Length Assertions Áã¿í¶È¸ºÔ¤²âÏÈĞĞ¶ÏÑÔ
+								*Negative Lookbehind Zero-Length Assertions é›¶å®½åº¦è´Ÿé¢„æµ‹å…ˆè¡Œæ–­è¨€
 								*(?!exp)
 								*/
 								break;
