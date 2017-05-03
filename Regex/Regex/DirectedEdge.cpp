@@ -252,6 +252,11 @@ namespace anyun_regex
 		cursor--;
 	}
 
+	void Matcher::set_cursor(size_t cursor)
+	{
+		this->cursor = cursor;
+	}
+
 	RepeatDirectedge::RepeatDirectedge(size_t id, size_t s_id, size_t e_id)
 		:DirectedEdge(id, s_id, e_id)
 	{

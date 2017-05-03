@@ -36,6 +36,7 @@ namespace anyun_regex
 #define Println(content) \
 	cout<<content<<endl;
 #ifdef _DEBUG
+	void test_nfa_match();
 	void test_nfa_search();
 	void test_nfa_escape();
 	void test_nfa_group();

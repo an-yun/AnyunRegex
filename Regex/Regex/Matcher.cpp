@@ -54,6 +54,7 @@ namespace anyun_regex {
 	{
 		set_text(text);
 		set_nfa(nfa);
+		set_groups(nfa.group_size());
 		is_find = true;
 		has_set = true;
 	}

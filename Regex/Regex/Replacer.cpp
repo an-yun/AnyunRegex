@@ -33,7 +33,8 @@ namespace  anyun_regex
 	string replace(const NFA & pattern, const Replacer & repalcer, const string & text, size_t offset)
 	{
 		NFAMatcher matcher;
-		NFAMatcher::search(text, matcher,pattern, offset);
+		matcher.set_content(text, pattern);
+		matcher.set_cursor(offset);
 		string result_str;
 		size_t position = 0;
 		while (matcher.search())

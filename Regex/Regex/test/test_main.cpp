@@ -111,6 +111,7 @@ void boost_regex_password_validate()
 void test_auto()
 {
 	test_directedgraph();
+	test_nfa_match();
 	test_nfa_search();
 	test_nfa_escape();
 	test_nfa_group();

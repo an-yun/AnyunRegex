@@ -195,6 +195,7 @@ namespace anyun_regex
 		virtual size_t group_index(string group_name)const = 0;
 		virtual size_t group_count() const = 0;
 
+		virtual void set_cursor(size_t cursor);
 
 	protected:
 		string text;

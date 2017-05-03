@@ -7,10 +7,94 @@ namespace anyun_regex
 
 	
 
+	void test_nfa_match()
+	{
+		cout << endl;
+		print_string_format(80, "Test class NFA and NFAMatcher for match", '-', true);
+		cout << endl;
+		NFATest nfa_test;
+
+		nfa_test.set_pattern(".*");
+		nfa_test.add_testcase("1b");
+		nfa_test.add_testcase("4a");
+		nfa_test.add_testcase("Mayflies, also known as shadflies or fishflies in Canada");
+		nfa_test.add_testcase(".cc .cpp .cxx .C .c++ .h .hh .hpp .hxx .h++");
+		nfa_test.add_testcase("are aquatic insects belonging to the order Ephemeroptera");
+		nfa_test.add_testcase("Immature mayflies are aquatic");
+		nfa_test.add_testcase("Adult mayflies, or imagos, are relatively primitive in structure");
+		nfa_test.add_testcase("Often, all the mayflies in a population mature at once (a hatch), and for a day or two in the spring or autumn");
+		nfa_test.add_testcase("1c23abcb");
+		nfa_test.add_testcase("1ab2ab3abbb");
+		nfa_test.add_testcase("1)*&^$3b3abbb");
+		nfa_test.test_match();
+
+		nfa_test.set_pattern("[123]ab*");
+		nfa_test.add_testcase("1a");
+		nfa_test.add_testcase("1b");
+		nfa_test.add_testcase("4a");
+		nfa_test.add_testcase("2abb");
+		nfa_test.add_testcase("23abb");
+		nfa_test.add_testcase("c23abcb");
+		nfa_test.add_testcase("1c23abcb");
+		nfa_test.add_testcase("1ab2ab3abbb");
+		nfa_test.add_testcase("1abbadafdasfdasfdasfdfdasf2abbb3abasdfbb");
+
+		nfa_test.test_match();
+
+		nfa_test.set_pattern("[a-zA-Z_][a-zA-Z0-9_]*");
+		nfa_test.add_testcase("dfe");
+		nfa_test.add_testcase("12fe");
+		nfa_test.add_testcase("abdfe");
+		nfa_test.add_testcase("c_edfe");
+		nfa_test.add_testcase("_hell1a001");
+		nfa_test.add_testcase("AB_Edsae12nfa_hell");
+		nfa_test.add_testcase("nfa&helld1a AB_c0 001");
+		nfa_test.add_testcase("nfa _hell 1a AB_c0 001");
+
+		nfa_test.test_match();
+
+		nfa_test.set_pattern("^ab*$");
+		nfa_test.add_testcase("abb");
+		nfa_test.add_testcase("a");
+		nfa_test.add_testcase("abbbb");
+		nfa_test.add_testcase("abaacdaa");
+		nfa_test.add_testcase("aaadbaaaaa");
+		nfa_test.add_testcase("ab\nabbb");
+		nfa_test.add_testcase("ab\nabbb\n");
+		nfa_test.add_testcase("ab\nabbb\n12");
+
+		nfa_test.test_match();
+
+		nfa_test.set_pattern("a+\\d{2,6}");
+		nfa_test.add_testcase("a");
+		nfa_test.add_testcase("a1");
+		nfa_test.add_testcase("ba12");
+		nfa_test.add_testcase("aba123456");
+		nfa_test.add_testcase("a1234567");
+		nfa_test.add_testcase("aaaaaaa36");
+		nfa_test.add_testcase("11111112a3");
+		nfa_test.add_testcase("1aa1aa112a3");
+		nfa_test.add_testcase("a&1@b#a1908");
+		nfa_test.add_testcase("123aaaji8eaa");
+
+		nfa_test.test_match();
+
+		nfa_test.set_pattern("a*a{2,}b{1,}");
+		nfa_test.add_testcase("ab");
+		nfa_test.add_testcase("aaab");
+		nfa_test.add_testcase("aaaabbb");
+		nfa_test.add_testcase("aaaabbabaa");
+		nfa_test.add_testcase("aaaabbbbaaab");
+		nfa_test.add_testcase("aaaab12abaabaa");
+		nfa_test.add_testcase("12aaaabbbbbbbbbbbb");
+		nfa_test.add_testcase("aca12\\^%12asdaaaabb");
+		nfa_test.test_match();
+	}
+
 	void test_nfa_search()
 	{
 		cout << endl;
-		print_string_format(80, "Test class NFA and NFAMatcher ", '-', true);
+		print_string_format(80, "Test class NFA and NFAMatcher for search", '-', true);
 		cout << endl;
 		NFATest nfa_test;
 		nfa_test.set_pattern("");
@@ -140,7 +224,7 @@ namespace anyun_regex
 	void test_nfa_group()
 	{
 		cout << endl;
-		print_string_format(80, "Test class NFA and NFAMatcher ", '-', true);
+		print_string_format(80, "Test class NFA and NFAMatcher for group", '-', true);
 		cout << endl;
 		NFATest nfa_test;
 		nfa_test.set_pattern("(a)+(acd)");
@@ -329,6 +413,154 @@ namespace anyun_regex
 
 	}
 
+	void test_lazy_match()
+	{
+		//to do
+		cout << endl;
+		print_string_format(80, "Test Lazy match in class NFA  ", '-', true);
+		cout << endl;
+		NFATest nfa_test;
+		nfa_test.test_lazy_match_can_none();
+		nfa_test.test_lazy_match_zero_more();
+		nfa_test.test_lazy_match_one_more();
+		nfa_test.test_lazy_match_repeat_count();
+	}
+
+	void NFATest::test_lazy_match_can_none()
+	{
+		set_pattern("a?(ab)??""(ab)*");
+		add_testcase("aab");
+		add_testcase("aaab");
+		add_testcase("aabab");
+		add_testcase("aaaaab");
+		add_testcase("acab");
+		add_testcase("babaaaab");
+		add_testcase("bbabaabab");
+		add_testcase("bbbbbbbbbbbbbbbbbbbba");
+		add_testcase("abababababababababab");
+		add_testcase("123ab132aab2ababd12f9kababab");
+		test_group();
+
+		set_pattern("(\\d )??""( *)([yY]ou|I|[Ss]he|[Hh]e)");
+		add_testcase("I");
+		add_testcase("1  You");
+		add_testcase("2He");
+		add_testcase("She");
+		add_testcase("1  I");
+		add_testcase("you2He3She 1");
+		add_testcase("    You yo   2  She He");
+		add_testcase("               1           She   He");
+		add_testcase("you He 12222    SHe He 12 ");
+		add_testcase("youYouSheheSheshe    1  You");
+		test_group();
+
+		//here should be more testcases
+	}
+
+	void NFATest::test_lazy_match_zero_more()
+	{
+		//to do
+		set_pattern(".*(<div>.*?</div>)");
+		add_testcase("<div>  </div");
+		add_testcase("<div></div>");
+		add_testcase("<div>123</div>");
+		add_testcase("<div><div>123</div></div>");
+		add_testcase("<div><div><p>mis /div</p></div>");
+		add_testcase("<div><p>mis div</p></div></div>");
+		add_testcase("</div></div>");
+		add_testcase("<p>mis div</p></div></div></div>");
+		add_testcase("<div><div><div><div><div><p>mis /div</p>");
+		add_testcase("<p>some content</p><div>infor mation for p</div>");
+		test_group();
+
+		set_pattern("(He|(\\s)he)(\\s+)(\\S*?)e?d");//search sentence like 'He looked' or 'he had'
+		add_testcase("Yet another unusual thing about Harry was how little he looked forward to his birthdays. ");
+		add_testcase("He had never received a birthday card in his life");
+		add_testcase("Harry walked across the dark room, past Hedwig¡¯s large, empty cage, to the open window. ");
+		add_testcase("Hedwig had been absent for two nights now.");
+		add_testcase("Harry recognized the unconscious owl at once");
+		add_testcase("Ron says he¡¯s going to be in London in the last week of the holidays. ");
+		add_testcase("He wanted me to debug the program");
+		add_testcase("It's surprising that he asked she to do this work");
+		add_testcase("\" No no no,it wasn't possible \" ,he said.");
+		add_testcase("He he       no       ");
+		test_group();
+	}
+
+	void NFATest::test_lazy_match_one_more()
+	{
+		set_pattern("a?(ab)+?""(ab)*");
+		add_testcase("aab");
+		add_testcase("aaab");
+		add_testcase("aabab");
+		add_testcase("aaaaab");
+		add_testcase("acab");
+		add_testcase("babaaaab");
+		add_testcase("bbabaabab");
+		add_testcase("bbbbbbbbbbbbbbbbbbbba");
+		add_testcase("abababababababababab");
+		add_testcase("123ab132aab2ababd12f9kababab");
+		test_group();
+
+		//here need more testcases
+
+		set_pattern("a?(ab)+?""(ab)+");
+		add_testcase("aab");
+		add_testcase("aaab");
+		add_testcase("aabab");
+		add_testcase("aaaaab");
+		add_testcase("acab");
+		add_testcase("babaaaab");
+		add_testcase("bbabaabab");
+		add_testcase("bbbbbbbbbbbbbbbbbbbba");
+		add_testcase("abababababababababab");
+		add_testcase("123ab132aab2ababd12f9kababab");
+		test_group();
+
+		set_pattern("ac?a+?(ab)+?");
+		add_testcase("aab");
+		add_testcase("aaab");
+		add_testcase("aabab");
+		add_testcase("aaaaab");
+		add_testcase("aaacab");
+		add_testcase("babaaaab");
+		add_testcase("bbabaabab");
+		add_testcase("bbbbbbbbbbbbbbbbbbbba");
+		add_testcase("abababababababababab");
+		add_testcase("a123ab132aab2ababd12f9kababab");
+		test_group();
+	}
+
+	void NFATest::test_lazy_match_repeat_count()
+	{
+		set_pattern("a?(ab){2,3}?""(ab)*");
+		add_testcase("aab");
+		add_testcase("aaab");
+		add_testcase("aabab");
+		add_testcase("aaaaab");
+		add_testcase("acab");
+		add_testcase("babaaaab");
+		add_testcase("bbabaabab");
+		add_testcase("bbbbbbbbbbbbbbbbbbbba");
+		add_testcase("abababababababababab");
+		add_testcase("123ab132aab2ababd12f9kababab");
+		test_group();
+		//to do
+
+		set_pattern("a\\d{1,}?345");
+		add_testcase("a345");
+		add_testcase("a1345");
+		add_testcase("a12345");
+		add_testcase("ab3345");
+		add_testcase("a333345");
+		add_testcase("aaaaaaaaa345");
+		add_testcase("a12a1212121345");
+		add_testcase("abcdefg123aaaa12121345");
+		test_group();
+
+
+	}
+
 	void test_nfa_replace()
 	{
 		cout << endl;
@@ -419,18 +651,6 @@ namespace anyun_regex
 		nfa_test.test_single_group_capture();
 	}
 
-	void test_lazy_match()
-	{
-		//to do
-		cout << endl;
-		print_string_format(80, "Test Lazy match in class NFA  ", '-', true);
-		cout << endl;
-		NFATest nfa_test;
-		nfa_test.test_lazy_match_can_none();
-		nfa_test.test_lazy_match_zero_more();
-		nfa_test.test_lazy_match_one_more();
-		nfa_test.test_lazy_match_repeat_count();
-	}
 
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle)
 	{
@@ -703,19 +923,29 @@ namespace anyun_regex
 
 	bool NFATest::test_one_match_testcase(const string & testcase)
 	{
-		NFAMatcher search_result;
-		NFAMatcher::search(testcase, search_result, nfa);
-		sregex_iterator begin(testcase.begin(), testcase.end(), standard_regex);
-		sregex_iterator end;
-		for (; begin != end && search_result.search(); begin++)
-			if ((*begin).str() != search_result.group()) return false;
-		return begin == end && !search_result.search();
+		NFAMatcher match_result;
+		std::smatch std_result;
+		bool is_match = std::regex_match(testcase, std_result, standard_regex);
+		if (is_match^NFAMatcher::match(testcase, match_result, nfa)) //if the match result is wrong
+			return false;
+		if (is_match)
+		{
+			if (std_result.str() != match_result.group()) return false;
+			else
+			{
+				if (std_result.size() != match_result.group_count())return false;
+				size_t group_size = std_result.size();
+				for (size_t i = 1; i < group_size; i++)
+					if (std_result[i] != match_result.group(i))return false;
+			}
+		}
+		return true;
 	}
 
 	bool NFATest::test_one_search_testcase(const string & testcase)
 	{
 		NFAMatcher search_result;
-		NFAMatcher::search(testcase, search_result, nfa);
+		search_result.set_content(testcase, nfa);
 		sregex_iterator begin(testcase.begin(), testcase.end(), standard_regex);
 		sregex_iterator end;
 		for (; begin != end && search_result.search(); begin++)
@@ -726,7 +956,7 @@ namespace anyun_regex
 	bool NFATest::test_one_group_testcase(const string & testcase)
 	{
 		NFAMatcher search_result;
-		NFAMatcher::search(testcase, search_result, nfa);
+		search_result.set_content(testcase, nfa);
 		sregex_iterator begin(testcase.begin(), testcase.end(), standard_regex);
 		sregex_iterator end;
 		for (; begin != end && search_result.search(); begin++)
@@ -753,7 +983,7 @@ namespace anyun_regex
 	{
 
 		NFAMatcher search_result;
-		NFAMatcher::search(testcase, search_result, nfa);
+		search_result.set_content(testcase, nfa);
 		sregex_iterator begin(testcase.begin(), testcase.end(), standard_regex);
 		sregex_iterator end;
 		for (; begin != end && search_result.search(); begin++)
@@ -799,140 +1029,7 @@ namespace anyun_regex
 		cout << endl;
 	}
 
-	void NFATest::test_lazy_match_can_none()
-	{
-		set_pattern("a?(ab)??""(ab)*");
-		add_testcase("aab");
-		add_testcase("aaab");
-		add_testcase("aabab");
-		add_testcase("aaaaab");
-		add_testcase("acab");
-		add_testcase("babaaaab");
-		add_testcase("bbabaabab");
-		add_testcase("bbbbbbbbbbbbbbbbbbbba");
-		add_testcase("abababababababababab");
-		add_testcase("123ab132aab2ababd12f9kababab");
-		test_group();
-
-		set_pattern("(\\d )??""( *)([yY]ou|I|[Ss]he|[Hh]e)");
-		add_testcase("I");
-		add_testcase("1  You");
-		add_testcase("2He");
-		add_testcase("She");
-		add_testcase("1  I");
-		add_testcase("you2He3She 1");
-		add_testcase("    You yo   2  She He");
-		add_testcase("               1           She   He");
-		add_testcase("you He 12222    SHe He 12 ");
-		add_testcase("youYouSheheSheshe    1  You");
-		test_group();
-
-		//here should be more testcases
-	}
-
-	void NFATest::test_lazy_match_zero_more()
-	{
-		//to do
-		set_pattern(".*(<div>.*?</div>)");
-		add_testcase("<div>  </div");
-		add_testcase("<div></div>");
-		add_testcase("<div>123</div>");
-		add_testcase("<div><div>123</div></div>");
-		add_testcase("<div><div><p>mis /div</p></div>");
-		add_testcase("<div><p>mis div</p></div></div>");
-		add_testcase("</div></div>");
-		add_testcase("<p>mis div</p></div></div></div>");
-		add_testcase("<div><div><div><div><div><p>mis /div</p>");
-		add_testcase("<p>some content</p><div>infor mation for p</div>");
-		test_group();
-
-		set_pattern("(He|(\\s)he)(\\s+)(\\S*?)e?d");//search sentence like 'He looked' or 'he had'
-		add_testcase("Yet another unusual thing about Harry was how little he looked forward to his birthdays. ");
-		add_testcase("He had never received a birthday card in his life");
-		add_testcase("Harry walked across the dark room, past Hedwig¡¯s large, empty cage, to the open window. ");
-		add_testcase("Hedwig had been absent for two nights now.");
-		add_testcase("Harry recognized the unconscious owl at once");
-		add_testcase("Ron says he¡¯s going to be in London in the last week of the holidays. ");
-		add_testcase("He wanted me to debug the program");
-		add_testcase("It's surprising that he asked she to do this work");
-		add_testcase("\" No no no,it wasn't possible \" ,he said.");
-		add_testcase("He he       no       ");
-		test_group();
-	}
-
-	void NFATest::test_lazy_match_one_more()
-	{
-		set_pattern("a?(ab)+?""(ab)*");
-		add_testcase("aab");
-		add_testcase("aaab");
-		add_testcase("aabab");
-		add_testcase("aaaaab");
-		add_testcase("acab");
-		add_testcase("babaaaab");
-		add_testcase("bbabaabab");
-		add_testcase("bbbbbbbbbbbbbbbbbbbba");
-		add_testcase("abababababababababab");
-		add_testcase("123ab132aab2ababd12f9kababab");
-		test_group();
-
-		//here need more testcases
-
-		set_pattern("a?(ab)+?""(ab)+");
-		add_testcase("aab");
-		add_testcase("aaab");
-		add_testcase("aabab");
-		add_testcase("aaaaab");
-		add_testcase("acab");
-		add_testcase("babaaaab");
-		add_testcase("bbabaabab");
-		add_testcase("bbbbbbbbbbbbbbbbbbbba");
-		add_testcase("abababababababababab");
-		add_testcase("123ab132aab2ababd12f9kababab");
-		test_group();
-
-		set_pattern("ac?a+?(ab)+?");
-		add_testcase("aab");
-		add_testcase("aaab");
-		add_testcase("aabab");
-		add_testcase("aaaaab");
-		add_testcase("aaacab");
-		add_testcase("babaaaab");
-		add_testcase("bbabaabab");
-		add_testcase("bbbbbbbbbbbbbbbbbbbba");
-		add_testcase("abababababababababab");
-		add_testcase("a123ab132aab2ababd12f9kababab");
-		test_group();
-	}
-
-	void NFATest::test_lazy_match_repeat_count()
-	{
-		set_pattern("a?(ab){2,3}?""(ab)*");
-		add_testcase("aab");
-		add_testcase("aaab");
-		add_testcase("aabab");
-		add_testcase("aaaaab");
-		add_testcase("acab");
-		add_testcase("babaaaab");
-		add_testcase("bbabaabab");
-		add_testcase("bbbbbbbbbbbbbbbbbbbba");
-		add_testcase("abababababababababab");
-		add_testcase("123ab132aab2ababd12f9kababab");
-		test_group();
-		//to do
-
-		set_pattern("a\\d{1,}?345");
-		add_testcase("a345");
-		add_testcase("a1345");
-		add_testcase("a12345");
-		add_testcase("ab3345");
-		add_testcase("a333345");
-		add_testcase("aaaaaaaaa345");
-		add_testcase("a12a1212121345");
-		add_testcase("abcdefg123aaaa12121345");
-		test_group();
-
-
-	}
+	
 
 	void NFATest::print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count)
 	{
@@ -948,7 +1045,7 @@ namespace anyun_regex
 		sregex_iterator begin(text.begin(), text.end(), standard_regex);
 		sregex_iterator end;
 		NFAMatcher search_result;
-		NFAMatcher::search(text, search_result, nfa);
+		search_result.set_content(text, nfa);
 		int i = 1;
 		for (; begin != end && search_result.search(); begin++)
 			std::cout << "test " << i++ << ":" << (*begin).str() << " " << search_result.group() << std::endl;
