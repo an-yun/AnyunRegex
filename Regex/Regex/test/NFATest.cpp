@@ -89,6 +89,40 @@ namespace anyun_regex
 		nfa_test.add_testcase("12aaaabbbbbbbbbbbb");
 		nfa_test.add_testcase("aca12\\^%12asdaaaabb");
 		nfa_test.test_match();
+
+		nfa_test.set_pattern("\\s+ab*\\s+");
+		nfa_test.add_testcase(" abb ");
+		nfa_test.add_testcase("a");
+		nfa_test.add_testcase(" abbc");
+		nfa_test.add_testcase("\ta\n");
+		nfa_test.test_match();
+
+
+		//url test
+		nfa_test.set_pattern("[a-zA-z]+://[^\\s]*");
+		nfa_test.add_testcase("http://www.baidu.com");
+		nfa_test.add_testcase("http://deerchao.net/tutorials/regex/regex.htm");
+		nfa_test.add_testcase("https://www.google.com.hk/");
+		nfa_test.add_testcase("http://msdn.itellyou.cn/");
+		nfa_test.add_testcase("a://b.c.com");
+		nfa_test.add_testcase("foo@demo.net");
+		nfa_test.add_testcase("bar.ba@test.co.uk");
+		nfa_test.add_testcase("www.demo.com");
+		nfa_test.add_testcase("http://foo.co.uk/");
+		nfa_test.add_testcase("http://regexr.com/foo.html?q=bar");
+		nfa_test.add_testcase("https://mediatemple.net");
+		nfa_test.test_match();
+
+		//email test
+		nfa_test.set_pattern("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+		nfa_test.add_testcase("foo@demo.net");
+		nfa_test.add_testcase("bar.ba@test.co.uk");
+		nfa_test.add_testcase("zsy296@gmail.com");
+		nfa_test.add_testcase("1007252397@qq.com");
+		nfa_test.add_testcase("b-+  ar.ba@test.co.uk");
+		nfa_test.add_testcase("http://deerchao.net/tutorials/regex/common.htm");
+		nfa_test.test_match();
+
 	}
 
 	void test_nfa_search()
