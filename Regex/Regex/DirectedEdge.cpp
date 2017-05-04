@@ -106,7 +106,7 @@ namespace anyun_regex
 		return SIGMA_DIRECTEDEDGE;
 	}
 
-	size_t SigmaDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
+	size_t SigmaDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		return 0;
 	}
@@ -119,7 +119,7 @@ namespace anyun_regex
 		return SINGLE_CHAR_DIRECTEDEDGE;
 	}
 
-	size_t SingleCharDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
+	size_t SingleCharDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		return index < matcher.text.length() && condition->match(text[index]) ? 1 : static_cast<unsigned>(-1);
 	}
@@ -160,7 +160,7 @@ namespace anyun_regex
 		return LINE_START_DIRECTEDEDGE;
 	}
 
-	size_t LineStartDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
+	size_t LineStartDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		return (index == 0 || text[index-1] == '\n') ? 0 : static_cast<unsigned>(-1);
 	}
@@ -180,7 +180,7 @@ namespace anyun_regex
 		return LINE_END_DIRECTEDEDGE;
 	}
 
-	size_t LineEndDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
+	size_t LineEndDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		return (index == text.size() || (index < text.size() && text[index] == '\n')) ? 0 : static_cast<unsigned>(-1);
 	}
@@ -201,7 +201,7 @@ namespace anyun_regex
 		return COUNT_DIRECTEDEDGE;
 	}
 
-	size_t CountDirectedEdge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
+	size_t CountDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		return static_cast<unsigned>(-1);
 	}
@@ -227,7 +227,7 @@ namespace anyun_regex
 		return REPEAT_DIRECTEDEDGE;
 	}
 
-	size_t RepeatDirectedge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
+	size_t RepeatDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		return static_cast<unsigned>(-1);
 	}
@@ -247,7 +247,7 @@ namespace anyun_regex
 		return GROUP_REFERENCE_DIRECTEDGE;
 	}
 
-	size_t GroupReferenceDirectedge::accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const
+	size_t GroupReferenceDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		//here should be move ?
 		//if (index >= matcher.text.length()) return static_cast<unsigned>(-1);
@@ -276,7 +276,7 @@ namespace anyun_regex
 		return WORD_BOUNDARY_DIRECTEDEDGE;
 	}
 
-	size_t WordBoundaryDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record) const
+	size_t WordBoundaryDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		//word start
 		if ((index == 0 || is_blank(text[index - 1])) && !is_blank(text[index])) return 0;
@@ -300,7 +300,7 @@ namespace anyun_regex
 		return ELEMENT_DIRECTEDGE;
 	}
 
-	size_t ElementDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record) const
+	size_t ElementDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		return original_edge->accept(text,index,matcher,track_record)==static_cast<size_t>(-1)?0: static_cast<size_t>(-1);
 	}
@@ -313,7 +313,8 @@ namespace anyun_regex
 	PLAZeroAssertionDirectedge::PLAZeroAssertionDirectedge(size_t id, const string &pattern)
 		:DirectedEdge(id)
 	{
-		matcher.set_pattern(pattern);
+		//lazy implement
+		sub_exp_matcher.set_pattern(pattern+".*");
 	}
 
 	DirectedEdgeType PLAZeroAssertionDirectedge::get_type() const
@@ -321,9 +322,10 @@ namespace anyun_regex
 		return PLA_ZERO_ASSERTION_DIRECTEDGE;
 	}
 
-	size_t PLAZeroAssertionDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record) const
+	size_t PLAZeroAssertionDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
-		return size_t();
+		//(this->matcher).set_text(text);
+		return sub_exp_matcher.match(index,text.length())?0: static_cast<size_t>(-1);
 	}
 
 	DirectedEdge * PLAZeroAssertionDirectedge::copy() const

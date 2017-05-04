@@ -188,7 +188,7 @@ namespace anyun_regex
 		virtual size_t get_start_node_id() const;
 		virtual size_t get_end_node_id() const;
 
-		virtual size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const = 0;
+		virtual size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) = 0;
 		virtual DirectedEdge* copy() const = 0;
 		virtual ~DirectedEdge();	//the virtual destructor
 	private:
@@ -205,7 +205,7 @@ namespace anyun_regex
 		SigmaDirectedEdge(size_t id, size_t s_id = 0, size_t e_id = 0);
 
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	};
 
@@ -217,7 +217,7 @@ namespace anyun_regex
 		SingleCharDirectedEdge(ConditionPoint condition, size_t id, size_t s_id = 0, size_t  e_id = 0);
 
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	private:
 		ConditionPoint condition;
@@ -228,7 +228,7 @@ namespace anyun_regex
 	public:
 		LineStartDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	};
 
@@ -237,7 +237,7 @@ namespace anyun_regex
 	public:
 		LineEndDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	};
 
@@ -246,7 +246,7 @@ namespace anyun_regex
 	public:
 		WordBoundaryDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	};
 
@@ -255,7 +255,7 @@ namespace anyun_regex
 	public:
 		CountDirectedEdge(size_t id);
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	private:
 
@@ -267,7 +267,7 @@ namespace anyun_regex
 		RepeatDirectedge(size_t id, size_t s_id = 0, size_t e_id = 0);
 
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	};
 
@@ -277,7 +277,7 @@ namespace anyun_regex
 		GroupReferenceDirectedge(size_t id, size_t group_id, size_t s_id = 0, size_t e_id = 0);
 
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	private:
 		size_t reference_id;
@@ -289,7 +289,7 @@ namespace anyun_regex
 		ElementDirectedge(size_t id, DirectedEdgePoint original_edge);
 
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	private:
 		DirectedEdgePoint original_edge;
@@ -307,10 +307,10 @@ namespace anyun_regex
 		PLAZeroAssertionDirectedge(size_t id, const string &pattern);
 
 		DirectedEdgeType get_type() const override;
-		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
 		DirectedEdge* copy() const override;
 	private:
-		NFAMatcher matcher;
+		NFAMatcher sub_exp_matcher;
 	};
 }
 

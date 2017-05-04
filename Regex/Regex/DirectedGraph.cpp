@@ -649,6 +649,15 @@ namespace anyun_regex
 						current = p[i], next = p[i + 1];
 						result.push_back(current);
 					}
+					else if(next == '=')
+					{
+						//for pla zero length assertions
+						result.push_back('=');
+						i += 2;
+						size_t end_subexp_position = p.find_first_of(')', i);
+						for(size_t s = i;s<end_subexp_position;s++) result.push_back(p[s]);
+						i = end_subexp_position-1;
+					}
 				}
 				bracket_count++;
 				break;
@@ -770,78 +779,92 @@ namespace anyun_regex
 			case '(':
 				if (p[parse_index + 1] == '?')
 				{
-					parse_index++;
-					if (p[parse_index + 1] == '<' || p[parse_index + 1] == '\'')
+					parse_index += 2;
+					switch (p[parse_index])
 					{
-						//do something for name capture (?<group_name>##) or (?'group_name'##)
+					case '<':
+						{
+							parse_index++;
+							if (p[parse_index] == '=')
+							{
+								/*
+								*Positive Lookbehind Zero-Length Assertions 零宽度正回顾后发断言
+								*(?<=exp)
+								*/
+
+								//to do
+							}
+							else if(p[parse_index] == '!')
+							{
+								/*
+								*Negative Lookbehind Zero-Length Assertions 零宽度负回顾后发断言
+								*(?<!exp)
+								*/
+
+								//to do
+							}
+							else
+							{
+								//do something for name capture (?<group_name>##)
+								size_t end_group_name_position = p.find_first_of('>', ++parse_index);
+								string group_name = p.substr(parse_index, end_group_name_position - parse_index);
+								size_t group_id = groups.size();
+								group_stack.push(group_id);
+								name_groups[group_name] = group_id;
+								groups.push_back(Group());//add group in stack
+								parse_index = end_group_name_position;
+							}
+							break;
+						}
+					case '\'':
+					{
+						//do something for name capture (?'group_name'##)
 						parse_index++;
-						char find_char = p[parse_index] == '\'' ? '\'' : '>';
-						size_t end_group_name_position = p.find_first_of(find_char, ++parse_index);
+						size_t end_group_name_position = p.find_first_of('\'', ++parse_index);
 						string group_name = p.substr(parse_index, end_group_name_position - parse_index);
 						size_t group_id = groups.size();
 						group_stack.push(group_id);
 						name_groups[group_name] = group_id;
 						groups.push_back(Group());//add group in stack
 						parse_index = end_group_name_position;
+						break;
 					}
-					else if (p[parse_index + 1] == ':')
+					case ':':
 					{
 						//don't capture this group (?:###) 
+						/*
+						 * here need more test
+						 */
 						parse_index++;
+						break;
 					}
-					else if(p[parse_index+1] == '?')
+					case '=':
 					{
-						parse_index+=2;
-						switch (p[parse_index])
-						{
-						case '=':
-							{
-								/*
-								 *Positive Lookahead Zero-Length Assertions 零宽度正预测先行断言
-								 *(?=exp)
-								 */
-								
-								//to do
-								break;
-							}
-
-						case '<':
-							{
-								parse_index++;
-								if(p[parse_index] == '=')
-								{
-									/*
-									*Positive Lookbehind Zero-Length Assertions 零宽度正回顾后发断言
-									*(?<=exp)
-									*/
-
-									//to do
-								}
-								else
-								{
-									/*
-									*Negative Lookbehind Zero-Length Assertions 零宽度负回顾后发断言
-									*(?<!exp)
-									*/
-
-									//to do
-								}
-								break;
-							}
-						case '!':
-							{
-								/*
-								*Negative Lookbehind Zero-Length Assertions 零宽度负预测先行断言
-								*(?!exp)
-								*/
+						/*
+						*Positive Lookahead Zero-Length Assertions 零宽度正预测先行断言
+						*(?=exp)
+						*/
+						size_t end_exp_position = p.find_first_of(')', ++parse_index);
+						string sub_pattern = p.substr(parse_index, end_exp_position - parse_index);
+						DirectedEdgePoint edge(new PLAZeroAssertionDirectedge(edges.size(), sub_pattern));
+						store_edge(edge, operands);
+						parse_index = end_exp_position-1;
+						group_stack.push(static_cast<unsigned>(-1));
+						break;
+					}
+					case '!':
+					{
+						/*
+						*Negative Lookbehind Zero-Length Assertions 零宽度负预测先行断言
+						*(?!exp)
+						*/
 
 
-								break;
-							}
-						default:
-							//error
-							break;
-						}
+						break;
+					}
+					default:
+						//error
+						break;
 					}
 				}
 				else
@@ -858,7 +881,10 @@ namespace anyun_regex
 				normal_priority_parse(')', operators, operands, parse_index);
 				//add group node
 				if (temp != parse_index)
-					add_group_node(operands, group_stack);
+				{
+					if (group_stack.top() == static_cast<unsigned>(-1)) group_stack.pop();
+					else add_group_node(operands, group_stack);
+				}
 				break;
 			}
 			case '^':

@@ -460,6 +460,16 @@ namespace anyun_regex
 		nfa_test.test_lazy_match_repeat_count();
 	}
 
+	void test_zero_length_assertions()
+	{
+		cout << endl;
+		print_string_format(80, "Test Zero-Length Assertions", '-', true);
+		cout << endl;
+		NFATest nfa_test;
+		nfa_test.test_pla_zero_length_assertions();
+		cout << endl;
+	}
+
 	void NFATest::test_lazy_match_can_none()
 	{
 		set_pattern("a?(ab)??""(ab)*");
@@ -591,6 +601,17 @@ namespace anyun_regex
 		add_testcase("abcdefg123aaaa12121345");
 		test_group();
 
+	}
+
+	void NFATest::test_pla_zero_length_assertions()
+	{
+		cout << endl;
+		print_string_format(80, "Test Positive Lookahead Zero-Length Assertions", '-', true);
+		cout << endl;
+		set_pattern("\\b\\w+(?=ing\\b)");
+		add_testcase("I'm singing while you're dancing");
+		test_group();
+		cout << endl;
 	}
 
 	void test_nfa_replace()

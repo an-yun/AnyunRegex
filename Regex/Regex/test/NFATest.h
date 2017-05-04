@@ -44,6 +44,7 @@ namespace anyun_regex
 	void test_nfa_replace();
 	void test_nfa_capture();
 	void test_lazy_match();
+	void test_zero_length_assertions();
 	void print_string_format(size_t length, const string &str, char fill_char, bool is_middle= false);
 
 	template<typename NumType>
@@ -72,6 +73,7 @@ namespace anyun_regex
 		void test_lazy_match_zero_more();
 		void test_lazy_match_one_more();
 		void test_lazy_match_repeat_count();
+		void test_pla_zero_length_assertions();
 	private:
 		string pattern;
 		regex standard_regex;

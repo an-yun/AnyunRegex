@@ -119,6 +119,7 @@ namespace anyun_regex {
 	}
 
 
+
 	bool NFAMatcher::match(size_t start, size_t end)
 	{
 		if (start > text_length) return false;
@@ -145,6 +146,8 @@ namespace anyun_regex {
 		}
 		return false;
 	}
+
+	
 
 
 	bool NFAMatcher::search(size_t offset)
