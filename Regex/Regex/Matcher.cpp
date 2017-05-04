@@ -39,7 +39,6 @@ namespace anyun_regex {
 	}
 
 	NFAMatcher::NFAMatcher()
-		:has_set(false)
 	{
 	}
 
@@ -47,7 +46,6 @@ namespace anyun_regex {
 	{
 		Matcher::set_content(text,pattern);
 		is_find = true;
-		has_set = true;
 	}
 
 	void NFAMatcher::set_content(const string & text, const NFA & nfa)
@@ -56,7 +54,6 @@ namespace anyun_regex {
 		set_nfa(nfa);
 		set_groups(nfa.group_size());
 		is_find = true;
-		has_set = true;
 	}
 
 	
@@ -74,13 +71,13 @@ namespace anyun_regex {
 
 	bool NFAMatcher::match()
 	{
-		return has_set && match(0,text_length);
+		return match(0,text_length);
 	}
 
 
 	bool NFAMatcher::match(size_t start, size_t end)
 	{
-		if (!has_set || start > text_length) return false;
+		if (start > text_length) return false;
 		SaveState save_state;
 		TrackRecord temp_record;
 		temp_record[0] = { start,1 };
@@ -108,7 +105,6 @@ namespace anyun_regex {
 
 	bool NFAMatcher::search(size_t offset)
 	{
-		if(!has_set) return false;
 		cursor = offset;
 		is_find = true;
 		return search();
@@ -118,7 +114,6 @@ namespace anyun_regex {
 	bool NFAMatcher::search()
 	{
 		//this is the new find method fisrst copy the old implement
-		if (!has_set ||!is_find) return false;
 		if (cursor > text_length) return is_find = false;
 		//begin to match ,start from the offset
 		is_find = false;

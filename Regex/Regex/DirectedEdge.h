@@ -169,11 +169,14 @@ namespace anyun_regex
 		COUNT_DIRECTEDEDGE,
 		GROUP_REFERENCE_DIRECTEDGE,
 		WORD_BOUNDARY_DIRECTEDEDGE,
-		ELEMENT_DIRECTEDGE
+		ELEMENT_DIRECTEDGE,
+		PLA_ZERO_ASSERTION_DIRECTEDGE
 	};
 
 	class DirectedGraph;
 	typedef shared_ptr<DirectedGraph> DirectedGraphPoint;
+	class NFAMatcher;
+	typedef shared_ptr<NFAMatcher> NFAMatcherPoint;
 	class Matcher
 	{
 		friend class NFA;
@@ -332,6 +335,24 @@ namespace anyun_regex
 		DirectedEdge* copy() const override;
 	private:
 		DirectedEdgePoint original_edge;
+	};
+
+	/*
+	 * 
+	 *Positive Lookahead Zero-Length Assertions 零宽度正预测先行断言
+	 *(?=exp)
+	 *对应的边
+	 */
+	class PLAZeroAssertionDirectedge :public DirectedEdge
+	{
+	public:
+		PLAZeroAssertionDirectedge(size_t id, const string &pattern);
+
+		DirectedEdgeType get_type() const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
+		DirectedEdge* copy() const override;
+	private:
+		NFAMatcherPoint matcher;
 	};
 }
 

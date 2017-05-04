@@ -50,7 +50,6 @@ namespace anyun_regex {
 
 		bool is_find;
 		size_t text_length;
-		bool has_set;
 
 		void set_nfa(NFA nfa);
 		//NFAMatcher(const string &text, const NFA &nfa, size_t offset=0);

@@ -579,7 +579,6 @@ namespace anyun_regex
 		add_testcase("abababababababababab");
 		add_testcase("123ab132aab2ababd12f9kababab");
 		test_group();
-		//to do
 
 		set_pattern("a\\d{1,}?345");
 		add_testcase("a345");
@@ -591,7 +590,6 @@ namespace anyun_regex
 		add_testcase("a12a1212121345");
 		add_testcase("abcdefg123aaaa12121345");
 		test_group();
-
 
 	}
 
