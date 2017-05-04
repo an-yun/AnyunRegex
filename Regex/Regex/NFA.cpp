@@ -1,4 +1,5 @@
 #include "NFA.h"
+#include "DirectedGraph.h"
 
 namespace anyun_regex
 {
@@ -13,14 +14,23 @@ namespace anyun_regex
 
 
 
-	NFA::NFA(const char * pattern)
-		: digraph(new DirectedGraph(pattern))
-	{
+	//NFA::NFA(const char * pattern)
+	//	: digraph(new DirectedGraph(pattern))
+	//{
 
-	}
+	//}
 
-	NFA::NFA(const string & pattern)
-		: digraph(new DirectedGraph(pattern))
+	//NFA::NFA(const string & pattern)
+	//	: digraph(new DirectedGraph(pattern))
+	//{
+	//}
+
+			NFA::NFA()
+		{
+		}
+
+	NFA::NFA(DirectedGraphPoint digraph)
+		:digraph(digraph)
 	{
 	}
 
@@ -32,6 +42,16 @@ namespace anyun_regex
 	{
 		digraph.reset(new DirectedGraph(pattern));
 		return digraph->parse_result == REGEX_PARSE_OK;
+	}
+
+	void NFA::set_digraph(DirectedGraphPoint diagraph)
+	{
+		this->digraph = diagraph;
+	}
+
+	DirectedGraphPoint NFA::get_diagraph()
+	{
+		return digraph;
 	}
 
 	RegexParseCode NFA::get_compile_result_code() const

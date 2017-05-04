@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "DirectedGraph.h"
 #include "Matcher.h"
 
 namespace  anyun_regex

@@ -1,6 +1,45 @@
 #include "Matcher.h"
-
+#include "DirectedGraph.h"
 namespace anyun_regex {
+
+	void Matcher::set_groups(size_t groups_size)
+	{
+		groups.resize(groups_size);
+	}
+
+	void Matcher::set_content(const string & text, const string & pattern)
+	{
+		set_text(text);
+		set_pattern(pattern);
+	}
+
+	void Matcher::set_text(const string & text)
+	{
+		this->text = text;
+	}
+
+
+	size_t Matcher::current_cursor() const
+	{
+		return cursor;
+	}
+
+
+	void Matcher::next()
+	{
+		cursor++;
+	}
+
+	void Matcher::back()
+	{
+		cursor--;
+	}
+
+	void Matcher::set_cursor(size_t cursor)
+	{
+		this->cursor = cursor;
+	}
+
 	bool NFAMatcher::search(const string & text, NFAMatcher& search_result, const string & pattern, size_t offset)
 	{
 		search_result.set_content(text,pattern);
@@ -67,6 +106,11 @@ namespace anyun_regex {
 	{
 		nfa.compile(pattern);
 		set_groups(nfa.group_size());
+	}
+
+	void NFAMatcher::set_pattern(DirectedGraphPoint digraph)
+	{
+		
 	}
 
 	bool NFAMatcher::match()

@@ -3,9 +3,6 @@
 namespace anyun_regex
 {
 
-
-	
-
 	Condition::~Condition()
 	{
 	}
@@ -219,43 +216,6 @@ namespace anyun_regex
 		return groups[group_index];
 	}
 
-	void Matcher::set_groups(size_t groups_size)
-	{
-		groups.resize(groups_size);
-	}
-
-	void Matcher::set_content(const string & text, const string & pattern)
-	{
-		set_text(text);
-		set_pattern(pattern);
-	}
-
-	void Matcher::set_text(const string & text)
-	{
-		this->text = text;
-	}
-
-
-	size_t Matcher::current_cursor() const
-	{
-		return cursor;
-	}
-
-
-	void Matcher::next()
-	{
-		cursor++;
-	}
-
-	void Matcher::back()
-	{
-		cursor--;
-	}
-
-	void Matcher::set_cursor(size_t cursor)
-	{
-		this->cursor = cursor;
-	}
 
 	RepeatDirectedge::RepeatDirectedge(size_t id, size_t s_id, size_t e_id)
 		:DirectedEdge(id, s_id, e_id)
@@ -348,6 +308,27 @@ namespace anyun_regex
 	DirectedEdge * ElementDirectedge::copy() const
 	{
 		return new ElementDirectedge(*this);
+	}
+
+	PLAZeroAssertionDirectedge::PLAZeroAssertionDirectedge(size_t id, const string &pattern)
+		:DirectedEdge(id)
+	{
+		matcher.set_pattern(pattern);
+	}
+
+	DirectedEdgeType PLAZeroAssertionDirectedge::get_type() const
+	{
+		return PLA_ZERO_ASSERTION_DIRECTEDGE;
+	}
+
+	size_t PLAZeroAssertionDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record) const
+	{
+		return size_t();
+	}
+
+	DirectedEdge * PLAZeroAssertionDirectedge::copy() const
+	{
+		return new PLAZeroAssertionDirectedge(*this);
 	}
 
 }

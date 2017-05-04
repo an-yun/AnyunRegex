@@ -58,7 +58,8 @@ void password_validate() {
 		"abcd",
 		"aabbccc",
 		"11123" };
-	NFA pattern("(\\w)\\1{2,}");
+	DirectedGraphPoint dia_graph(new DirectedGraph("(\\w)\\1{2,}"));
+	NFA pattern(dia_graph);
 	Println("use my regex lib validate password");
 	for (string &password : passwords)
 	{

@@ -10,21 +10,25 @@ namespace  anyun_regex
 	}
 	string replace(const char * pattern, const string & new_string, const string & text, size_t offset)
 	{
-		return replace(NFA(pattern), CommonReplacer(new_string), text, offset);
+		DirectedGraphPoint directed_graph(new DirectedGraph(pattern));
+		return replace(NFA(directed_graph), CommonReplacer(new_string), text, offset);
 	}
 
 	string replace(const char * pattern, const char * new_string, const string & text, size_t offset)
 	{
-		return replace(NFA(pattern), CommonReplacer(new_string), text, offset);
+		DirectedGraphPoint directed_graph(new DirectedGraph(pattern));
+		return replace(NFA(directed_graph), CommonReplacer(new_string), text, offset);
 	}
 
 	string replace(const string & pattern, const string & new_string, const string & text, size_t offset)
 	{
-		return replace(NFA(pattern),CommonReplacer(new_string),text,offset);
+		DirectedGraphPoint directed_graph(new DirectedGraph(pattern));
+		return replace(NFA(directed_graph),CommonReplacer(new_string),text,offset);
 	}
 	string replace(const string & pattern, const Replacer & repalcer, const string & text, size_t offset)
 	{
-		return replace(NFA(pattern), repalcer, text, offset);
+		DirectedGraphPoint directed_graph(new DirectedGraph(pattern));
+		return replace(NFA(directed_graph), repalcer, text, offset);
 	}
 	string replace(const NFA & pattern, const string & new_string, const string & text, size_t offset)
 	{

@@ -8,6 +8,7 @@
 #include <vector>
 #include <algorithm>
 #include <regex>
+#include "../DirectedGraph.h"
 #include "../NFA.h"
 #include "../Matcher.h"
 #include "../Replacer.h"

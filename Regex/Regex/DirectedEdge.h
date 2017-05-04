@@ -11,6 +11,7 @@
 #include <iterator>
 #include <stack>
 #include <tuple>
+#include "Matcher.h"
 
 namespace anyun_regex
 {
@@ -172,50 +173,7 @@ namespace anyun_regex
 		ELEMENT_DIRECTEDGE,
 		PLA_ZERO_ASSERTION_DIRECTEDGE
 	};
-
-	class DirectedGraph;
-	typedef shared_ptr<DirectedGraph> DirectedGraphPoint;
-	class NFAMatcher;
-	typedef shared_ptr<NFAMatcher> NFAMatcherPoint;
-	class Matcher
-	{
-		friend class NFA;
-		friend class SingleCharDirectedEdge;
-		friend class RepeatCountDirectedNode;
-		friend class GroupReferenceDirectedge;
-	public:
-		virtual ~Matcher()
-		{
-		}
-		virtual bool match() =0;
-		virtual bool match(size_t start, size_t end) = 0;
-		virtual bool search() = 0;
-		virtual bool search(size_t offset) = 0;
-		virtual pair<size_t, size_t> get_group(size_t group_index = 0);
-
-		virtual string group(size_t index = 0) const = 0;
-		virtual string group(string group_name) const = 0;
-		virtual size_t group_index(string group_name)const = 0;
-		virtual size_t group_count() const = 0;
-
-		virtual void set_cursor(size_t cursor);
-
-	protected:
-		string text;
-		size_t cursor;
-		vector<pair<size_t, size_t>> groups;
-		void set_groups(size_t groups_size);
-		virtual void set_content(const string &text,const string &pattern);
-		virtual void set_text(const string &text);
-		virtual void set_pattern(const string&pattern) = 0;
-		virtual size_t current_cursor() const;
-		virtual void next();
-		virtual void back();
-		virtual pair<size_t, size_t> get_groups_node(size_t group_id) = 0;
-
-	private:
-
-	};
+	
 
 	class DirectedEdge
 	{
@@ -352,7 +310,7 @@ namespace anyun_regex
 		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) const override;
 		DirectedEdge* copy() const override;
 	private:
-		NFAMatcherPoint matcher;
+		NFAMatcher matcher;
 	};
 }
 

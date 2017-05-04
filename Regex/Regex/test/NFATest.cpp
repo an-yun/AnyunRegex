@@ -623,8 +623,8 @@ namespace anyun_regex
 		nfa_test.add_replace_testcase("aabbccc", "repeat");
 		nfa_test.add_replace_testcase("11123", "repeat");
 		nfa_test.test_replace();
-
-		NFA nfa("(\\w)\\1{2,}");
+		DirectedGraphPoint diagaph(new DirectedGraph("(\\w)\\1{2,}"));
+		NFA nfa(diagaph);
 		class PasswordReplacer :public Replacer
 		{
 		public:
@@ -701,14 +701,15 @@ namespace anyun_regex
 		cout << (is_left ? std::left : std::right) << setw(length) << num;
 	}
 	NFATest::NFATest()
+		:nfa(DirectedGraphPoint(new DirectedGraph()))
 	{
 	}
 
-	NFATest::NFATest(const string & pattern) :pattern(pattern), standard_regex(pattern), nfa(pattern)
+	NFATest::NFATest(const string & pattern) :pattern(pattern), standard_regex(pattern), nfa(DirectedGraphPoint(new DirectedGraph(pattern)))
 	{
 	}
 
-	NFATest::NFATest(const string & pattern, const string & test_file_path) : pattern(pattern), standard_regex(pattern), nfa(pattern)
+	NFATest::NFATest(const string & pattern, const string & test_file_path) : pattern(pattern), standard_regex(pattern), nfa(DirectedGraphPoint(new DirectedGraph(pattern)))
 	{
 		read_testcases_from_file(test_file_path);
 	}
@@ -1073,7 +1074,8 @@ namespace anyun_regex
 	int singal_test(const string& pattern, const string &text)
 	{
 		regex standard_regex(pattern);
-		NFA nfa(pattern);
+		DirectedGraphPoint diagaph(new DirectedGraph(pattern));
+		NFA nfa(diagaph);
 		sregex_iterator begin(text.begin(), text.end(), standard_regex);
 		sregex_iterator end;
 		NFAMatcher search_result;
