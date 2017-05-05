@@ -122,7 +122,7 @@ namespace anyun_regex {
 
 	bool NFAMatcher::match(size_t start, size_t end)
 	{
-		if (start > text_length) return false;
+		if (start > end) return false;
 		SaveState save_state;
 		TrackRecord temp_record;
 		temp_record[0] = { start,1 };

@@ -324,7 +324,7 @@ namespace anyun_regex
 
 	size_t PLAZeroAssertionDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
-		//(this->matcher).set_text(text);
+		sub_exp_matcher.set_text(text);
 		return sub_exp_matcher.match(index,text.length())?0: static_cast<size_t>(-1);
 	}
 

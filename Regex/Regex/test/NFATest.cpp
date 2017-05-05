@@ -609,7 +609,10 @@ namespace anyun_regex
 		print_string_format(80, "Test Positive Lookahead Zero-Length Assertions", '-', true);
 		cout << endl;
 		set_pattern("\\b\\w+(?=ing\\b)");
+		add_testcase("inging");
 		add_testcase("I'm singing while you're dancing");
+		add_testcase("are you kidding me? ");
+		add_testcase("inginging reading");
 		test_group();
 		cout << endl;
 	}
