@@ -13,6 +13,7 @@
 */
 #include "PreProcessNormalTest.h"
 #include "PreProcessErrorTest.h"
+#include "NormalErrorTest.h"
 #include "CompileErrorTest.h"
 
 #else

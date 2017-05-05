@@ -868,10 +868,11 @@ namespace anyun_regex
 						group_stack.push(static_cast<unsigned>(-1));
 						break;
 
-						break;
 					}
 					default:
-						//error
+						/*
+						 * here should some regex option set
+						 */
 						break;
 					}
 				}
