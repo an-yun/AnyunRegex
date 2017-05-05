@@ -590,6 +590,7 @@ namespace anyun_regex
 		add_testcase("123ab132aab2ababd12f9kababab");
 		test_group();
 
+
 		set_pattern("a\\d{1,}?345");
 		add_testcase("a345");
 		add_testcase("a1345");
@@ -696,7 +697,7 @@ namespace anyun_regex
 		nfa_test.add_replace_testcase("acdadbadeadafgacdabded", "captrue_name");
 		nfa_test.test_single_group_capture();
 
-		nfa_test.set_pattern("(?'repeat'(\\w)\\1{2,})", true);
+		nfa_test.set_pattern("(?'repeat'(\\w)\\2{2,})", true);
 		nfa_test.add_replace_testcase("aaaa1111", "repeat");
 		nfa_test.add_replace_testcase("aa123", "repeat");
 		nfa_test.add_replace_testcase("123", "repeat");
@@ -705,6 +706,19 @@ namespace anyun_regex
 		nfa_test.add_replace_testcase("aabbccc", "repeat");
 		nfa_test.add_replace_testcase("11123", "repeat");
 		nfa_test.test_single_group_capture();
+
+		nfa_test.set_pattern("a?(?:ab){2,3}?""(ab)*");
+		nfa_test.add_testcase("aab");
+		nfa_test.add_testcase("aaab");
+		nfa_test.add_testcase("aabab");
+		nfa_test.add_testcase("aaaaab");
+		nfa_test.add_testcase("acab");
+		nfa_test.add_testcase("babaaaab");
+		nfa_test.add_testcase("bbabaabab");
+		nfa_test.add_testcase("bbbbbbbbbbbbbbbbbbbba");
+		nfa_test.add_testcase("abababababababababab");
+		nfa_test.add_testcase("123ab132aab2ababd12f9kababab");
+		nfa_test.test_group();
 	}
 
 
@@ -1074,7 +1088,7 @@ namespace anyun_regex
 			print_string_format(30, replaec_strs[i], ' ');
 			cout << endl;
 			NFAMatcher search_result;
-			NFAMatcher::search(testcases[i], search_result, nfa);
+			search_result.set_content(testcases[i], nfa);
 			while (search_result.search())
 			{
 				print_string_format(20, "\tGroup Capture", ' ');

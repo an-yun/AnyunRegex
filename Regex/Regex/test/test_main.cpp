@@ -36,8 +36,8 @@ int main()
 	auto_cpu_timer t;
 #ifdef _DEBUG
 
-	test_auto();
-	//test_capture();
+	//test_auto();
+	test_capture();
 	//boost_regex_password_validate();
 #else
 	password_validate();
@@ -122,9 +122,9 @@ void test_auto()
 
 void test_capture()
 {
-	test_nfa_replace();
+	//test_nfa_replace();
 	test_nfa_capture();
-	password_validate();
+	//password_validate();
 }
 #endif
 

@@ -805,8 +805,10 @@ namespace anyun_regex
 							}
 							else
 							{
-								//do something for name capture (?<group_name>##)
-								size_t end_group_name_position = p.find_first_of('>', ++parse_index);
+								/*
+								 *do something for name capture (?<group_name>##)
+								 */
+								size_t end_group_name_position = p.find_first_of('>', parse_index);
 								string group_name = p.substr(parse_index, end_group_name_position - parse_index);
 								size_t group_id = groups.size();
 								group_stack.push(group_id);
@@ -820,7 +822,7 @@ namespace anyun_regex
 					{
 						//do something for name capture (?'group_name'##)
 						parse_index++;
-						size_t end_group_name_position = p.find_first_of('\'', ++parse_index);
+						size_t end_group_name_position = p.find_first_of('\'', parse_index);
 						string group_name = p.substr(parse_index, end_group_name_position - parse_index);
 						size_t group_id = groups.size();
 						group_stack.push(group_id);
@@ -835,7 +837,7 @@ namespace anyun_regex
 						/*
 						 * here need more test
 						 */
-						parse_index++;
+						group_stack.push(static_cast<unsigned>(-1));
 						break;
 					}
 					case '=':
