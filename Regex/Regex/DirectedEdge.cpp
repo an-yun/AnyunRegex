@@ -333,4 +333,19 @@ namespace anyun_regex
 		return new PLAZeroAssertionDirectedge(*this);
 	}
 
+	NLAZeroAssertionDirectedge::NLAZeroAssertionDirectedge(size_t id, const string & pattern)
+		:ElementDirectedge(id,DirectedEdgePoint(new PLAZeroAssertionDirectedge(id,pattern)))
+	{
+	}
+
+	DirectedEdgeType NLAZeroAssertionDirectedge::get_type() const
+	{
+		return NLA_ZERO_ASSERTION_DIRECTEDGE;
+	}
+
+	DirectedEdge * NLAZeroAssertionDirectedge::copy() const
+	{
+		return new NLAZeroAssertionDirectedge(*this);
+	}
+
 }

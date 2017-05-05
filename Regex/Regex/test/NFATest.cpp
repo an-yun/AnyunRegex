@@ -467,6 +467,7 @@ namespace anyun_regex
 		cout << endl;
 		NFATest nfa_test;
 		nfa_test.test_pla_zero_length_assertions();
+		nfa_test.test_nla_zero_length_assertions();
 		cout << endl;
 	}
 
@@ -614,6 +615,20 @@ namespace anyun_regex
 		add_testcase("I'm singing while you're dancing");
 		add_testcase("are you kidding me? ");
 		add_testcase("inginging reading");
+		test_group();
+		cout << endl;
+	}
+
+	void NFATest::test_nla_zero_length_assertions()
+	{
+		cout << endl;
+		print_string_format(80, "Test Negative Lookahead Zero-Length Assertions", '-', true);
+		cout << endl;
+		set_pattern("\\b((?!abc)\\w)+\\b");
+		add_testcase("abc");
+		add_testcase("aabc ab ababa abaabc ");
+		add_testcase("aaabbc abaa abababc");
+		add_testcase("abcde ab abc abcccccc ababababababababababababc");
 		test_group();
 		cout << endl;
 	}

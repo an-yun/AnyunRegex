@@ -649,10 +649,10 @@ namespace anyun_regex
 						current = p[i], next = p[i + 1];
 						result.push_back(current);
 					}
-					else if(next == '=')
+					else if(next == '=' || next == '!')
 					{
 						//for pla zero length assertions
-						result.push_back('=');
+						result.push_back(next);
 						i += 2;
 						size_t end_subexp_position = p.find_first_of(')', i);
 						for(size_t s = i;s<end_subexp_position;s++) result.push_back(p[s]);
@@ -860,7 +860,13 @@ namespace anyun_regex
 						*Negative Lookbehind Zero-Length Assertions 零宽度负预测先行断言
 						*(?!exp)
 						*/
-
+						size_t end_exp_position = p.find_first_of(')', ++parse_index);
+						string sub_pattern = p.substr(parse_index, end_exp_position - parse_index);
+						DirectedEdgePoint edge(new NLAZeroAssertionDirectedge(edges.size(), sub_pattern));
+						store_edge(edge, operands);
+						parse_index = end_exp_position - 1;
+						group_stack.push(static_cast<unsigned>(-1));
+						break;
 
 						break;
 					}

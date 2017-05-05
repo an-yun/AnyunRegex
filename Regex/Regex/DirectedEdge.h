@@ -171,7 +171,8 @@ namespace anyun_regex
 		GROUP_REFERENCE_DIRECTEDGE,
 		WORD_BOUNDARY_DIRECTEDEDGE,
 		ELEMENT_DIRECTEDGE,
-		PLA_ZERO_ASSERTION_DIRECTEDGE
+		PLA_ZERO_ASSERTION_DIRECTEDGE,
+		NLA_ZERO_ASSERTION_DIRECTEDGE
 	};
 	
 
@@ -311,6 +312,23 @@ namespace anyun_regex
 		DirectedEdge* copy() const override;
 	private:
 		NFAMatcher sub_exp_matcher;
+	};
+
+	/*
+	*
+	*Negative Lookahead Zero-Length Assertions 零宽度负预测先行断言
+	*(?!exp)
+	*即零宽度正预测先行断言补集
+	*/
+
+	class NLAZeroAssertionDirectedge :public ElementDirectedge
+	{
+	public:
+		NLAZeroAssertionDirectedge(size_t id, const string &pattern);
+
+		DirectedEdgeType get_type() const override;
+		DirectedEdge* copy() const override;
+
 	};
 }
 

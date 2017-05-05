@@ -36,8 +36,8 @@ int main()
 	auto_cpu_timer t;
 #ifdef _DEBUG
 
-	//test_auto();
-	test_capture();
+	test_auto();
+	//test_capture();
 	//boost_regex_password_validate();
 #else
 	password_validate();
@@ -111,12 +111,12 @@ void boost_regex_password_validate()
 #ifdef _DEBUG
 void test_auto()
 {
-	test_directedgraph();
-	test_nfa_match();
-	test_nfa_search();
-	test_nfa_escape();
-	test_nfa_group();
-	test_lazy_match();
+	//test_directedgraph();
+	//test_nfa_match();
+	//test_nfa_search();
+	//test_nfa_escape();
+	//test_nfa_group();
+	//test_lazy_match();
 	test_zero_length_assertions();
 }
 
