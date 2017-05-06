@@ -1,4 +1,5 @@
 #include "NFATest.h"
+#include <regex>
 
 namespace anyun_regex
 {
@@ -468,6 +469,7 @@ namespace anyun_regex
 		NFATest nfa_test;
 		nfa_test.test_pla_zero_length_assertions();
 		nfa_test.test_nla_zero_length_assertions();
+		nfa_test.test_plb_zero_length_assertions();
 		cout << endl;
 	}
 
@@ -633,6 +635,20 @@ namespace anyun_regex
 		cout << endl;
 	}
 
+	void NFATest::test_plb_zero_length_assertions()
+	{
+		cout << endl;
+		print_string_format(80, "Test Positive Lookbehind Zero-Length Assertions", '-', true);
+		cout << endl;
+		set_pattern("(?<=\\bre)\\w+\\b");
+		add_testcase("reading a book");
+		add_testcase("request something");
+		add_testcase("prepare something for eat");
+		add_testcase("request prepare decrese ");
+		test_group();
+		cout << endl;
+	}
+
 	void test_nfa_replace()
 	{
 		cout << endl;
@@ -771,8 +787,9 @@ namespace anyun_regex
 	{
 		
 		this->pattern = pattern;
-		if (!no_std_regex)//especial case for alphabetic chracters
-			standard_regex = regex(std::regex_replace(pattern, regex("\\\\a"), "[a-zA-Z]"));
+		standard_regex = regex(pattern);
+		//if (!no_std_regex)//especial case for alphabetic chracters
+		//	standard_regex = regex(std::regex_replace(pattern, regex("\\\\a"), "[a-zA-Z]"));
 		nfa.compile(pattern);
 		testcases.clear();
 		replaec_strs.clear();
@@ -1010,8 +1027,8 @@ namespace anyun_regex
 	bool NFATest::test_one_match_testcase(const string & testcase)
 	{
 		NFAMatcher match_result;
-		std::smatch std_result;
-		bool is_match = std::regex_match(testcase, std_result, standard_regex);
+		smatch std_result;
+		bool is_match = regex_match(testcase, std_result, standard_regex);
 		if (is_match^NFAMatcher::match(testcase, match_result, nfa)) //if the match result is wrong
 			return false;
 		if (is_match)

@@ -625,38 +625,59 @@ namespace anyun_regex
 					i++;
 					current = p[i], next = p[i + 1];
 					result.push_back(current);
-					if (next == '<' || next == '\'')
+					switch (next)
 					{
-						//do something for name capture (?<group_name>##) or (?'group_name'##)
-						i++;
-						current = p[i], next = p[i + 1];
-						result.push_back(current);
-						char find_char = current == '\'' ? '\'' : '>';
-						size_t end_group_name_position = p.find_first_of(find_char, ++i);
-						//add expection handle to namecapture
-						if (end_group_name_position == string::npos)
-							PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_END_CHAR_FOR_NAMECAPTURE);
-						string group_name = p.substr(i, end_group_name_position - i);
-						for (size_t ch : group_name) { result.push_back(ch); }
-						result.push_back(p[end_group_name_position]);
-						i = end_group_name_position;
-					}
-
-					else if (next == ':')
-					{
-						//don't capture this group (?:###)
-						i++;
-						current = p[i], next = p[i + 1];
-						result.push_back(current);
-					}
-					else if(next == '=' || next == '!')
-					{
-						//for pla zero length assertions
-						result.push_back(next);
-						i += 2;
-						size_t end_subexp_position = p.find_first_of(')', i);
-						for(size_t s = i;s<end_subexp_position;s++) result.push_back(p[s]);
-						i = end_subexp_position-1;
+						case '<':
+							{
+								if(p[i+2] == '=')
+								{
+									result.push_back(next);
+									i += 2;
+									size_t end_subexp_position = p.find_first_of(')', i);
+									for (size_t s = i; s<end_subexp_position; s++) result.push_back(p[s]);
+									i = end_subexp_position - 1;
+									break;
+								}
+								//else is name capture (?<group_name>##) same to (?'group_name'##)
+							}
+						case '\'':
+							{
+								//do something for name capture (?<group_name>##) or (?'group_name'##)
+								i++;
+								current = p[i], next = p[i + 1];
+								result.push_back(current);
+								char find_char = current == '\'' ? '\'' : '>';
+								size_t end_group_name_position = p.find_first_of(find_char, ++i);
+								//add expection handle to namecapture
+								if (end_group_name_position == string::npos)
+									PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_MISS_END_CHAR_FOR_NAMECAPTURE);
+								string group_name = p.substr(i, end_group_name_position - i);
+								for (size_t ch : group_name) { result.push_back(ch); }
+								result.push_back(p[end_group_name_position]);
+								i = end_group_name_position;
+								break;
+							}
+						case ':':
+							{
+								//don't capture this group (?:###)
+								i++;
+								current = p[i], next = p[i + 1];
+								result.push_back(current);
+								break;
+							}
+						case '=':
+						case '!':
+							{
+								//for pla zero length assertions and nla zero length assertions
+								result.push_back(next);
+								i += 2;
+								size_t end_subexp_position = p.find_first_of(')', i);
+								for (size_t s = i; s<end_subexp_position; s++) result.push_back(p[s]);
+								i = end_subexp_position - 1;
+								break;
+							}
+						default:
+							break;
 					}
 				}
 				bracket_count++;
@@ -792,7 +813,13 @@ namespace anyun_regex
 								*(?<=exp)
 								*/
 
-								//to do
+								size_t end_exp_position = p.find_first_of(')', ++parse_index);
+								string sub_pattern = p.substr(parse_index, end_exp_position - parse_index);
+								DirectedEdgePoint edge(new PLBZeroAssertionDirectedge(edges.size(), sub_pattern));
+								store_edge(edge, operands);
+								parse_index = end_exp_position - 1;
+								group_stack.push(static_cast<unsigned>(-1));
+								break;
 							}
 							else if(p[parse_index] == '!')
 							{

@@ -172,7 +172,8 @@ namespace anyun_regex
 		WORD_BOUNDARY_DIRECTEDEDGE,
 		ELEMENT_DIRECTEDGE,
 		PLA_ZERO_ASSERTION_DIRECTEDGE,
-		NLA_ZERO_ASSERTION_DIRECTEDGE
+		NLA_ZERO_ASSERTION_DIRECTEDGE,
+		PLB_ZERO_ASSERTION_DIRECTEDGE
 	};
 	
 
@@ -329,6 +330,22 @@ namespace anyun_regex
 		DirectedEdgeType get_type() const override;
 		DirectedEdge* copy() const override;
 
+	};
+
+	/*
+	*Positive Lookbehind Zero-Length Assertions 零宽度正回顾后发断言
+	*(?<=exp)
+	*/
+	class PLBZeroAssertionDirectedge :public DirectedEdge
+	{
+	public:
+		PLBZeroAssertionDirectedge(size_t id, const string &pattern);
+
+		DirectedEdgeType get_type() const override;
+		size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) override;
+		DirectedEdge* copy() const override;
+	private:
+		NFAMatcher sub_exp_matcher;
 	};
 }
 

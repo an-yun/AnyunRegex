@@ -348,4 +348,26 @@ namespace anyun_regex
 		return new NLAZeroAssertionDirectedge(*this);
 	}
 
+	PLBZeroAssertionDirectedge::PLBZeroAssertionDirectedge(size_t id, const string & pattern)
+		:DirectedEdge(id)
+	{
+		sub_exp_matcher.set_pattern(".*" + pattern);
+	}
+
+	DirectedEdgeType PLBZeroAssertionDirectedge::get_type() const
+	{
+		return PLB_ZERO_ASSERTION_DIRECTEDGE;
+	}
+
+	size_t PLBZeroAssertionDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
+	{
+		sub_exp_matcher.set_text(text);
+		return sub_exp_matcher.match(0,index) ? 0 : static_cast<size_t>(-1);
+	}
+
+	DirectedEdge * PLBZeroAssertionDirectedge::copy() const
+	{
+		return new PLBZeroAssertionDirectedge(*this);
+	}
+
 }

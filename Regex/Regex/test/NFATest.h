@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <regex>
 #include "../DirectedGraph.h"
 #include "../NFA.h"
 #include "../Matcher.h"
@@ -18,11 +17,11 @@
 namespace anyun_regex
 {
 	using std::string;
-	using std::regex;
-	using std::smatch;
-	using std::sregex_iterator;
-	using std::regex_replace;
-	using std::match_results;
+	using boost::regex;
+	using boost::smatch;
+	using boost::sregex_iterator;
+	using boost::regex_replace;
+	using boost::match_results;
 	using std::vector;
 	using std::string;
 	using std::ifstream;
@@ -75,6 +74,8 @@ namespace anyun_regex
 		void test_lazy_match_repeat_count();
 		void test_pla_zero_length_assertions();
 		void test_nla_zero_length_assertions();
+		void test_plb_zero_length_assertions();
+		
 	private:
 		string pattern;
 		regex standard_regex;
