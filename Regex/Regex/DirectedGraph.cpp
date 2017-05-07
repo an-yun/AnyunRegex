@@ -629,8 +629,9 @@ namespace anyun_regex
 					{
 						case '<':
 							{
-								if(p[i+2] == '=')
+								if(p[i+2] == '=' || p[i + 2] == '!')
 								{
+									//special case for loobehind zero length assertions(both positive and negative)
 									result.push_back(next);
 									i += 2;
 									size_t end_subexp_position = p.find_first_of(')', i);
@@ -725,13 +726,26 @@ namespace anyun_regex
 			case '\\':
 				if (next == 'N')
 					PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_ILLEGAL_ESCAPE_CHAR);
+				result.push_back(next);
 				//fix bug for reference num
-				do{
-					result.push_back(next);
+				i++;
+				if(next == 'g')
+				{
 					i++;
-					next = p[i + 1];
 					current = p[i];
-				} while (is_num(current) && is_num(next));
+					if (is_num(current))result.push_back(current);
+					else if(current == '{')
+					{
+						result.push_back(current);
+						i++;
+						for (current = p[i]; is_num(current);i++, current = p[i])
+							result.push_back(current);
+						if(current != '}')PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_GROUP_REFERENCE_SYNTAX_ERROR);
+						result.push_back(current);
+					}
+					else PRE_PROCESS_PATTERN_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+				}
+				next = p[i+1];
 				next_is_other = is_char_in(next, end_and_no_connect_operators, sizeof(end_and_no_connect_operators) / sizeof(char));
 				break;
 			default:
@@ -828,7 +842,13 @@ namespace anyun_regex
 								*(?<!exp)
 								*/
 
-								//to do
+								size_t end_exp_position = p.find_first_of(')', ++parse_index);
+								string sub_pattern = p.substr(parse_index, end_exp_position - parse_index);
+								DirectedEdgePoint edge(new NLBZeroAssertionDirectedge(edges.size(), sub_pattern));
+								store_edge(edge, operands);
+								parse_index = end_exp_position - 1;
+								group_stack.push(static_cast<unsigned>(-1));
+								break;
 							}
 							else
 							{
@@ -981,6 +1001,7 @@ namespace anyun_regex
 				case 'f':
 					DEFAULT_SINGLE_CHAR_PROCESS('\f');
 					break;
+				
 				case 'b':
 				{
 					parse_meta_b(operands);
@@ -995,6 +1016,21 @@ namespace anyun_regex
 				}
 				case '0':
 					PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+				case 'g':
+				{
+					//group reference
+					size_t next = p[++parse_index];
+					if(next == '{')
+					{
+						parse_index++;
+						DirectedEdgePoint directed_edge = parse_group_reference(p, parse_index);
+						if (directed_edge == nullptr)PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+						store_edge(directed_edge, operands);
+						parse_index++;
+						break;
+					}
+					//else is same to \1 ... \9 ,so here no break
+				}
 				case '1':
 				case '2':
 				case '3':
@@ -1005,16 +1041,17 @@ namespace anyun_regex
 				case '8':
 				case '9':
 				{
-					DirectedEdgePoint directed_edge = parse_group_reference(p, parse_index);
-					if (directed_edge == nullptr)PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
-					else store_edge(directed_edge, operands);
+					size_t refence_id = p[parse_index++] - '0';
+					if(refence_id > groups.size()) PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+					DirectedEdgePoint directed_edge(new GroupReferenceDirectedge(edges.size(),refence_id));
+					store_edge(directed_edge, operands);
 					break;
 				}
 				default:
 					size_t ch = p[parse_index];
 					if (is_meta_char(ch))
 					{
-						//handle meta char like \a \w \d and so on
+						//handle meta char like \w \d and so on
 						size_t index = 0;		
 						DirectedEdgePoint edge(new SingleCharDirectedEdge(parse_or_string(meta_string_map[ch], index), edges.size()));
 						store_edge(edge, operands);

@@ -43,10 +43,9 @@ namespace anyun_regex
 	const size_t UPPER_Z = 'Z';
 	const char BLANK_CHARS[] = " \n\t\r\f";
 	const char SINGLE_SPECAIL_CAHRS[] = { '\0','(' ,')','[',']','{','}','|','*','+','?' ,'\\','^','$' };
-	const char META_CHARS[] = { 'a','w','W','d','D','s','S'};
+	const char META_CHARS[] = { 'w','W','d','D','s','S'};
 	static map<size_t, const char *> meta_string_map
 	{
-		{'a',"[a-zA-Z]"},
 		{'w',"[a-zA-Z0-9_]" },
 		{'W',"[^a-zA-Z0-9_]" },
 		{'d',"[0-9]"},
@@ -173,7 +172,8 @@ namespace anyun_regex
 		ELEMENT_DIRECTEDGE,
 		PLA_ZERO_ASSERTION_DIRECTEDGE,
 		NLA_ZERO_ASSERTION_DIRECTEDGE,
-		PLB_ZERO_ASSERTION_DIRECTEDGE
+		PLB_ZERO_ASSERTION_DIRECTEDGE,
+		NLB_ZERO_ASSERTION_DIRECTEDGE
 	};
 	
 
@@ -346,6 +346,20 @@ namespace anyun_regex
 		DirectedEdge* copy() const override;
 	private:
 		NFAMatcher sub_exp_matcher;
+	};
+
+	/*
+	*Negative Lookbehind Zero-Length Assertions 零宽度负回顾后发断言
+	*(?<!exp)
+	*/
+	class NLBZeroAssertionDirectedge :public ElementDirectedge
+	{
+	public:
+		NLBZeroAssertionDirectedge(size_t id, const string &pattern);
+
+		DirectedEdgeType get_type() const override;
+		DirectedEdge* copy() const override;
+
 	};
 }
 

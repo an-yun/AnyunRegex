@@ -38,8 +38,8 @@ int main()
 #ifdef _DEBUG
 
 	test_auto();
-	//test_capture();
-	//boost_regex_password_validate();
+	test_capture();
+	boost_regex_password_validate();
 #else
 	password_validate();
 	boost_regex_password_validate();
@@ -65,9 +65,8 @@ void password_validate() {
 	for (string &password : passwords)
 	{
 		NFAMatcher matcher;
-		NFAMatcher::search(password, matcher, pattern);
 		Println("validate the password:" + password);
-		if (matcher.search())
+		if (NFAMatcher::search(password, matcher, pattern))
 		{
 			Println("contain repeated chars more than three times,the repeat string is");
 			Println(matcher.group());
@@ -112,20 +111,20 @@ void boost_regex_password_validate()
 #ifdef _DEBUG
 void test_auto()
 {
-	//test_directedgraph();
-	//test_nfa_match();
-	//test_nfa_search();
-	//test_nfa_escape();
-	//test_nfa_group();
-	//test_lazy_match();
+	test_directedgraph();
+	test_nfa_match();
+	test_nfa_search();
+	test_nfa_escape();
+	test_nfa_group();
+	test_lazy_match();
 	test_zero_length_assertions();
 }
 
 void test_capture()
 {
-	//test_nfa_replace();
+	test_nfa_replace();
 	test_nfa_capture();
-	//password_validate();
+	password_validate();
 }
 #endif
 

@@ -370,4 +370,19 @@ namespace anyun_regex
 		return new PLBZeroAssertionDirectedge(*this);
 	}
 
+	NLBZeroAssertionDirectedge::NLBZeroAssertionDirectedge(size_t id, const string & pattern)
+		:ElementDirectedge(id, DirectedEdgePoint(new PLBZeroAssertionDirectedge(id, pattern)))
+	{
+	}
+
+	DirectedEdgeType NLBZeroAssertionDirectedge::get_type() const
+	{
+		return NLB_ZERO_ASSERTION_DIRECTEDGE;
+	}
+
+	DirectedEdge * NLBZeroAssertionDirectedge::copy() const
+	{
+		return new NLBZeroAssertionDirectedge(*this);
+	}
+
 }

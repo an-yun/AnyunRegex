@@ -131,7 +131,9 @@ namespace anyun_regex
 		TEST_COMPILE_PATTERN_NORMAL("(a|b){2,}c");
 		TEST_COMPILE_PATTERN_NORMAL("(A|a)(B|b)c{2,5}D");
 		TEST_COMPILE_PATTERN_NORMAL("(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z+)\\26");
+		TEST_COMPILE_PATTERN_NORMAL("(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z+)\\g{26}");
 		TEST_COMPILE_PATTERN_NORMAL("(a)(b)?(c)?(d)?(e)?(f)?(g)?(h)?(i)?(j)?(k)?(l)?(m)?(n)?(o)?(p)?(q)?(r)?(s)?(t)?(u)?(v)?(w)?(x)?(y)?(z+)\\26");
+		TEST_COMPILE_PATTERN_NORMAL("(a)(b)?(c)?(d)?(e)?(f)?(g)?(h)?(i)?(j)?(k)?(l)?(m)?(n)?(o)?(p)?(q)?(r)?(s)?(t)?(u)?(v)?(w)?(x)?(y)?(z+)\\g{26}");
 		TEST_COMPILE_PATTERN_NORMAL("(a|b|c|d){2,5}D");
 		TEST_COMPILE_PATTERN_NORMAL("(a|b|c|d){2,5}D");
 		TEST_COMPILE_PATTERN_NORMAL("[0-9](a|b|c|d){2,5}D");

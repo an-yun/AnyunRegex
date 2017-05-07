@@ -241,7 +241,7 @@ namespace anyun_regex
 
 		nfa_test.test_search();
 
-		nfa_test.set_pattern("\\a\\w*");
+		nfa_test.set_pattern("[a-zA-Z]\\w*");
 		nfa_test.add_testcase("cout");
 		nfa_test.add_testcase("set_pattern");
 		nfa_test.add_testcase("nfa_test");
@@ -420,7 +420,7 @@ namespace anyun_regex
 		/*
 		hrer are very long group name and reference test
 		*/
-		nfa_test.set_pattern("(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z*)\\26");
+		nfa_test.set_pattern("(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z*)\\g{26}");
 		nfa_test.add_testcase("abdefpqrstuvwxyzz");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyz");
 		nfa_test.add_testcase("abcdefghijklmnopqrstuvwxyzzz");
@@ -431,7 +431,7 @@ namespace anyun_regex
 		nfa_test.add_testcase("bdefghijklmnopqrstuvwxyzz");
 		nfa_test.test_group();
 
-		nfa_test.set_pattern("(a)(b)?(c)?(d)?(e)?(f)?(g)?(h)?(i)?(j)?(k)?(l)?(m)?(n)?(o)?(p)?(q)?(r)?(s)?(t)?(u)?(v)?(w)?(x)?(y)?(z+)\\26");
+		nfa_test.set_pattern("(a)(b)?(c)?(d)?(e)?(f)?(g)?(h)?(i)?(j)?(k)?(l)?(m)?(n)?(o)?(p)?(q)?(r)?(s)?(t)?(u)?(v)?(w)?(x)?(y)?(z+)\\g{26}");
 		nfa_test.add_testcase("azz");
 		nfa_test.add_testcase("aceizz");
 		nfa_test.add_testcase("aczeizz");
@@ -470,6 +470,7 @@ namespace anyun_regex
 		nfa_test.test_pla_zero_length_assertions();
 		nfa_test.test_nla_zero_length_assertions();
 		nfa_test.test_plb_zero_length_assertions();
+		nfa_test.test_nlb_zero_length_assertions();
 		cout << endl;
 	}
 
@@ -632,6 +633,16 @@ namespace anyun_regex
 		add_testcase("aaabbc abaa abababc");
 		add_testcase("abcde ab abc abcccccc ababababababababababababc");
 		test_group();
+
+		//C++ identifier
+		set_pattern("\\b(?!\\d)\\w+\\b");
+		add_testcase("aaa1 cout");
+		add_testcase("test1 i j k 1p");
+		add_testcase("test_group 0group 0i");
+		add_testcase("request1 endl decrese ");
+		add_testcase("_");
+		add_testcase("_1 _2 _at");
+		test_group();
 		cout << endl;
 	}
 
@@ -645,6 +656,21 @@ namespace anyun_regex
 		add_testcase("request something");
 		add_testcase("prepare something for eat");
 		add_testcase("request prepare decrese ");
+		test_group();
+
+		cout << endl;
+	}
+
+	void NFATest::test_nlb_zero_length_assertions()
+	{
+		cout << endl;
+		print_string_format(80, "Test Negative Lookbehind Zero-Length Assertions", '-', true);
+		cout << endl;
+		set_pattern("(?<![a-zA-Z])\\d+");
+		add_testcase("aaa1 12");
+		add_testcase("1111 +22 *2 = ");
+		add_testcase("a3 b12 _123 _90282");
+		add_testcase("234567request11 pre2343567pare decrese aaaa 111");
 		test_group();
 		cout << endl;
 	}
@@ -788,8 +814,6 @@ namespace anyun_regex
 		
 		this->pattern = pattern;
 		standard_regex = regex(pattern);
-		//if (!no_std_regex)//especial case for alphabetic chracters
-		//	standard_regex = regex(std::regex_replace(pattern, regex("\\\\a"), "[a-zA-Z]"));
 		nfa.compile(pattern);
 		testcases.clear();
 		replaec_strs.clear();

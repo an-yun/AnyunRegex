@@ -75,7 +75,7 @@ namespace anyun_regex
 		void test_pla_zero_length_assertions();
 		void test_nla_zero_length_assertions();
 		void test_plb_zero_length_assertions();
-		
+		void test_nlb_zero_length_assertions();
 	private:
 		string pattern;
 		regex standard_regex;
