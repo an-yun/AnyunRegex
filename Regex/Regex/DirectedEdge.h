@@ -185,10 +185,10 @@ namespace anyun_regex
 		size_t get_id() const;
 		virtual DirectedEdgeType get_type() const = 0;
 
-		virtual void set_start_node(size_t node_id);
-		virtual void set_end_node(size_t node_id);
-		virtual size_t get_start_node_id() const;
-		virtual size_t get_end_node_id() const;
+		void set_start_node(size_t node_id);
+		void set_end_node(size_t node_id);
+		size_t get_start_node_id() const;
+		size_t get_end_node_id() const;
 
 		virtual size_t accept(const string& text, size_t index, Matcher& matcher, TrackRecord& track_record) = 0;
 		virtual DirectedEdge* copy() const = 0;
