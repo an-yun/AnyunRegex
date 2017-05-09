@@ -140,10 +140,10 @@ namespace anyun_regex
 		size_t to;
 	};
 
-	class ComplmentCondtion :public Condition
+	class ComplementCondtion :public Condition
 	{
 	public:
-		explicit ComplmentCondtion(ConditionPoint condition_ptr);
+		explicit ComplementCondtion(ConditionPoint condition_ptr);
 		bool match(size_t ch) const override;
 	private:
 		ConditionPoint original_condition;

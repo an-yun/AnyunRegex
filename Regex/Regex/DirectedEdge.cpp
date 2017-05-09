@@ -31,11 +31,11 @@ namespace anyun_regex
 		return ch >= from && ch <= to;
 	}
 
-	ComplmentCondtion::ComplmentCondtion(ConditionPoint condition_ptr) :original_condition(condition_ptr)
+	ComplementCondtion::ComplementCondtion(ConditionPoint condition_ptr) :original_condition(condition_ptr)
 	{
 	}
 
-	bool ComplmentCondtion::match(size_t ch) const
+	bool ComplementCondtion::match(size_t ch) const
 	{
 		return !original_condition->match(ch);
 	}
@@ -139,7 +139,7 @@ namespace anyun_regex
 		: DirectedEdge(id, s_id, e_id)
 	{
 		ConditionPoint range_condition(new RangeCondition(start, end));
-		if (complementary) condition.reset(new ComplmentCondtion(range_condition));
+		if (complementary) condition.reset(new ComplementCondtion(range_condition));
 		else condition = range_condition;
 	}
 

@@ -1117,7 +1117,7 @@ namespace anyun_regex
 		else if (conditions.size() == 1)
 			condition= conditions[0];
 		else condition.reset(new OrCondtion(conditions));
-		if (complementary)condition.reset(new ComplmentCondtion(condition));
+		if (complementary)condition.reset(new ComplementCondtion(condition));
 		assert(p_string[p_index] == ']');
 		p_index++;
 		return condition;
