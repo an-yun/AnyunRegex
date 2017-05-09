@@ -415,6 +415,16 @@ namespace anyun_regex
 		connect_in_node_to_edge(node_id, sigma_edge->get_id());
 		return sigma_edge->get_id();  //return sigma_edge id
 	}
+	size_t DirectedGraph::get_sub_exp_end_position(const string & expression, size_t index)
+	{
+		size_t bracket_nested_amount = 0;
+		for(;expression[index] != ')' || bracket_nested_amount > 0;index++)
+		{
+			if (expression[index] == '(') bracket_nested_amount++;
+			else if(expression[index] == ')')bracket_nested_amount--;
+		}
+		return index;
+	}
 	/*
 	connect fragment to itself
 	  <fra<
@@ -634,7 +644,7 @@ namespace anyun_regex
 									//special case for loobehind zero length assertions(both positive and negative)
 									result.push_back(next);
 									i += 2;
-									size_t end_subexp_position = p.find_first_of(')', i);
+									size_t end_subexp_position = get_sub_exp_end_position(p, i);
 									for (size_t s = i; s<end_subexp_position; s++) result.push_back(p[s]);
 									i = end_subexp_position - 1;
 									break;
@@ -672,7 +682,7 @@ namespace anyun_regex
 								//for pla zero length assertions and nla zero length assertions
 								result.push_back(next);
 								i += 2;
-								size_t end_subexp_position = p.find_first_of(')', i);
+								size_t end_subexp_position = get_sub_exp_end_position(p, i);
 								for (size_t s = i; s<end_subexp_position; s++) result.push_back(p[s]);
 								i = end_subexp_position - 1;
 								break;
@@ -827,7 +837,7 @@ namespace anyun_regex
 								*(?<=exp)
 								*/
 
-								size_t end_exp_position = p.find_first_of(')', ++parse_index);
+								size_t end_exp_position = get_sub_exp_end_position(p, ++parse_index);
 								string sub_pattern = p.substr(parse_index, end_exp_position - parse_index);
 								DirectedEdgePoint edge(new PLBZeroAssertionDirectedge(edges.size(), sub_pattern));
 								store_edge(edge, operands);
@@ -842,7 +852,7 @@ namespace anyun_regex
 								*(?<!exp)
 								*/
 
-								size_t end_exp_position = p.find_first_of(')', ++parse_index);
+								size_t end_exp_position = get_sub_exp_end_position(p, ++parse_index);
 								string sub_pattern = p.substr(parse_index, end_exp_position - parse_index);
 								DirectedEdgePoint edge(new NLBZeroAssertionDirectedge(edges.size(), sub_pattern));
 								store_edge(edge, operands);
@@ -893,7 +903,7 @@ namespace anyun_regex
 						*Positive Lookahead Zero-Length Assertions 零宽度正预测先行断言
 						*(?=exp)
 						*/
-						size_t end_exp_position = p.find_first_of(')', ++parse_index);
+						size_t end_exp_position = get_sub_exp_end_position(p, ++parse_index);
 						string sub_pattern = p.substr(parse_index, end_exp_position - parse_index);
 						DirectedEdgePoint edge(new PLAZeroAssertionDirectedge(edges.size(), sub_pattern));
 						store_edge(edge, operands);
@@ -907,7 +917,7 @@ namespace anyun_regex
 						*Negative Lookbehind Zero-Length Assertions 零宽度负预测先行断言
 						*(?!exp)
 						*/
-						size_t end_exp_position = p.find_first_of(')', ++parse_index);
+						size_t end_exp_position = get_sub_exp_end_position(p, ++parse_index);
 						string sub_pattern = p.substr(parse_index, end_exp_position - parse_index);
 						DirectedEdgePoint edge(new NLAZeroAssertionDirectedge(edges.size(), sub_pattern));
 						store_edge(edge, operands);

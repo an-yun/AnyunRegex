@@ -619,6 +619,8 @@ namespace anyun_regex
 		add_testcase("are you kidding me? ");
 		add_testcase("inginging reading");
 		test_group();
+
+
 		cout << endl;
 	}
 
@@ -658,6 +660,12 @@ namespace anyun_regex
 		add_testcase("request prepare decrese ");
 		test_group();
 
+		set_pattern("(?<=[yY]ou)\\b\\w+\\b");
+		add_testcase("what do you find");
+		add_testcase("I am singing while you are dancing");
+		add_testcase("are you kidding me? ");
+		add_testcase("what's your name?");
+		test_group();
 		cout << endl;
 	}
 

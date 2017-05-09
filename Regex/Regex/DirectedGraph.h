@@ -134,6 +134,9 @@ namespace anyun_regex
 		void connect_out_node(size_t out_node_id, const ConnectedFragment &fragment);
 		size_t add_in_sigma_edge(size_t node_id);
 		size_t add_out_sigma_edge(size_t node_id);
+
+		size_t get_sub_exp_end_position(const string& expression, size_t index);
+
 		/*
 		connect fragment to itself
           <fra<
