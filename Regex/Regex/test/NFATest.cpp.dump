@@ -6,7 +6,7 @@ namespace anyun_regex
 
 #ifdef _DEBUG
 
-
+	
 
 	void test_nfa_match()
 	{
@@ -27,54 +27,6 @@ namespace anyun_regex
 		nfa_test.add_testcase("1c23abcb");
 		nfa_test.add_testcase("1ab2ab3abbb");
 		nfa_test.add_testcase("1)*&^$3b3abbb");
-		nfa_test.test_match();
-
-		nfa_test.set_pattern("a|b");
-		nfa_test.add_testcase("a");
-		nfa_test.add_testcase("b");
-		nfa_test.add_testcase("ab");
-		nfa_test.add_testcase("aaa");
-		nfa_test.add_testcase("bbbb");
-		nfa_test.add_testcase("134erq");
-		nfa_test.add_testcase("abceefaeq");
-		nfa_test.add_testcase("ewqtefadsfqrte");
-		nfa_test.add_testcase("ewrertrtweryrrety4");
-		nfa_test.add_testcase("$^(4ad)(^(03431)))923");
-		nfa_test.test_match();
-
-		nfa_test.set_pattern("a1|2bc");
-		nfa_test.add_testcase("a");
-		nfa_test.add_testcase("b");
-		nfa_test.add_testcase("2bc");
-		nfa_test.add_testcase("a1aa");
-		nfa_test.add_testcase("a1bca");
-		nfa_test.add_testcase("ba2bcbb");
-		nfa_test.add_testcase("134erq");
-		nfa_test.add_testcase("abcea1bcaefaeq");
-		nfa_test.add_testcase("ewqtefadsfqrte");
-		nfa_test.add_testcase("ewrertrtweryrrety4");
-		nfa_test.add_testcase("$^(4ad)(^(03431");
-		nfa_test.add_testcase("a111bbbbcc$^cca_)&");
-		nfa_test.add_testcase("b1#a2^22a2bcbbbcbb)))923");
-		nfa_test.add_testcase("C++ Is Designed by	Bjarne Stroustrup");
-		nfa_test.add_testcase("can you find me is a1|2bc match this a12bc ro match this a1bc");
-		nfa_test.test_match();
-
-		nfa_test.set_pattern("am|is|are");
-		nfa_test.add_testcase("are you ok?");
-		nfa_test.add_testcase("I am fine!");
-		nfa_test.add_testcase("thank you.");
-		nfa_test.add_testcase("who is he?");
-		nfa_test.add_testcase("can the regex engine find me aa aa aa ia sr s  ar aa a aam ,ok you get it");
-		nfa_test.add_testcase("");
-		nfa_test.test_match();
-
-		nfa_test.set_pattern("he(r|ll)o");
-		nfa_test.add_testcase("hello");
-		nfa_test.add_testcase("hero");
-		nfa_test.add_testcase("are you ok?");
-		nfa_test.add_testcase("I am fine!");
-		nfa_test.add_testcase("can the regex engine find me aa aa aa ia sr s  ar aa a aam ,ok you get it wrong");
 		nfa_test.test_match();
 
 		nfa_test.set_pattern("[123]ab*");
@@ -206,54 +158,6 @@ namespace anyun_regex
 		nfa_test.add_testcase("1c23abcb");
 		nfa_test.add_testcase("1ab2ab3abbb");
 		nfa_test.add_testcase("1)*&^$3b3abbb");
-		nfa_test.test_search();
-
-		nfa_test.set_pattern("a|b");
-		nfa_test.add_testcase("a");
-		nfa_test.add_testcase("b");
-		nfa_test.add_testcase("ab");
-		nfa_test.add_testcase("aaa");
-		nfa_test.add_testcase("bbbb");
-		nfa_test.add_testcase("134erq");
-		nfa_test.add_testcase("abceefaeq");
-		nfa_test.add_testcase("ewqtefadsfqrte");
-		nfa_test.add_testcase("ewrertrtweryrrety4");
-		nfa_test.add_testcase("$^(4ad)(^(03431)))923");
-		nfa_test.test_search();
-
-		nfa_test.set_pattern("a1|2bc");
-		nfa_test.add_testcase("a");
-		nfa_test.add_testcase("b");
-		nfa_test.add_testcase("2bc");
-		nfa_test.add_testcase("a1aa");
-		nfa_test.add_testcase("a1bca");
-		nfa_test.add_testcase("ba2bcbb");
-		nfa_test.add_testcase("134erq");
-		nfa_test.add_testcase("abcea1bcaefaeq");
-		nfa_test.add_testcase("ewqtefadsfqrte");
-		nfa_test.add_testcase("ewrertrtweryrrety4");
-		nfa_test.add_testcase("$^(4ad)(^(03431");
-		nfa_test.add_testcase("a111bbbbcc$^cca_)&");
-		nfa_test.add_testcase("b1#a2^22a2bcbbbcbb)))923");
-		nfa_test.add_testcase("C++ Is Designed by	Bjarne Stroustrup");
-		nfa_test.add_testcase("can you find me is a1|2bc match this a12bc ro match this a1bc");
-		nfa_test.test_search();
-
-		nfa_test.set_pattern("am|is|are");
-		nfa_test.add_testcase("are you ok?");
-		nfa_test.add_testcase("I am fine!");
-		nfa_test.add_testcase("thank you.");
-		nfa_test.add_testcase("who is he?");
-		nfa_test.add_testcase("can the regex engine find me aa aa aa ia sr s  ar aa a aam ,ok you get it");
-		nfa_test.add_testcase("");
-		nfa_test.test_search();
-
-		nfa_test.set_pattern("he(r|ll)o");
-		nfa_test.add_testcase("hello");
-		nfa_test.add_testcase("hero");
-		nfa_test.add_testcase("are you ok?");
-		nfa_test.add_testcase("I am fine!");
-		nfa_test.add_testcase("can the regex engine find me aa aa aa ia sr s  ar aa a aam ,ok you get it wrong");
 		nfa_test.test_search();
 
 		nfa_test.set_pattern("[123]ab*");
@@ -620,10 +524,10 @@ namespace anyun_regex
 		set_pattern("(He|(\\s)he)(\\s+)(\\S*?)e?d");//search sentence like 'He looked' or 'he had'
 		add_testcase("Yet another unusual thing about Harry was how little he looked forward to his birthdays. ");
 		add_testcase("He had never received a birthday card in his life");
-		add_testcase("Harry walked across the dark room, past Hedwig¡¯s large, empty cage, to the open window. ");
+		add_testcase("Harry walked across the dark room, past Hedwigâ€™s large, empty cage, to the open window. ");
 		add_testcase("Hedwig had been absent for two nights now.");
 		add_testcase("Harry recognized the unconscious owl at once");
-		add_testcase("Ron says he¡¯s going to be in London in the last week of the holidays. ");
+		add_testcase("Ron says heâ€™s going to be in London in the last week of the holidays. ");
 		add_testcase("He wanted me to debug the program");
 		add_testcase("It's surprising that he asked she to do this work");
 		add_testcase("\" No no no,it wasn't possible \" ,he said.");
@@ -904,7 +808,7 @@ namespace anyun_regex
 	{
 	}
 
-	NFATest::NFATest(const string & pattern) : pattern(pattern), standard_regex(pattern), nfa(DirectedGraphPoint(new DirectedGraph(pattern)))
+	NFATest::NFATest(const string & pattern) :pattern(pattern), standard_regex(pattern), nfa(DirectedGraphPoint(new DirectedGraph(pattern)))
 	{
 	}
 
@@ -915,7 +819,7 @@ namespace anyun_regex
 
 	void NFATest::set_pattern(const string & pattern, bool no_std_regex)
 	{
-
+		
 		this->pattern = pattern;
 		standard_regex = regex(pattern);
 		nfa.compile(pattern);
@@ -1260,7 +1164,7 @@ namespace anyun_regex
 		cout << endl;
 	}
 
-
+	
 
 	void NFATest::print_test_result_information(size_t total_test_count, size_t pass_count, size_t failed_count)
 	{
