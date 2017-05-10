@@ -1052,7 +1052,7 @@ namespace anyun_regex
 				case '9':
 				{
 					size_t refence_id = p[parse_index++] - '0';
-					if(refence_id > groups.size()) PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
+					if(refence_id >= groups.size()) PARSE_ERROR(parse_result, REGEX_PARSE_ILLEGAL_GROUP_REFERENCE);
 					DirectedEdgePoint directed_edge(new GroupReferenceDirectedge(edges.size(),refence_id));
 					store_edge(directed_edge, operands);
 					break;
