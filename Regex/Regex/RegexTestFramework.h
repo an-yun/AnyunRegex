@@ -64,7 +64,20 @@ typedef pre_process_error_test_case_t compile_error_test_case_t;
 				   <<"' (expected:'"<<::anyun_regex::PARSE_RESULT_MESSAGE[excepted_parase_error_code]<<"')");		\
 	}while(false)
 
-//perform one error test for COMPILE pattern
+//perform one normal test for pre compile pattern
+#define TEST_NORMAL_COMPILE_PATTERN(pattern)																		\
+	do{																												\
+		::anyun_regex::DirectedGraph test_diagraph(pattern);														\
+		::std::cout<<"test normal DirectedGraph.compile for '"<<pattern<<"'"<<std::endl;							\
+		::anyun_regex::RegexParseCode parse_result_code = test_diagraph.get_parse_result_code();					\
+		BOOST_TEST(parse_result_code == ::anyun_regex::REGEX_PARSE_OK,												\
+				  "the compile test result code for '" << pattern <<	"' is'"										\
+				  <<::anyun_regex::PARSE_RESULT_MESSAGE[parse_result_code]											\
+				   <<"' (expected:'REGEX_PARSE_OK')");																\
+	}while(false)
+
+
+//perform one error test for compile pattern
 #define TEST_ERROR_COMPILE_PATTERN(pattern,excepted_parase_error_code)												\
 	do{																												\
 		::anyun_regex::DirectedGraph test_diagraph(pattern);														\
@@ -87,6 +100,11 @@ typedef pre_process_error_test_case_t compile_error_test_case_t;
 //add error test case for pre process pattern
 #define ADD_ERROR_TESTCASE_FOR_PRE_PROCESS(test_case_name,testcases)												\
 	ADD_DATA_TEST_CASE(test_case_name,testcases,one_testcase)	{TEST_ERROR_PRE_PROCESS_PATTERN(one_testcase.first,one_testcase.second);}	
+
+//add normal test case for compile pattern
+#define ADD_NORMAL_TESTCASE_FOR_COMPILE(test_case_name,testcases)													\
+	ADD_DATA_TEST_CASE(test_case_name,testcases,one_testcase)	{TEST_NORMAL_COMPILE_PATTERN(one_testcase);}	
+
 
 //add error test case for compile pattern
 #define ADD_ERROR_TESTCASE_FOR_COMPILE(test_case_name,testcases)													\

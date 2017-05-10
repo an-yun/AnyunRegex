@@ -3,7 +3,7 @@
 #include <fstream>
 #include "../Matcher.h"
 
-//#define TEST
+#define TEST
 
 
 #ifdef TEST
@@ -13,7 +13,7 @@
 */
 #include "PreProcessNormalTest.h"
 #include "PreProcessErrorTest.h"
-#include "NormalErrorTest.h"
+#include "CompileNormalTest.h"
 #include "CompileErrorTest.h"
 
 #else

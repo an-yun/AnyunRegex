@@ -149,6 +149,12 @@ namespace anyun_regex
 		TEST_COMPILE_PATTERN_NORMAL("ab\\nb\\rba");
 		TEST_COMPILE_PATTERN_NORMAL("a(?<my_name>a)");
 		TEST_COMPILE_PATTERN_NORMAL("a(?'my_name'ab)");
+		TEST_COMPILE_PATTERN_NORMAL("\\b\\w+(?=ing\\b)");
+		TEST_COMPILE_PATTERN_NORMAL("\\b((?!abc)\\w)+\\b");
+		TEST_COMPILE_PATTERN_NORMAL("\\b(?!\\d)\\w+\\b");
+		TEST_COMPILE_PATTERN_NORMAL("(?<=\\bre)\\w+\\b");
+		TEST_COMPILE_PATTERN_NORMAL("(?<=[yY]ou)\\b\\w+\\b");
+		TEST_COMPILE_PATTERN_NORMAL("(?<![a-zA-Z])\\d+");
 
 		cout << endl;
 	}
