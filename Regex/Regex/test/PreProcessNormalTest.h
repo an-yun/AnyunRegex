@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../RegexTestFramework.h"
-TEST_TIME_EXAMPLE()
 
 std::vector<pre_process_normal_test_case_t> pre_process_normal_test_cases
 {

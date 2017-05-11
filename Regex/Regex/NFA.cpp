@@ -25,7 +25,12 @@ namespace anyun_regex
 	//{
 	//}
 
-			NFA::NFA()
+	NFA::NFA(const string & pattern)
+	{
+		compile(pattern);
+	}
+
+	NFA::NFA()
 		{
 		}
 

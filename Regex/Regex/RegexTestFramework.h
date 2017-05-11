@@ -15,11 +15,21 @@
 #include <vector>
 #include <utility>
 #include <string>
+#include <boost/regex.hpp>
+#include <boost/test/parameterized_test.hpp>
+#include <boost/bind.hpp>
 
+using namespace boost::unit_test;
+namespace tt = boost::test_tools;
+using namespace boost;
 using boost::timer::cpu_timer;
 using boost::timer::format;
 using boost::timer::default_places;
-
+using boost::regex;
+using boost::smatch;
+using boost::sregex_iterator;
+using boost::regex_replace;
+using boost::match_results;
 #include "DirectedGraph.h"
 
 namespace regex_test_data = boost::unit_test::data;
@@ -114,15 +124,59 @@ typedef pre_process_error_test_case_t compile_error_test_case_t;
 
 //add error test case for compile pattern
 #define ADD_ERROR_TESTCASE_FOR_COMPILE(test_case_name,testcases)													\
-	ADD_DATA_TEST_CASE(test_case_name,testcases,one_testcase)	{TEST_ERROR_COMPILE_PATTERN(one_testcase.first,one_testcase.second);}	
+	ADD_DATA_TEST_CASE(test_case_name,testcases,one_testcase)	{TEST_ERROR_COMPILE_PATTERN(one_testcase.first,one_testcase.second);}				
 
-#define TEST_TIME_EXAMPLE()  \
-	ADD_ONE_TEST_CASE(test_time){ cpu_timer t; ;std::cout<<format(t.elapsed(),default_places,"%ws\n");}					
- 
-
-typedef std::pair<const char*,std:: vector<const char*>> match_testcases_t;
-typedef match_testcases_t search_testcases_t;
 
 //test suit macro
 #define BEGING_TEST_SUIT(test_suit_name) BOOST_AUTO_TEST_SUITE(test_suit_name)
 #define END_TEST_SUIT() BOOST_AUTO_TEST_SUITE_END();
+
+
+typedef std::pair<const char*, std::vector<const char*>> match_testcases_t;
+typedef match_testcases_t search_testcases_t;
+
+struct MatchTestFixture
+{
+	anyun_regex::NFA nfa;
+	boost::regex standard_regex;
+
+	MatchTestFixture(std::string pattern)
+		:nfa(pattern), standard_regex(pattern)
+	{}
+
+	void test_match(const std::string &testcase)
+	{
+		anyun_regex::NFAMatcher match_result;
+		smatch std_result;
+		::std::cout << "test match pattern:" << standard_regex.expression() << " ,text:" << testcase<<std::endl;
+		cpu_timer t_1;
+		bool test_match = anyun_regex::NFAMatcher::match(testcase, match_result, nfa);
+		t_1.stop();
+		cpu_timer t_2;
+		bool standard_match = regex_match(testcase, std_result, standard_regex);
+		t_2.stop();
+		BOOST_TEST(test_match == standard_match); //if the match result is wrong
+		if (standard_match)
+		{
+			BOOST_TEST(std_result.str() == match_result.group());
+			BOOST_TEST(std_result.size() == match_result.group_count());
+			size_t group_size = std_result.size();
+			for (size_t i = 1; i < group_size; i++)
+				BOOST_TEST(std_result[i] == match_result.group(i));
+		}
+		::std::cout << "anyun regex cost:" << format(t_1.elapsed(), default_places, "%ws,") 
+			<<"boost regex cost:"<< format(t_2.elapsed(), default_places, "%ws") << std::endl;
+
+	}
+};
+
+//add normal test case for compile pattern
+#define ADD_ONE_MATCH_TEST_SUIT(test_case_name,one_match_test_case)															\
+	ADD_ONE_TEST_CASE(test_case_name)																						\
+	{																														\
+		std::string pattern = one_match_test_case.first;																	\
+		std::vector<const char*> test_texts = one_match_test_case.second;													\
+		MatchTestFixture testFixture(pattern);																				\
+		for(std::vector<const char*>::iterator b= test_texts.begin(),e= test_texts.end();b!=e;b++)							\
+		testFixture.test_match(*b);																							\
+	}

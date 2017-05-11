@@ -45,7 +45,7 @@ namespace anyun_regex
 		friend class NFAMatcher;
 	public:
 		//explicit NFA(const char *pattern = "");
-		//explicit NFA(const string & pattern);
+		explicit NFA(const string & pattern);
 		explicit NFA();
 		explicit NFA(DirectedGraphPoint digraph);
 		~NFA();
