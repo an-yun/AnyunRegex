@@ -63,6 +63,9 @@
     <ClInclude Include="test\MatchTest.h">
       <Filter>头文件\test</Filter>
     </ClInclude>
+    <ClInclude Include="test\SearchTest.h">
+      <Filter>头文件\test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedEdge.cpp">

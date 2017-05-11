@@ -178,6 +178,7 @@
     <ClInclude Include="test\CompileNormalTest.h" />
     <ClInclude Include="test\PreProcessNormalTest.h" />
     <ClInclude Include="test\PreProcessErrorTest.h" />
+    <ClInclude Include="test\SearchTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectedNode.cpp" />

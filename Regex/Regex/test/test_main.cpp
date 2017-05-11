@@ -17,6 +17,7 @@
 #include "CompileErrorTest.h"
 
 #include "MatchTest.h"
+#include "SearchTest.h"
 
 #else
 #include "DirectedGraphTest.h"
