@@ -11,9 +11,15 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/data/monomorphic.hpp>
+#include <boost/timer/timer.hpp>
 #include <vector>
 #include <utility>
 #include <string>
+
+using boost::timer::cpu_timer;
+using boost::timer::format;
+using boost::timer::default_places;
+
 #include "DirectedGraph.h"
 
 namespace regex_test_data = boost::unit_test::data;
@@ -109,6 +115,13 @@ typedef pre_process_error_test_case_t compile_error_test_case_t;
 //add error test case for compile pattern
 #define ADD_ERROR_TESTCASE_FOR_COMPILE(test_case_name,testcases)													\
 	ADD_DATA_TEST_CASE(test_case_name,testcases,one_testcase)	{TEST_ERROR_COMPILE_PATTERN(one_testcase.first,one_testcase.second);}	
+
+#define TEST_TIME_EXAMPLE()  \
+	ADD_ONE_TEST_CASE(test_time){ cpu_timer t; ;std::cout<<format(t.elapsed(),default_places,"%ws\n");}					
+ 
+
+typedef std::pair<const char*,std:: vector<const char*>> match_testcases_t;
+typedef match_testcases_t search_testcases_t;
 
 //test suit macro
 #define BEGING_TEST_SUIT(test_suit_name) BOOST_AUTO_TEST_SUITE(test_suit_name)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../RegexTestFramework.h"
+TEST_TIME_EXAMPLE()
 
 std::vector<pre_process_normal_test_case_t> pre_process_normal_test_cases
 {
@@ -10,7 +11,7 @@ std::vector<pre_process_normal_test_case_t> pre_process_normal_test_cases
 	{ "a|b", "a|b" },
 	{ "a|bc", "a|b\\Nc" },
 	{ "a|b|123", "a|b|1\\N2\\N3" },
-	{ "(a|b)c", "(a|b)\\Nc" },
+	{ "(a|b)c", "(a|b)\\Nc" }, 
 	{ "(a|bb)c", "(a|b\\Nb)\\Nc" },
 	{ "(a|b)|123", "(a|b)|1\\N2\\N3" },
 	{ "(A|a)(B|b)(C|c)(E|e)", "(A|a)\\N(B|b)\\N(C|c)\\N(E|e)" },

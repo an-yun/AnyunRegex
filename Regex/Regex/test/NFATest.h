@@ -12,7 +12,6 @@
 #include "../Matcher.h"
 #include "../Replacer.h"
 #include <boost/regex.hpp>
-#include <boost/timer/timer.hpp>
 #include <boost/cregex.hpp>
 
 namespace anyun_regex

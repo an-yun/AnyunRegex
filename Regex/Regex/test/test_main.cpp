@@ -33,8 +33,7 @@ void test_capture();
 
 int main()
 {
-	using boost::timer::auto_cpu_timer;
-	auto_cpu_timer t;
+
 #ifdef _DEBUG
 
 	test_auto();
