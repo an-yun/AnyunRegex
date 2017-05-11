@@ -170,13 +170,16 @@ struct MatchTestFixture
 	}
 };
 
-//add normal test case for compile pattern
-#define ADD_ONE_MATCH_TEST_SUIT(test_case_name,one_match_test_case)															\
+//add match test case
+#define ADD_MATCH_TEST_SUIT(test_case_name,match_test_cases)																\
 	ADD_ONE_TEST_CASE(test_case_name)																						\
 	{																														\
+	for(std::vector<match_testcases_t>::iterator b =  match_test_cases.begin(),												\
+		e = match_test_cases.end();b!=e;b++) {																				\
+		match_testcases_t one_match_test_case = *b;																			\
 		std::string pattern = one_match_test_case.first;																	\
 		std::vector<const char*> test_texts = one_match_test_case.second;													\
 		MatchTestFixture testFixture(pattern);																				\
 		for(std::vector<const char*>::iterator b= test_texts.begin(),e= test_texts.end();b!=e;b++)							\
-		testFixture.test_match(*b);																							\
+		testFixture.test_match(*b);	}																						\
 	}

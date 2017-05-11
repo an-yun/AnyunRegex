@@ -148,4 +148,4 @@ std::vector<match_testcases_t> match_testcases
 "http://deerchao.net/tutorials/regex/common.htm",
 } } };
 
-//ADD_ONE_MATCH_TEST_SUIT(test_match, match_testcases);
+ADD_MATCH_TEST_SUIT(test_match, match_testcases);

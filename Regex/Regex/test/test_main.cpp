@@ -16,6 +16,8 @@
 #include "CompileNormalTest.h"
 #include "CompileErrorTest.h"
 
+#include "MatchTest.h"
+
 #else
 #include "DirectedGraphTest.h"
 #include "NFATest.h"
