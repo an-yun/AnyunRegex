@@ -124,8 +124,19 @@ std::vector<match_testcases_t> match_testcases
 "\ta\n",
 
 }
+},
+{"(12|34|56)+(a|e|i|o|u)",
+{"12abb",
+"34a",
+"13abbb",
+"24eaacdaa",
+"12a34e",
+"123456i",
+"4523a",
+"563412e",
+"1212121212343434aa1234565656ecdabded",
 //url test
-}, { "[a-zA-z]+://[^\\s]*",{
+} }, { "[a-zA-z]+://[^\\s]*",{
 "http://www.baidu.com",
 "http://deerchao.net/tutorials/regex/regex.htm",
 "https://www.google.com.hk/",

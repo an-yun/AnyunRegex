@@ -18,11 +18,13 @@
 #include <boost/regex.hpp>
 #include <boost/test/parameterized_test.hpp>
 #include <boost/bind.hpp>
-
+#include "DirectedGraph.h"
 using namespace boost::unit_test;
 namespace tt = boost::test_tools;
 using namespace boost;
+using std::pair;
 using boost::timer::cpu_timer;
+using boost::timer::cpu_times;
 using boost::timer::format;
 using boost::timer::default_places;
 using boost::regex;
@@ -30,7 +32,6 @@ using boost::smatch;
 using boost::sregex_iterator;
 using boost::regex_replace;
 using boost::match_results;
-#include "DirectedGraph.h"
 
 namespace regex_test_data = boost::unit_test::data;
 
@@ -135,6 +136,22 @@ typedef pre_process_error_test_case_t compile_error_test_case_t;
 typedef std::pair<const char*, std::vector<const char*>> match_testcases_t;
 typedef match_testcases_t search_testcases_t;
 
+inline cpu_times &operator+=(cpu_times &t1, const cpu_times &t2)
+{
+	t1.wall += t2.wall;
+	t1.system += t2.system;
+	t1.user += t2.user;
+	return t1;
+}
+
+inline cpu_times &operator/=(cpu_times &t1, unsigned num)
+{
+	t1.wall /= num;
+	t1.system /= num;
+	t1.user /= num;
+	return t1;
+}
+
 struct MatchTestFixture
 {
 	anyun_regex::NFA nfa;
@@ -144,7 +161,7 @@ struct MatchTestFixture
 		:nfa(pattern), standard_regex(pattern)
 	{}
 
-	void test_match(const std::string &testcase)
+	pair<cpu_times, cpu_times> test_match(const std::string &testcase)
 	{
 		anyun_regex::NFAMatcher match_result;
 		smatch std_result;
@@ -166,7 +183,7 @@ struct MatchTestFixture
 		}
 		::std::cout << "anyun regex cost:" << format(t_1.elapsed(), default_places, "%ws,") 
 			<<"boost regex cost:"<< format(t_2.elapsed(), default_places, "%ws") << std::endl;
-
+		return{ t_1.elapsed() ,t_2.elapsed() };
 	}
 };
 
@@ -180,6 +197,9 @@ struct MatchTestFixture
 		std::string pattern = one_match_test_case.first;																	\
 		std::vector<const char*> test_texts = one_match_test_case.second;													\
 		MatchTestFixture testFixture(pattern);																				\
+		cpu_times cost_time;																								\
+		cost_time.clear();																									\
 		for(std::vector<const char*>::iterator b= test_texts.begin(),e= test_texts.end();b!=e;b++)							\
-		testFixture.test_match(*b);	}																						\
-	}
+		cost_time += testFixture.test_match(*b).first;																		\
+		::std::cout << "anyun average regex cost:" << format(cost_time/=test_texts.size(), default_places, "%ws\n");									\
+	}}
