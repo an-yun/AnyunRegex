@@ -212,9 +212,9 @@ namespace anyun_regex
 			 *else
 			 *	 next_edge_id++;
 			 */
-			size_t step = static_cast<unsigned>(-1);	//the step of the str_point should go if the edge accept it
+			size_t step = static_cast<size_t>(-1);	//the step of the str_point should go if the edge accept it
 			DirectedEdgePoint current_edge = edges[out_edges[next_edge_id]];
-			if ((step = current_edge->accept(text, track_recode[top_node_id].first , matcher, track_recode)) != static_cast<unsigned>(-1))
+			if ((step = current_edge->accept(text, track_recode[top_node_id].first , matcher, track_recode)) != static_cast<size_t>(-1))
 			{
 				/*
 				 * 	 push a new OneSaveState;

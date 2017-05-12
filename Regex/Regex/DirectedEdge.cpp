@@ -121,7 +121,7 @@ namespace anyun_regex
 
 	size_t SingleCharDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
-		return index < matcher.text.length() && condition->match(text[index]) ? 1 : static_cast<unsigned>(-1);
+		return index < matcher.text.length() && condition->match(text[index]) ? 1 : static_cast<size_t>(-1);
 	}
 
 	DirectedEdge * SingleCharDirectedEdge::copy() const
@@ -162,7 +162,7 @@ namespace anyun_regex
 
 	size_t LineStartDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
-		return (index == 0 || text[index-1] == '\n') ? 0 : static_cast<unsigned>(-1);
+		return (index == 0 || text[index-1] == '\n') ? 0 : static_cast<size_t>(-1);
 	}
 
 	DirectedEdge * LineStartDirectedEdge::copy() const
@@ -182,7 +182,7 @@ namespace anyun_regex
 
 	size_t LineEndDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
-		return (index == text.size() || (index < text.size() && text[index] == '\n')) ? 0 : static_cast<unsigned>(-1);
+		return (index == text.size() || (index < text.size() && text[index] == '\n')) ? 0 : static_cast<size_t>(-1);
 	}
 
 	DirectedEdge * LineEndDirectedEdge::copy() const
@@ -203,7 +203,7 @@ namespace anyun_regex
 
 	size_t CountDirectedEdge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
-		return static_cast<unsigned>(-1);
+		return static_cast<size_t>(-1);
 	}
 
 	DirectedEdge * CountDirectedEdge::copy() const
@@ -229,7 +229,7 @@ namespace anyun_regex
 
 	size_t RepeatDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
-		return static_cast<unsigned>(-1);
+		return static_cast<size_t>(-1);
 	}
 
 	DirectedEdge * RepeatDirectedge::copy() const
@@ -250,13 +250,13 @@ namespace anyun_regex
 	size_t GroupReferenceDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
 		//here should be move ?
-		//if (index >= matcher.text.length()) return static_cast<unsigned>(-1);
+		//if (index >= matcher.text.length()) return static_cast<size_t>(-1);
 		pair<size_t, size_t> reference_group = matcher.get_groups_node(reference_id);
 		size_t length = track_record[reference_group.second].first - track_record[reference_group.first].first;
 		string group_str = text.substr(track_record[reference_group.first].first, length);
 		for (size_t i = 0; i < length; i++)
 			if (group_str[i] != text[index + i])
-				return static_cast<unsigned>(-1);
+				return static_cast<size_t>(-1);
 		//then shouldn't move the cursor
 		return length;
 	}
@@ -282,7 +282,7 @@ namespace anyun_regex
 		if ((index == 0 || is_blank(text[index - 1])) && !is_blank(text[index])) return 0;
 		//word end
 		if ((index == text.size() || is_blank(text[index])) && !is_blank(text[index-1])) return 0;
-		return static_cast<unsigned>(-1);
+		return static_cast<size_t>(-1);
 	}
 
 	DirectedEdge * WordBoundaryDirectedEdge::copy() const
