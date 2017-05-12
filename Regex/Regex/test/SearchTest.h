@@ -129,17 +129,6 @@ std::vector<search_testcases_t> group_search_testcases
 			"11123",
 		}
 	},
-	{ "(\\w)(\\1){2,}",
-		{
-			"aaaa1111",
-			"aa123",
-			"123",
-			"1123445690aaa",
-			"abcd",
-			"aabbccc",
-			"11123",
-		}
-	},
 	{"(\\w)(\\1){2,3}",
 		{ 
 			"aaaa1111",
