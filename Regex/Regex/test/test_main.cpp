@@ -3,7 +3,7 @@
 #include <fstream>
 #include "../Matcher.h"
 
-#define TEST
+//#define TEST
 
 
 #ifdef TEST
@@ -44,7 +44,7 @@ int main()
 	//boost_regex_password_validate();
 #else
 	password_validate();
-	boost_regex_password_validate();
+	//boost_regex_password_validate();
 #endif
 	return 0;
 }
@@ -61,16 +61,14 @@ void password_validate() {
 		"abcd",
 		"aabbccc",
 		"11123" };
-	DirectedGraphPoint dia_graph(new DirectedGraph("(\\w)\\1{2,}"));
-	NFA pattern(dia_graph);
-	Println("use my regex lib validate password");
+	NFA pattern("(\\w)\\1{2,}");
 	for (string &password : passwords)
 	{
 		NFAMatcher matcher;
-		Println("validate the password:" + password);
+		Println("验证密码：" + password);
 		if (NFAMatcher::search(password, matcher, pattern))
 		{
-			Println("contain repeated chars more than three times,the repeat string is");
+			Println("包含重复3个以上,重复段为");
 			Println(matcher.group());
 		}
 		else
@@ -94,13 +92,12 @@ void boost_regex_password_validate()
 		"11123" };
 	boost::regex regex_expression("(\\w)\\1{2,}");
 	boost::match_results<std::string::const_iterator> what;
-	Println("use boost regex lib validate password");
 	for (string &password : passwords)
 	{
-		Println("validate the password:" + password);
+		Println("验证密码：" + password);
 		if (regex_search(password.cbegin(), password.cend(), what, regex_expression))
 		{
-			Println("contain repeated chars more than three times,the repeat string is");
+			Println("包含重复3个以上,重复段为");
 			Println(what[0]);
 		}
 		else
