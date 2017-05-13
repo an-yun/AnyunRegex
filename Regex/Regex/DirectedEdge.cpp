@@ -249,8 +249,6 @@ namespace anyun_regex
 
 	size_t GroupReferenceDirectedge::accept(const string & text, size_t index, Matcher & matcher, TrackRecord & track_record)
 	{
-		//here should be move ?
-		//if (index >= matcher.text.length()) return static_cast<size_t>(-1);
 		pair<size_t, size_t> reference_group = matcher.get_groups_node(reference_id);
 		size_t length = track_record[reference_group.second].first - track_record[reference_group.first].first;
 		string group_str = text.substr(track_record[reference_group.first].first, length);
