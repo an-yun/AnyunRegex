@@ -1,8 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include <boost/regex.hpp>
+#include <boost/timer/timer.hpp>
 #include <QMainWindow>
-
+#include <QDebug>
+using boost::timer::cpu_timer;
+using boost::timer::cpu_times;
+using boost::timer::format;
+using boost::timer::default_places;
 namespace Ui {
 class MainWindow;
 }
@@ -15,8 +20,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+
+    void on_search_button_clicked();
+
 private:
     Ui::MainWindow *ui;
+	boost::regex regex_expression;
+	boost::match_results<std::string::const_iterator> what;
 };
 
 #endif // MAINWINDOW_H
