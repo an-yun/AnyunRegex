@@ -22,7 +22,6 @@ public:
 
 private slots:
 
-    void on_search_button_clicked();
 
 private:
     Ui::MainWindow *ui;

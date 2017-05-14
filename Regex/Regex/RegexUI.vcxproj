@@ -247,6 +247,9 @@
     <ClInclude Include="test\PreProcessNormalTest.h" />
     <ClInclude Include="test\SearchTest.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
   <ProjectExtensions>

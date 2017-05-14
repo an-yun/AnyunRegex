@@ -58,7 +58,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Qt QRegExp</string>
+           <string>Qt 5.8 QRegExp</string>
           </property>
          </item>
         </widget>

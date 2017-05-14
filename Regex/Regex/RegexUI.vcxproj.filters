@@ -158,4 +158,9 @@
       <Filter>Header Files\test</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.png">
+      <Filter>Source Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
