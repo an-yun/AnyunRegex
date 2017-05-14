@@ -44,13 +44,8 @@
           <bool>false</bool>
          </property>
          <property name="currentText">
-          <string>C++ std::regex (Visual C++ 2015)</string>
+          <string>C++ Boost.Regex 5.1.2</string>
          </property>
-         <item>
-          <property name="text">
-           <string>C++ std::regex (Visual C++ 2015)</string>
-          </property>
-         </item>
          <item>
           <property name="text">
            <string>C++ Boost.Regex 5.1.2</string>
@@ -58,7 +53,17 @@
          </item>
          <item>
           <property name="text">
-           <string>Qt QRegExp</string>
+           <string>C++ std::regex (Visual C++ 2015)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Qt 5.8 QRegExp</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>C++ anyun_regex</string>
           </property>
          </item>
         </widget>

@@ -209,11 +209,12 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "C++ Regex Tool", Q_NULLPTR));
         comboBox->clear();
         comboBox->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "C++ std::regex (Visual C++ 2015)", Q_NULLPTR)
          << QApplication::translate("MainWindow", "C++ Boost.Regex 5.1.2", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "Qt QRegExp", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "C++ std::regex (Visual C++ 2015)", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "Qt 5.8 QRegExp", Q_NULLPTR)
+         << QApplication::translate("MainWindow", "C++ anyun_regex", Q_NULLPTR)
         );
-        comboBox->setCurrentText(QApplication::translate("MainWindow", "C++ std::regex (Visual C++ 2015)", Q_NULLPTR));
+        comboBox->setCurrentText(QApplication::translate("MainWindow", "C++ Boost.Regex 5.1.2", Q_NULLPTR));
         textEdit_2->setPlaceholderText(QApplication::translate("MainWindow", "please enter your regex expression", Q_NULLPTR));
         label_3->setText(QApplication::translate("MainWindow", "\347\224\250\346\227\266: 0.000025s", Q_NULLPTR));
         label_2->setText(QApplication::translate("MainWindow", "\345\210\206\347\273\204\345\206\205\345\256\271", Q_NULLPTR));
