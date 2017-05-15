@@ -30,3 +30,5 @@ HEADERS  += mainwindow.h
 
 
 FORMS    += mainwindow.ui
+
+RC_FILE = RegexUI.rc

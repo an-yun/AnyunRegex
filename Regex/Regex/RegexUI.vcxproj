@@ -238,6 +238,7 @@
     <ClInclude Include="NFA.h" />
     <ClInclude Include="RegexTestFramework.h" />
     <ClInclude Include="Replacer.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="test\CompileErrorTest.h" />
     <ClInclude Include="test\CompileNormalTest.h" />
     <ClInclude Include="test\DirectedGraphTest.h" />
@@ -248,7 +249,10 @@
     <ClInclude Include="test\SearchTest.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.png" />
+    <ResourceCompile Include="RegexUI.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="regex.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
