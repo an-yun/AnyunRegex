@@ -66,7 +66,7 @@ public:
         regex_lib_widget = new QWidget(centralWidget);
         regex_lib_widget->setObjectName(QStringLiteral("regex_lib_widget"));
         regex_lib_widget->setEnabled(true);
-        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(regex_lib_widget->sizePolicy().hasHeightForWidth());
@@ -108,8 +108,11 @@ public:
 
         regex_frame = new QFrame(centralWidget);
         regex_frame->setObjectName(QStringLiteral("regex_frame"));
-        sizePolicy.setHeightForWidth(regex_frame->sizePolicy().hasHeightForWidth());
-        regex_frame->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(regex_frame->sizePolicy().hasHeightForWidth());
+        regex_frame->setSizePolicy(sizePolicy2);
         regex_frame->setFrameShape(QFrame::NoFrame);
         regex_frame->setFrameShadow(QFrame::Plain);
         regex_frame->setLineWidth(0);
@@ -133,11 +136,11 @@ public:
 
         search_result_frame = new QFrame(regex_frame);
         search_result_frame->setObjectName(QStringLiteral("search_result_frame"));
-        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(search_result_frame->sizePolicy().hasHeightForWidth());
-        search_result_frame->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(search_result_frame->sizePolicy().hasHeightForWidth());
+        search_result_frame->setSizePolicy(sizePolicy3);
         search_result_frame->setFrameShape(QFrame::StyledPanel);
         search_result_frame->setFrameShadow(QFrame::Raised);
         verticalLayout_3 = new QVBoxLayout(search_result_frame);
@@ -158,11 +161,11 @@ public:
 
         search_result_textEdit = new QTextEdit(search_result_frame);
         search_result_textEdit->setObjectName(QStringLiteral("search_result_textEdit"));
-        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(search_result_textEdit->sizePolicy().hasHeightForWidth());
-        search_result_textEdit->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(search_result_textEdit->sizePolicy().hasHeightForWidth());
+        search_result_textEdit->setSizePolicy(sizePolicy4);
         search_result_textEdit->setFont(font2);
         search_result_textEdit->setFrameShape(QFrame::Panel);
         search_result_textEdit->setFrameShadow(QFrame::Plain);
@@ -179,8 +182,8 @@ public:
 
         searc_frame = new QFrame(centralWidget);
         searc_frame->setObjectName(QStringLiteral("searc_frame"));
-        sizePolicy.setHeightForWidth(searc_frame->sizePolicy().hasHeightForWidth());
-        searc_frame->setSizePolicy(sizePolicy);
+        sizePolicy2.setHeightForWidth(searc_frame->sizePolicy().hasHeightForWidth());
+        searc_frame->setSizePolicy(sizePolicy2);
         searc_frame->setFrameShape(QFrame::NoFrame);
         searc_frame->setFrameShadow(QFrame::Plain);
         searc_frame->setMidLineWidth(1);
