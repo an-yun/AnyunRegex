@@ -27,12 +27,19 @@ public:
 private slots:
 
     void regex_selected_changed(int index);
+	void regex_text_changed();
+	void search_text_changed();
 
 private:
+	static QColor red;
+	static QColor black;
     Ui::MainWindow *ui;
-	boost::basic_regex<char32_t> boost_regex;
-	std::basic_regex<char32_t> std_regex;
+	boost::wregex boost_regex;
+	std::wregex std_regex;
 	QRegExp q_regex;
+	anyun_regex::NFA anyun_regex;
+	QString regex_expression;
+	QString search_text;
 	int regex_select;
 };
 

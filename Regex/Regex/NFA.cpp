@@ -64,7 +64,7 @@ namespace anyun_regex
 		return digraph->parse_result;
 	}
 
-	string NFA::get_compile_message() const
+	const char * NFA::get_compile_message() const
 	{
 		return PARSE_RESULT_MESSAGE[digraph->parse_result];
 	}

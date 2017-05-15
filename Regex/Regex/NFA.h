@@ -54,7 +54,7 @@ namespace anyun_regex
 		void set_digraph(DirectedGraphPoint diagraph);
 		DirectedGraphPoint get_diagraph();
 		RegexParseCode get_compile_result_code() const;
-		string get_compile_message() const;
+		const char * get_compile_message() const;
 		string get_pattern() const;
 
 		size_t group_size() const;

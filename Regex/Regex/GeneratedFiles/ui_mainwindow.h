@@ -201,6 +201,8 @@ public:
 
         retranslateUi(MainWindow);
         QObject::connect(regex_select_combox, SIGNAL(currentIndexChanged(int)), MainWindow, SLOT(regex_selected_changed(int)));
+        QObject::connect(regex_textEdit, SIGNAL(textChanged()), MainWindow, SLOT(regex_text_changed()));
+        QObject::connect(search_textEdit, SIGNAL(textChanged()), MainWindow, SLOT(search_text_changed()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
