@@ -38,9 +38,16 @@ private:
 	std::wregex std_regex;
 	QRegExp q_regex;
 	anyun_regex::NFA anyun_regex;
+
 	QString regex_expression;
 	QString search_text;
 	int regex_select;
+
+	std::vector<std::vector<QString>> search_result;
+	std::vector<std::pair<size_t, size_t>> match_positions;
+
+	void search();
+	void show_search_result();
 };
 
 #endif // MAINWINDOW_H

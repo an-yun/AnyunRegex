@@ -1,4 +1,5 @@
-#include  <exception>
+#include <exception>
+#include <algorithm>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
@@ -23,6 +24,7 @@ QColor MainWindow::black(0, 0, 0);
 void MainWindow::regex_selected_changed(int index)
 {
 	qDebug() << "select regex :" << index;
+	if(regex_select == index) return;
 	regex_select = index;
 	regex_text_changed();
 }
@@ -34,21 +36,13 @@ void MainWindow::regex_text_changed()
 	if(temp_regex == regex_expression) return;
 	else regex_expression = temp_regex;
 	std::wstring w_regex_expression = regex_expression.toStdWString();
-	std::wstring w_search_text = search_text.toStdWString();
 	try
 	{
 		switch (regex_select)
 		{
 		case 0:
-			{
-				boost_regex.set_expression(w_regex_expression);
-				boost::wsregex_iterator b(w_search_text.begin(), w_search_text.end(), boost_regex);
-				boost::wsregex_iterator e;
-				for (;b!=e;b++)
-					ui->search_result_textEdit->append(QString::fromStdWString((*b).str()));
-				break;
-			}
-
+			boost_regex.set_expression(w_regex_expression);
+			break;
 		case 1:
 			std_regex.assign(w_regex_expression);
 			break;
@@ -63,6 +57,8 @@ void MainWindow::regex_text_changed()
 		default:
 			break;
 		}
+		search();
+		show_search_result();
 	}
 	catch (std::exception e)
 	{
@@ -76,6 +72,56 @@ void MainWindow::regex_text_changed()
 
 void MainWindow::search_text_changed()
 {
-	search_text = ui->search_textEdit->toPlainText();
-	qDebug() << search_text;
+	QString temp_text = ui->search_textEdit->toPlainText();;
+	if (search_text == temp_text) return;
+	search_text = temp_text;
+	qDebug() <<"search text :"<< search_text;
+	search();
+	show_search_result();
+}
+
+void MainWindow::search()
+{
+	search_result.clear();
+	match_positions.clear();
+	std::wstring w_search_text = search_text.toStdWString();
+	switch (regex_select)
+	{
+		case 0:
+		{
+			boost::wsregex_iterator b(w_search_text.begin(), w_search_text.end(), boost_regex);
+			boost::wsregex_iterator e;
+			for (; b != e; b++)
+			{
+				auto &one_search_result = *b;
+				std::vector<QString> groups;
+				size_t groups_amount= one_search_result.size();
+				for (size_t i=0;i< groups_amount;i++)
+					groups.push_back(QString::fromStdWString(one_search_result.str(i)));
+				search_result.push_back(groups);
+				size_t match_start_positoin = std::distance(w_search_text.cbegin(),one_search_result[0].first);
+				size_t match_length = one_search_result.length(0);
+				qDebug() << "start " << match_start_positoin << " length " << match_length;
+				match_positions.push_back({ match_start_positoin,match_length });
+			}
+			break;
+		}
+
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		default:
+			break;
+	}
+}
+
+void MainWindow::show_search_result()
+{
+	for(std::pair<size_t,size_t> &one_positon:match_positions)
+	{
+		
+	}
 }

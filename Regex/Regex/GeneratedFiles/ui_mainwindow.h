@@ -145,7 +145,7 @@ public:
 
         search_result_textEdit = new QTextEdit(search_result_frame);
         search_result_textEdit->setObjectName(QStringLiteral("search_result_textEdit"));
-        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Fixed);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
         sizePolicy3.setHeightForWidth(search_result_textEdit->sizePolicy().hasHeightForWidth());
