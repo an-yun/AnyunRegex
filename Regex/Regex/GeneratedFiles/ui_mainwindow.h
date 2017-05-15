@@ -34,8 +34,9 @@ public:
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
     QWidget *regex_lib_widget;
-    QVBoxLayout *verticalLayout_4;
+    QHBoxLayout *horizontalLayout;
     QComboBox *regex_select_combox;
+    QLabel *regex_tip_label;
     QFrame *regex_frame;
     QHBoxLayout *horizontalLayout_2;
     QTextEdit *regex_textEdit;
@@ -64,36 +65,51 @@ public:
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         regex_lib_widget = new QWidget(centralWidget);
         regex_lib_widget->setObjectName(QStringLiteral("regex_lib_widget"));
-        verticalLayout_4 = new QVBoxLayout(regex_lib_widget);
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
+        regex_lib_widget->setEnabled(true);
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(regex_lib_widget->sizePolicy().hasHeightForWidth());
+        regex_lib_widget->setSizePolicy(sizePolicy);
+        horizontalLayout = new QHBoxLayout(regex_lib_widget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         regex_select_combox = new QComboBox(regex_lib_widget);
         regex_select_combox->setObjectName(QStringLiteral("regex_select_combox"));
         regex_select_combox->setEnabled(true);
-        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(regex_select_combox->sizePolicy().hasHeightForWidth());
-        regex_select_combox->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(regex_select_combox->sizePolicy().hasHeightForWidth());
+        regex_select_combox->setSizePolicy(sizePolicy1);
         regex_select_combox->setMinimumSize(QSize(350, 26));
         QFont font;
         font.setFamily(QString::fromUtf8("\345\276\256\350\275\257\351\233\205\351\273\221"));
         regex_select_combox->setFont(font);
         regex_select_combox->setEditable(false);
 
-        verticalLayout_4->addWidget(regex_select_combox);
+        horizontalLayout->addWidget(regex_select_combox);
+
+        regex_tip_label = new QLabel(regex_lib_widget);
+        regex_tip_label->setObjectName(QStringLiteral("regex_tip_label"));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("\345\276\256\350\275\257\351\233\205\351\273\221"));
+        font1.setPointSize(10);
+        regex_tip_label->setFont(font1);
+        regex_tip_label->setStyleSheet(QStringLiteral(""));
+        regex_tip_label->setTextFormat(Qt::AutoText);
+        regex_tip_label->setScaledContents(true);
+
+        horizontalLayout->addWidget(regex_tip_label);
 
 
         verticalLayout->addWidget(regex_lib_widget);
 
         regex_frame = new QFrame(centralWidget);
         regex_frame->setObjectName(QStringLiteral("regex_frame"));
-        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(regex_frame->sizePolicy().hasHeightForWidth());
-        regex_frame->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(regex_frame->sizePolicy().hasHeightForWidth());
+        regex_frame->setSizePolicy(sizePolicy);
         regex_frame->setFrameShape(QFrame::NoFrame);
         regex_frame->setFrameShadow(QFrame::Plain);
         regex_frame->setLineWidth(0);
@@ -104,10 +120,10 @@ public:
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         regex_textEdit = new QTextEdit(regex_frame);
         regex_textEdit->setObjectName(QStringLiteral("regex_textEdit"));
-        QFont font1;
-        font1.setFamily(QStringLiteral("Consolas"));
-        font1.setPointSize(10);
-        regex_textEdit->setFont(font1);
+        QFont font2;
+        font2.setFamily(QStringLiteral("Consolas"));
+        font2.setPointSize(10);
+        regex_textEdit->setFont(font2);
         regex_textEdit->setFrameShape(QFrame::Panel);
         regex_textEdit->setFrameShadow(QFrame::Sunken);
         regex_textEdit->setLineWidth(1);
@@ -130,16 +146,13 @@ public:
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         time_label = new QLabel(search_result_frame);
         time_label->setObjectName(QStringLiteral("time_label"));
-        QFont font2;
-        font2.setFamily(QString::fromUtf8("\345\276\256\350\275\257\351\233\205\351\273\221"));
-        font2.setPointSize(10);
-        time_label->setFont(font2);
+        time_label->setFont(font1);
 
         verticalLayout_3->addWidget(time_label);
 
         group_label = new QLabel(search_result_frame);
         group_label->setObjectName(QStringLiteral("group_label"));
-        group_label->setFont(font2);
+        group_label->setFont(font1);
 
         verticalLayout_3->addWidget(group_label);
 
@@ -150,7 +163,7 @@ public:
         sizePolicy3.setVerticalStretch(0);
         sizePolicy3.setHeightForWidth(search_result_textEdit->sizePolicy().hasHeightForWidth());
         search_result_textEdit->setSizePolicy(sizePolicy3);
-        search_result_textEdit->setFont(font1);
+        search_result_textEdit->setFont(font2);
         search_result_textEdit->setFrameShape(QFrame::Panel);
         search_result_textEdit->setFrameShadow(QFrame::Plain);
         search_result_textEdit->setLineWidth(1);
@@ -166,8 +179,8 @@ public:
 
         searc_frame = new QFrame(centralWidget);
         searc_frame->setObjectName(QStringLiteral("searc_frame"));
-        sizePolicy1.setHeightForWidth(searc_frame->sizePolicy().hasHeightForWidth());
-        searc_frame->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(searc_frame->sizePolicy().hasHeightForWidth());
+        searc_frame->setSizePolicy(sizePolicy);
         searc_frame->setFrameShape(QFrame::NoFrame);
         searc_frame->setFrameShadow(QFrame::Plain);
         searc_frame->setMidLineWidth(1);
@@ -177,7 +190,7 @@ public:
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         search_textEdit = new QTextEdit(searc_frame);
         search_textEdit->setObjectName(QStringLiteral("search_textEdit"));
-        search_textEdit->setFont(font1);
+        search_textEdit->setFont(font2);
         search_textEdit->setFrameShape(QFrame::Panel);
         search_textEdit->setLineWidth(1);
         search_textEdit->setMidLineWidth(1);
@@ -203,6 +216,7 @@ public:
         QObject::connect(regex_select_combox, SIGNAL(currentIndexChanged(int)), MainWindow, SLOT(regex_selected_changed(int)));
         QObject::connect(regex_textEdit, SIGNAL(textChanged()), MainWindow, SLOT(regex_text_changed()));
         QObject::connect(search_textEdit, SIGNAL(textChanged()), MainWindow, SLOT(search_text_changed()));
+        QObject::connect(search_textEdit, SIGNAL(cursorPositionChanged()), MainWindow, SLOT(regex_text_cursor_position_changed()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -218,8 +232,9 @@ public:
          << QApplication::translate("MainWindow", "C++ anyun_regex", Q_NULLPTR)
         );
         regex_select_combox->setCurrentText(QApplication::translate("MainWindow", "C++ Boost.Regex 5.1.2", Q_NULLPTR));
+        regex_tip_label->setText(QString());
         regex_textEdit->setPlaceholderText(QApplication::translate("MainWindow", "please enter your regex expression", Q_NULLPTR));
-        time_label->setText(QApplication::translate("MainWindow", "\347\224\250\346\227\266: 0.000025s", Q_NULLPTR));
+        time_label->setText(QApplication::translate("MainWindow", "\347\224\250\346\227\266: 0.000000s", Q_NULLPTR));
         group_label->setText(QApplication::translate("MainWindow", "\345\210\206\347\273\204\345\206\205\345\256\271", Q_NULLPTR));
         search_textEdit->setPlaceholderText(QApplication::translate("MainWindow", "please enter your text", Q_NULLPTR));
     } // retranslateUi

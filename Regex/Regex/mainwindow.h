@@ -29,12 +29,15 @@ private slots:
     void regex_selected_changed(int index);
 	void regex_text_changed();
 	void search_text_changed();
+	void regex_text_cursor_position_changed();
 
 private:
 	static QColor red;
 	static QColor black;
 	static QColor white;
 	static QColor match_color;
+	static QString result_format;
+	static QString result_header_format;
     Ui::MainWindow *ui;
 	boost::wregex boost_regex;
 	std::wregex std_regex;
@@ -45,11 +48,11 @@ private:
 	QString search_text;
 	int regex_select;
 
-	std::vector<std::vector<QString>> search_result;
-	std::vector<std::pair<size_t, size_t>> match_positions;
+	std::map<size_t,std::pair<size_t, std::vector<QString>>> search_result;
 
 	void search();
 	void show_search_result();
+	void re_compile();
 };
 
 #endif // MAINWINDOW_H

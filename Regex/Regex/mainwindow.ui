@@ -17,7 +17,16 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QWidget" name="regex_lib_widget" native="true">
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QComboBox" name="regex_select_combox">
          <property name="enabled">
@@ -66,6 +75,28 @@
            <string>C++ anyun_regex</string>
           </property>
          </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="regex_tip_label">
+         <property name="font">
+          <font>
+           <family>微软雅黑</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -141,7 +172,7 @@
              </font>
             </property>
             <property name="text">
-             <string>用时: 0.000025s</string>
+             <string>用时: 0.000000s</string>
             </property>
            </widget>
           </item>
@@ -308,10 +339,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>search_textEdit</sender>
+   <signal>cursorPositionChanged()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>regex_text_cursor_position_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>234</x>
+     <y>516</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>221</x>
+     <y>592</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>regex_selected_changed(int)</slot>
   <slot>regex_text_changed()</slot>
   <slot>search_text_changed()</slot>
+  <slot>regex_text_cursor_position_changed()</slot>
  </slots>
 </ui>

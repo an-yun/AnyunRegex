@@ -3,7 +3,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QTextBlock>
 #include "DirectedGraph.h"
+
+
+QColor MainWindow::red(255, 0, 0);
+QColor MainWindow::black(0, 0, 0);
+QColor MainWindow::white(255, 255, 255);
+QColor MainWindow::match_color(103, 204, 255);
+QString MainWindow::result_format("Group %1:	%2");
+QString MainWindow::result_header_format("mathch postion %1-%2");
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,17 +27,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-QColor MainWindow::red(255, 0, 0);
-QColor MainWindow::black(0, 0, 0);
-QColor MainWindow::white(255, 255, 255);
-QColor MainWindow::match_color(103, 204, 255);
-
 void MainWindow::regex_selected_changed(int index)
 {
 	qDebug() << "select regex :" << index;
 	if(regex_select == index) return;
 	regex_select = index;
-	regex_text_changed();
+	re_compile();
 }
 
 void MainWindow::regex_text_changed()
@@ -36,7 +40,113 @@ void MainWindow::regex_text_changed()
 	qDebug() << "regex text changed";
 	QString temp_regex = ui->regex_textEdit->toPlainText();
 	if(temp_regex == regex_expression) return;
-	else regex_expression = temp_regex;
+	regex_expression = temp_regex;
+	re_compile();
+}
+
+void MainWindow::search_text_changed()
+{
+	QString temp_text = ui->search_textEdit->toPlainText();;
+	if (search_text == temp_text) return;
+	search_text = temp_text;
+	qDebug() <<"search text :"<< search_text;
+	search();
+	show_search_result();
+}
+
+void MainWindow::regex_text_cursor_position_changed()
+{
+	size_t position = ui->search_textEdit->textCursor().position();
+	auto find_result = search_result.upper_bound(position);
+	if (find_result == search_result.begin()) return;
+	auto &one_match = *(--find_result);
+	if (position > one_match.second.first) return;
+	auto &groups = one_match.second.second;
+	auto &search_result_textEdit = ui->search_result_textEdit;
+	search_result_textEdit->clear();
+	size_t group_size = groups.size();
+	search_result_textEdit->append(result_header_format.arg(one_match.first).arg(one_match.second.first));
+	for (size_t i = 0; i < group_size; i++)
+		search_result_textEdit->append(result_format.arg(i,3).arg(groups[i]));
+}
+
+void MainWindow::search()
+{
+	search_result.clear();
+	std::wstring w_search_text = search_text.toStdWString();
+	cpu_timer t;
+	switch (regex_select)
+	{
+		case 0:
+		{
+			boost::wsregex_iterator b(w_search_text.begin(), w_search_text.end(), boost_regex);
+			boost::wsregex_iterator e;
+			for (; b != e; b++)
+			{
+				auto &one_search_result = *b;
+				std::vector<QString> groups;
+				size_t groups_amount= one_search_result.size();
+				for (size_t i=0;i< groups_amount;i++)
+					groups.push_back(QString::fromStdWString(one_search_result.str(i)));
+				size_t match_start_positoin = std::distance(w_search_text.cbegin(),one_search_result[0].first);
+				size_t match_end_position = match_start_positoin +one_search_result.length(0);
+				qDebug() << "start " << match_start_positoin << " end " << match_end_position;
+				search_result[match_start_positoin] = { match_end_position,groups };
+			}
+			break;
+		}
+
+		case 1:
+		{
+			std::wsregex_iterator b(w_search_text.begin(), w_search_text.end(), std_regex);
+			std::wsregex_iterator e;
+			for (; b != e; b++)
+			{
+				auto &one_search_result = *b;
+				std::vector<QString> groups;
+				size_t groups_amount = one_search_result.size();
+				for (size_t i = 0; i< groups_amount; i++)
+					groups.push_back(QString::fromStdWString(one_search_result.str(i)));
+				size_t match_start_positoin = std::distance(w_search_text.cbegin(), one_search_result[0].first);
+				size_t match_end_position = match_start_positoin + one_search_result.length(0);
+				qDebug() << "start " << match_start_positoin << " end " << match_end_position;
+				search_result[match_start_positoin] = { match_end_position,groups };
+			}
+			break;
+		}
+		case 2:
+			break;
+		case 3:
+			break;
+		default:
+			break;
+	}
+	t.stop();
+	ui->time_label->setText(QString::fromStdString(format(t.elapsed(), default_places, "鐢ㄦ椂: %ws")));
+}
+
+void MainWindow::show_search_result()
+{
+	QTextCursor cursor = ui->search_textEdit->textCursor();
+	int current_position = cursor.position();
+	ui->search_textEdit->selectAll();
+	ui->search_textEdit->setTextBackgroundColor(white);
+	ui->regex_textEdit->textCursor().clearSelection();
+	for(auto m_start = search_result.begin(),m_end = search_result.end();m_start!=m_end;m_start++)
+	{
+		auto &one_positon = *m_start;
+		cursor.setPosition(one_positon.first);
+		cursor.setPosition(one_positon.second.first,QTextCursor::KeepAnchor);
+		ui->search_textEdit->setTextCursor(cursor);
+		ui->search_textEdit->setTextBackgroundColor(match_color);
+	}
+	cursor.setPosition(current_position);
+	ui->search_textEdit->setTextCursor(cursor);
+	ui->search_textEdit->setTextBackgroundColor(white);
+}
+
+void MainWindow::re_compile()
+{
 	std::wstring w_regex_expression = regex_expression.toStdWString();
 	try
 	{
@@ -59,83 +169,21 @@ void MainWindow::regex_text_changed()
 		default:
 			break;
 		}
+		QTextCursor cursor = ui->regex_textEdit->textCursor();
+		ui->regex_tip_label->clear();
+		ui->regex_textEdit->selectAll();
+		ui->regex_textEdit->setTextColor(black);
+		ui->regex_textEdit->setTextCursor(cursor);
 		search();
 		show_search_result();
 	}
 	catch (std::exception e)
 	{
-		QMessageBox::information(this, QStringLiteral("正则表达式非法"), e.what());
+		ui->regex_tip_label->setText(QStringLiteral("<font color=red>regex error: %1</font>").arg(e.what()));
+		QTextCursor cursor = ui->regex_textEdit->textCursor();
 		ui->regex_textEdit->selectAll();
 		ui->regex_textEdit->setTextColor(red);
-		ui->regex_textEdit->textCursor().clearSelection();
+		ui->regex_textEdit->setTextCursor(cursor);
 		ui->regex_textEdit->setTextColor(black);
 	}
-}
-
-void MainWindow::search_text_changed()
-{
-	QString temp_text = ui->search_textEdit->toPlainText();;
-	if (search_text == temp_text) return;
-	search_text = temp_text;
-	qDebug() <<"search text :"<< search_text;
-	search();
-	show_search_result();
-}
-
-void MainWindow::search()
-{
-	search_result.clear();
-	match_positions.clear();
-	std::wstring w_search_text = search_text.toStdWString();
-	switch (regex_select)
-	{
-		case 0:
-		{
-			boost::wsregex_iterator b(w_search_text.begin(), w_search_text.end(), boost_regex);
-			boost::wsregex_iterator e;
-			for (; b != e; b++)
-			{
-				auto &one_search_result = *b;
-				std::vector<QString> groups;
-				size_t groups_amount= one_search_result.size();
-				for (size_t i=0;i< groups_amount;i++)
-					groups.push_back(QString::fromStdWString(one_search_result.str(i)));
-				search_result.push_back(groups);
-				size_t match_start_positoin = std::distance(w_search_text.cbegin(),one_search_result[0].first);
-				size_t match_length = one_search_result.length(0);
-				qDebug() << "start " << match_start_positoin << " length " << match_length;
-				match_positions.push_back({ match_start_positoin,match_length });
-			}
-			break;
-		}
-
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		default:
-			break;
-	}
-}
-
-void MainWindow::show_search_result()
-{
-	QTextCursor cursor = ui->search_textEdit->textCursor();
-	int current_position = cursor.position();
-	ui->search_textEdit->selectAll();
-	ui->search_textEdit->setTextBackgroundColor(white);
-	ui->regex_textEdit->textCursor().clearSelection();
-	for(std::pair<size_t,size_t> &one_positon:match_positions)
-	{
-		
-		cursor.setPosition(one_positon.first);
-		cursor.setPosition(one_positon.first+one_positon.second,QTextCursor::KeepAnchor);
-		ui->search_textEdit->setTextCursor(cursor);
-		ui->search_textEdit->setTextBackgroundColor(match_color);
-	}
-	cursor.setPosition(current_position);
-	ui->search_textEdit->setTextCursor(cursor);
-	ui->search_textEdit->setTextBackgroundColor(white);
 }
