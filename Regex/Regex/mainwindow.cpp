@@ -20,6 +20,8 @@ MainWindow::~MainWindow()
 
 QColor MainWindow::red(255, 0, 0);
 QColor MainWindow::black(0, 0, 0);
+QColor MainWindow::white(255, 255, 255);
+QColor MainWindow::match_color(103, 204, 255);
 
 void MainWindow::regex_selected_changed(int index)
 {
@@ -120,8 +122,20 @@ void MainWindow::search()
 
 void MainWindow::show_search_result()
 {
+	QTextCursor cursor = ui->search_textEdit->textCursor();
+	int current_position = cursor.position();
+	ui->search_textEdit->selectAll();
+	ui->search_textEdit->setTextBackgroundColor(white);
+	ui->regex_textEdit->textCursor().clearSelection();
 	for(std::pair<size_t,size_t> &one_positon:match_positions)
 	{
 		
+		cursor.setPosition(one_positon.first);
+		cursor.setPosition(one_positon.first+one_positon.second,QTextCursor::KeepAnchor);
+		ui->search_textEdit->setTextCursor(cursor);
+		ui->search_textEdit->setTextBackgroundColor(match_color);
 	}
+	cursor.setPosition(current_position);
+	ui->search_textEdit->setTextCursor(cursor);
+	ui->search_textEdit->setTextBackgroundColor(white);
 }

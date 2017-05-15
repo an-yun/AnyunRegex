@@ -33,6 +33,8 @@ private slots:
 private:
 	static QColor red;
 	static QColor black;
+	static QColor white;
+	static QColor match_color;
     Ui::MainWindow *ui;
 	boost::wregex boost_regex;
 	std::wregex std_regex;
