@@ -6,8 +6,6 @@ namespace anyun_regex
 
 #ifdef _DEBUG
 
-
-
 	void test_nfa_match()
 	{
 		cout << endl;

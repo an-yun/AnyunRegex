@@ -47,6 +47,7 @@ private:
 	QString regex_expression;
 	QString search_text;
 	int regex_select;
+	bool error_flag;
 
 	std::map<size_t,std::pair<size_t, std::vector<QString>>> search_result;
 

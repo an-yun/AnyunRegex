@@ -56,7 +56,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(1085, 626);
+        MainWindow->resize(1280, 720);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         verticalLayout = new QVBoxLayout(centralWidget);
@@ -141,6 +141,7 @@ public:
         sizePolicy3.setVerticalStretch(0);
         sizePolicy3.setHeightForWidth(search_result_frame->sizePolicy().hasHeightForWidth());
         search_result_frame->setSizePolicy(sizePolicy3);
+        search_result_frame->setMinimumSize(QSize(500, 0));
         search_result_frame->setFrameShape(QFrame::StyledPanel);
         search_result_frame->setFrameShadow(QFrame::Raised);
         verticalLayout_3 = new QVBoxLayout(search_result_frame);
@@ -206,7 +207,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1085, 26));
+        menuBar->setGeometry(QRect(0, 0, 1280, 26));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));

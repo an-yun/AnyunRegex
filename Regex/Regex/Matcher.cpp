@@ -16,6 +16,7 @@ namespace anyun_regex {
 	void Matcher::set_text(const string & text)
 	{
 		this->text = text;
+		cursor = 0;
 	}
 
 
@@ -110,7 +111,8 @@ namespace anyun_regex {
 
 	void NFAMatcher::set_pattern(DirectedGraphPoint digraph)
 	{
-		
+		nfa.digraph = digraph;
+		set_groups(nfa.group_size());
 	}
 
 	bool NFAMatcher::match()
@@ -145,6 +147,16 @@ namespace anyun_regex {
 			nfa.get_next_state(save_state, text, *this);
 		}
 		return false;
+	}
+
+	size_t NFAMatcher::start(size_t index) const
+	{
+		return groups[index].first;
+	}
+
+	size_t NFAMatcher::end(size_t index) const
+	{
+		return groups[index].second;
 	}
 
 	

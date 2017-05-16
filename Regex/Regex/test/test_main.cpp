@@ -3,7 +3,7 @@
 #include <fstream>
 #include "../Matcher.h"
 
-//#define TEST
+#define TEST
 
 
 #ifdef TEST

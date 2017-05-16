@@ -17,7 +17,8 @@ QString MainWindow::result_header_format("mathch postion %1-%2");
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-	regex_select(0)
+	regex_select(0),
+	error_flag(false)
 {
     ui->setupUi(this);
 }
@@ -73,13 +74,15 @@ void MainWindow::regex_text_cursor_position_changed()
 void MainWindow::search()
 {
 	search_result.clear();
-	std::wstring w_search_text = search_text.toStdWString();
+	if(error_flag || search_text.length() == 0|| regex_expression.length() == 0)return;
+	std::wstring ws_search_text = search_text.toStdWString();
+	std::string s_search_text = search_text.toStdString();
 	cpu_timer t;
 	switch (regex_select)
 	{
 		case 0:
 		{
-			boost::wsregex_iterator b(w_search_text.begin(), w_search_text.end(), boost_regex);
+			boost::wsregex_iterator b(ws_search_text.begin(), ws_search_text.end(), boost_regex);
 			boost::wsregex_iterator e;
 			for (; b != e; b++)
 			{
@@ -88,17 +91,16 @@ void MainWindow::search()
 				size_t groups_amount= one_search_result.size();
 				for (size_t i=0;i< groups_amount;i++)
 					groups.push_back(QString::fromStdWString(one_search_result.str(i)));
-				size_t match_start_positoin = std::distance(w_search_text.cbegin(),one_search_result[0].first);
+				size_t match_start_positoin = std::distance(ws_search_text.cbegin(),one_search_result[0].first);
 				size_t match_end_position = match_start_positoin +one_search_result.length(0);
 				qDebug() << "start " << match_start_positoin << " end " << match_end_position;
 				search_result[match_start_positoin] = { match_end_position,groups };
 			}
 			break;
 		}
-
 		case 1:
 		{
-			std::wsregex_iterator b(w_search_text.begin(), w_search_text.end(), std_regex);
+			std::wsregex_iterator b(ws_search_text.begin(), ws_search_text.end(), std_regex);
 			std::wsregex_iterator e;
 			for (; b != e; b++)
 			{
@@ -107,7 +109,7 @@ void MainWindow::search()
 				size_t groups_amount = one_search_result.size();
 				for (size_t i = 0; i< groups_amount; i++)
 					groups.push_back(QString::fromStdWString(one_search_result.str(i)));
-				size_t match_start_positoin = std::distance(w_search_text.cbegin(), one_search_result[0].first);
+				size_t match_start_positoin = std::distance(ws_search_text.cbegin(), one_search_result[0].first);
 				size_t match_end_position = match_start_positoin + one_search_result.length(0);
 				qDebug() << "start " << match_start_positoin << " end " << match_end_position;
 				search_result[match_start_positoin] = { match_end_position,groups };
@@ -115,9 +117,39 @@ void MainWindow::search()
 			break;
 		}
 		case 2:
+		{
+			int position = 0;
+			while ((position = q_regex.indexIn(search_text,position))!= -1)
+			{
+				std::vector<QString> groups;
+				size_t groups_amount = q_regex.captureCount();
+				for (size_t i = 0; i<= groups_amount; i++)
+					groups.push_back(q_regex.cap(i));
+				size_t match_end_position = position + q_regex.matchedLength();
+				qDebug() << "start " << position << " end " << match_end_position;
+				search_result[position] = { match_end_position,groups };
+				position = match_end_position;
+			}
 			break;
+		}
 		case 3:
+		{
+			::anyun_regex::NFAMatcher anyun_search_result;
+			anyun_search_result.set_content(s_search_text, anyun_regex);
+			while(anyun_search_result.search())
+			{
+				std::vector<QString> groups;
+				size_t groups_amount = anyun_search_result.group_count();
+				for (size_t i = 0; i < groups_amount; i++)
+					groups.push_back(QString::fromStdString(anyun_search_result.group(i)));
+				size_t start = anyun_search_result.start();
+				size_t end = anyun_search_result.end();
+				qDebug() << "start " << start << " end " << end;
+				search_result[start] = { end,groups };
+			}
 			break;
+		}
+			
 		default:
 			break;
 	}
@@ -160,6 +192,7 @@ void MainWindow::re_compile()
 			break;
 		case 2:
 			q_regex.setPattern(regex_expression);
+			if (!q_regex.isValid()) throw std::exception(q_regex.errorString().toStdString().c_str());
 			break;
 		case 3:
 			anyun_regex.compile(regex_expression.toStdString());
@@ -167,8 +200,10 @@ void MainWindow::re_compile()
 				throw std::exception(anyun_regex.get_compile_message());
 			break;
 		default:
+
 			break;
 		}
+		error_flag = false;
 		QTextCursor cursor = ui->regex_textEdit->textCursor();
 		ui->regex_tip_label->clear();
 		ui->regex_textEdit->selectAll();
@@ -179,6 +214,7 @@ void MainWindow::re_compile()
 	}
 	catch (std::exception e)
 	{
+		error_flag = true;
 		ui->regex_tip_label->setText(QStringLiteral("<font color=red>regex error: %1</font>").arg(e.what()));
 		QTextCursor cursor = ui->regex_textEdit->textCursor();
 		ui->regex_textEdit->selectAll();
