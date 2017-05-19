@@ -142,6 +142,7 @@ void MainWindow::search()
 				size_t groups_amount = anyun_search_result.group_count();
 				for (size_t i = 0; i < groups_amount; i++)
 					groups.push_back(QString::fromStdString(anyun_search_result.group(i)));
+				//here need some code to transform string position to wstring position
 				size_t start = anyun_search_result.start();
 				size_t end = anyun_search_result.end();
 				qDebug() << "start " << start << " end " << end;
@@ -149,7 +150,6 @@ void MainWindow::search()
 			}
 			break;
 		}
-			
 		default:
 			break;
 	}
