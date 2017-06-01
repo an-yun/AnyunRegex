@@ -237,9 +237,33 @@ public:
         );
         regex_select_combox->setCurrentText(QApplication::translate("MainWindow", "C++ Boost.Regex 5.1.2", Q_NULLPTR));
         regex_tip_label->setText(QString());
+        regex_textEdit->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Consolas'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">([A-Z])\\w+</p></body></html>", Q_NULLPTR));
         regex_textEdit->setPlaceholderText(QApplication::translate("MainWindow", "please enter your regex expression", Q_NULLPTR));
         time_label->setText(QApplication::translate("MainWindow", "\347\224\250\346\227\266: 0.000000s", Q_NULLPTR));
         group_label->setText(QApplication::translate("MainWindow", "\345\210\206\347\273\204\345\206\205\345\256\271", Q_NULLPTR));
+        search_textEdit->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Consolas'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Welcome to Anyun Regex Test Tool!</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Edit the Expression &amp; Text to see matches. Roll over matches or the expression for details. Undo mistakes with ctrl-z. Save Favorites &amp; Share expressions with friends or the Community. Explore your results with Tools. A full Reference &"
+                        "amp; Help is available in the Library, or watch the video Tutorial.</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Sample text for testing:</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0123456789 _+-.,!@#$%^&amp;*();\\/|&lt;&gt;&quot;'</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">12345 -98.7 3.141 .6180 9,000 +42</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-i"
+                        "ndent:0px;\">555.123.4567	+1-(800)-555-2468</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">foo@demo.net	bar.ba@test.co.uk</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">www.demo.com	http://foo.co.uk/</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">http://regexr.com/foo.html?q=bar</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">https://mediatemple.net</p></body></html>", Q_NULLPTR));
         search_textEdit->setPlaceholderText(QApplication::translate("MainWindow", "please enter your text", Q_NULLPTR));
     } // retranslateUi
 

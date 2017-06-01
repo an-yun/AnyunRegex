@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	error_flag(false)
 {
     ui->setupUi(this);
+	regex_text_changed();
+	search_text_changed();
 }
 
 MainWindow::~MainWindow()
@@ -185,7 +187,7 @@ void MainWindow::re_compile()
 		switch (regex_select)
 		{
 		case 0:
-			boost_regex.set_expression(w_regex_expression);
+			boost_regex.assign(w_regex_expression);
 			break;
 		case 1:
 			std_regex.assign(w_regex_expression);
